@@ -54,6 +54,7 @@ new='''        self.data = json.loads(self.path.read_text(encoding="utf-8"))
         expected_types = {"mcq": 532, "tf": 218, "short": 250}
         if type_counts != expected_types:
             raise RuntimeError(f"Phân bố dạng câu V3 không hợp lệ: {type_counts}")
+        print(f"[QUESTION_BANK_V3] version={self.data.get('version')} total={len(questions)} chapters={chapter_counts} types={type_counts}", flush=True)
         self.questions = questions'''
 if old not in s:
     raise SystemExit('question bank load marker not found')
