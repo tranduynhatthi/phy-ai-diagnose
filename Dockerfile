@@ -17,6 +17,7 @@ COPY multi_school_home_patch.py /tmp/multi_school_home_patch.py
 COPY homepage_cleanup_patch.py /tmp/homepage_cleanup_patch.py
 COPY role_access_patch.py /tmp/role_access_patch.py
 COPY role_portal_patch.py /tmp/role_portal_patch.py
+COPY admin_accounts_patch.py /tmp/admin_accounts_patch.py
 COPY v3_patch /app/v3_patch
 RUN python - <<'PY'
 from pathlib import Path
@@ -100,6 +101,7 @@ RUN python /tmp/multi_school_home_patch.py
 RUN python /tmp/homepage_cleanup_patch.py
 RUN python /tmp/role_access_patch.py
 RUN python /tmp/role_portal_patch.py
+RUN python /tmp/admin_accounts_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/models

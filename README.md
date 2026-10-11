@@ -60,9 +60,12 @@ Mã ứng dụng trong repository được đóng gói ở `deploy_bundle`; Dock
 ```bash
 PHY_APP_ROOT=/path/to/generated-app python -m pytest -q tests/test_homepage_cleanup.py tests/test_role_access.py
 PHY_APP_ROOT=/path/to/generated-app PHY_PYTHON=/path/to/venv/bin/python node tests/test_role_portals.cjs
+PHY_APP_ROOT=/path/to/generated-app PHY_PYTHON=/path/to/venv/bin/python node tests/test_admin_accounts.cjs
 ```
 
 Kiểm tra trình duyệt dùng Playwright/Chromium và cơ sở dữ liệu tạm riêng. Các luồng gồm hai cổng đăng nhập, giao diện điện thoại, tạo trường/lớp, tham gia lớp, báo cáo học sinh, đổi mật khẩu và phục hồi phiên hết hạn. Patch dọn trang chủ chỉ xóa các phần giới thiệu, giữ nguyên biểu mẫu đăng nhập.
+
+Trang quản trị đặt lại bộ lọc khi đăng nhập để hiển thị danh sách tài khoản đã đăng kí. Nếu tìm kiếm không có kết quả, chọn **Xóa bộ lọc** cạnh danh sách để xem tất cả; lỗi tải danh sách có nút thử lại. Khi đăng xuất, danh sách và các ô mật khẩu admin được xóa khỏi giao diện.
 
 ## AI
 
