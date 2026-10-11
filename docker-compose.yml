@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: phy_ai
+      POSTGRES_USER: phy_ai
+      POSTGRES_PASSWORD: change_me_local
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U phy_ai -d phy_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: development
+      DATABASE_URL: postgresql+psycopg://phy_ai:change_me_local@db:5432/phy_ai
+      SECRET_KEY: local-dev-secret-change-in-production
+      TEACHER_USERNAME: teacher
+      TEACHER_PASSWORD: teacher12345
+      TEACHER_NAME: Giáo viên thử nghiệm
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  pgdata:
