@@ -31,10 +31,14 @@ html = frontend.read_text(encoding='utf-8')
 # Browser fix: window.top is a reserved browser global.
 html = html.replace('top()', 'renderTop()')
 
-# Make validation errors readable and normalize registration input.
+# Make authentication and validation errors accurate and readable.
 html = html.replace(
-    "if(!r.ok)throw new Error(data.detail||'Có lỗi xảy ra');return data",
-    "if(!r.ok){let d=data.detail;if(Array.isArray(d))d=d.map(x=>x.msg||String(x)).join(' · ');throw new Error(d||'Có lỗi xảy ra')}return data"
+    "async function api(path,opt={}){opt.headers=Object.assign({'Content-Type':'application/json'},opt.headers||{});if(token)opt.headers.Authorization='Bearer '+token;const r=await fetch(path,opt);if(r.status===401){logout();throw new Error('Phiên đăng nhập đã hết hạn')}let data;try{data=await r.json()}catch(e){data={detail:'Lỗi máy chủ'}}if(!r.ok)throw new Error(data.detail||'Có lỗi xảy ra');return data}",
+    "async function api(path,opt={}){opt.headers=Object.assign({'Content-Type':'application/json'},opt.headers||{});if(token&&!path.startsWith('/api/auth/'))opt.headers.Authorization='Bearer '+token;const r=await fetch(path,opt);let data;try{data=await r.json()}catch(e){data={detail:'Lỗi máy chủ'}}if(r.status===401){if(path==='/api/auth/login')throw new Error(data.detail||'Tên đăng nhập hoặc mật khẩu không đúng');logout();throw new Error(data.detail||'Phiên đăng nhập đã hết hạn')}if(!r.ok){let d=data.detail;if(Array.isArray(d))d=d.map(x=>x.msg||String(x)).join(' · ');throw new Error(d||'Có lỗi xảy ra')}return data}"
+)
+html = html.replace(
+    "username:$('loginUser').value,password:$('loginPass').value",
+    "username:$('loginUser').value.trim().toLowerCase(),password:$('loginPass').value"
 )
 html = html.replace(
     "display_name:$('regName').value,username:$('regUser').value,password:$('regPass').value",
