@@ -24,13 +24,31 @@ if not source.exists():
 
 shutil.copytree(source, Path('/app'), dirs_exist_ok=True)
 
-# Browser hotfix: "window.top" is a reserved browser global. A global
-# function named top() can prevent the inline application script from
-# initializing, which means login/register buttons never reach the API.
 frontend = Path('/app/app/static/index.html')
 html = frontend.read_text(encoding='utf-8')
+
+# Browser fix: window.top is a reserved browser global.
 html = html.replace('function top(){', 'function renderTop(){')
 html = html.replace('top();', 'renderTop();')
+
+# Make validation errors readable and normalize registration input.
+html = html.replace(
+    "if(!r.ok)throw new Error(data.detail||'Có lỗi xảy ra');return data",
+    "if(!r.ok){let d=data.detail;if(Array.isArray(d))d=d.map(x=>x.msg||String(x)).join(' · ');throw new Error(d||'Có lỗi xảy ra')}return data"
+)
+html = html.replace(
+    "display_name:$('regName').value,username:$('regUser').value,password:$('regPass').value",
+    "display_name:$('regName').value.trim(),username:$('regUser').value.trim().toLowerCase(),password:$('regPass').value"
+)
+html = html.replace(
+    '<input id="regUser" placeholder="vd: 12a1-nguyenvana"></div>',
+    '<input id="regUser" placeholder="vd: 12a1-nguyenvana"><div class="small muted">Tối thiểu 3 kí tự; chỉ dùng a-z, 0-9, dấu chấm, gạch dưới hoặc gạch ngang.</div></div>'
+)
+html = html.replace(
+    '<input id="regPass" type="password"></div>',
+    '<input id="regPass" type="password"><div class="small muted">Mật khẩu tối thiểu 8 kí tự.</div></div>'
+)
+
 frontend.write_text(html, encoding='utf-8')
 PY
 
