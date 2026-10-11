@@ -3,8 +3,12 @@ from pathlib import Path
 p=Path('/app/app/main.py')
 s=p.read_text(encoding='utf-8')
 if 'FORCE_ADMIN_PASSWORD_RESET' not in s:
-    if not s.startswith('import os'):
-        s='import os\n'+s
+    if '\nimport os\n' not in '\n'+s:
+        future='from __future__ import annotations\n'
+        if s.startswith(future):
+            s=future+'import os\n'+s[len(future):]
+        else:
+            s='import os\n'+s
     old='''            if not u:
                 db.add(User(username=username.lower(), password_hash=hash_password(password), display_name=name, role=role))
             elif u.role != role:
