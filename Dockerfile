@@ -5,7 +5,7 @@ WORKDIR /app
 COPY deploy_bundle /tmp/deploy_bundle
 RUN python - <<'PY'
 from pathlib import Path
-import base64, zipfile, shutil
+import base64, zipfile, shutil, re
 
 parts = sorted(Path('/tmp/deploy_bundle').glob('part*.b64'))
 if not parts:
@@ -47,6 +47,22 @@ html = html.replace(
 html = html.replace(
     '<input id="regPass" type="password"></div>',
     '<input id="regPass" type="password"><div class="small muted">Mật khẩu tối thiểu 8 kí tự.</div></div>'
+)
+
+# Remove the unvalidated/fake-looking ability summary from the student UI.
+html = html.replace(
+    '<div class="toolbar"><h2>Đề luyện cuối năm</h2><button class="btn ghost" onclick="loadProfile()">Cập nhật</button></div>\n   <div id="abilityBox"></div>',
+    '<h2>Đề luyện cuối năm</h2>'
+)
+html = html.replace(
+    '<div class="field"><label>Mức đề</label><select id="examLevel"><option value="auto">Tự động</option><option value="foundation">Củng cố nền tảng</option><option value="developing">Đang phát triển</option><option value="proficient">Khá – vững</option><option value="advanced">Nâng cao</option><option value="balanced">Cân bằng</option></select></div>',
+    '<div class="field"><label>Mức đề</label><select id="examLevel"><option value="balanced" selected>Cân bằng</option><option value="foundation">Củng cố nền tảng</option><option value="developing">Đang phát triển</option><option value="proficient">Khá – vững</option><option value="advanced">Nâng cao</option></select></div>'
+)
+html = re.sub(
+    r"let p=await api\('/api/profile'\);let a=p\.ability;\$\('abilityBox'\)\.innerHTML=\`.*?\`;\$\('errorProfile'\)",
+    "let p=await api('/api/profile');$('errorProfile')",
+    html,
+    count=1
 )
 
 frontend.write_text(html, encoding='utf-8')
