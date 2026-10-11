@@ -10,6 +10,7 @@ COPY admin_patch.py /tmp/admin_patch.py
 COPY admin_bootstrap_patch.py /tmp/admin_bootstrap_patch.py
 COPY admin_password_patch.py /tmp/admin_password_patch.py
 COPY question_bank_quality_patch.py /tmp/question_bank_quality_patch.py
+COPY v3_patch /app/v3_patch
 RUN python - <<'PY'
 from pathlib import Path
 import base64, zipfile, shutil, re
