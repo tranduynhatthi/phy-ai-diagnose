@@ -8,6 +8,7 @@ COPY teacher_patch.py /tmp/teacher_patch.py
 COPY teacher_dashboard_v2.py /tmp/teacher_dashboard_v2.py
 COPY admin_patch.py /tmp/admin_patch.py
 COPY admin_bootstrap_patch.py /tmp/admin_bootstrap_patch.py
+COPY admin_password_patch.py /tmp/admin_password_patch.py
 RUN python - <<'PY'
 from pathlib import Path
 import base64, zipfile, shutil, re
@@ -81,6 +82,7 @@ RUN python /tmp/teacher_patch.py
 RUN python /tmp/teacher_dashboard_v2.py
 RUN python /tmp/admin_patch.py
 RUN python /tmp/admin_bootstrap_patch.py
+RUN python /tmp/admin_password_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/models
