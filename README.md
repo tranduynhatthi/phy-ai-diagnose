@@ -12,9 +12,11 @@ Bản triển khai server của PHY-AI DIAGNOSE cho Vật lí 12.
 - Đề luyện cuối năm 18 MCQ + 4 Đúng/Sai + 6 trả lời ngắn, 50 phút.
 - Đề thích ứng theo kết quả học gần nhất và chương yếu.
 - Tài khoản học sinh.
+- Hai khu đăng nhập riêng dành cho giáo viên và học sinh; đăng kí học sinh bằng mã lớp.
 - Tài khoản giáo viên / quản trị viên bootstrap bằng biến môi trường.
 - Lớp học + mã tham gia.
 - Dashboard giáo viên.
+- Quản lí học sinh lớp giáo viên phụ trách; giữ tổng quan trường để phối hợp theo dõi.
 - Xuất CSV lớp và nhãn giáo viên cho nghiên cứu.
 - PostgreSQL production; SQLite dùng được cho chạy thử.
 - JWT authentication + Argon2 password hashing.
@@ -52,6 +54,15 @@ pytest -q
 ```
 
 Ngân hàng phải trả về 1.000 câu và 250 câu cho từng chương.
+
+Mã ứng dụng trong repository được đóng gói ở `deploy_bundle`; Dockerfile giải nén và áp dụng các patch trước khi cài phụ thuộc. Khi kiểm tra bản giải nén bằng Python, đặt `PHY_APP_ROOT` thành thư mục chứa `app/` và chạy riêng từng nhóm để các cấu hình cơ sở dữ liệu thử nghiệm không ảnh hưởng nhau:
+
+```bash
+PHY_APP_ROOT=/path/to/generated-app python -m pytest -q tests/test_homepage_cleanup.py tests/test_role_access.py
+PHY_APP_ROOT=/path/to/generated-app PHY_PYTHON=/path/to/venv/bin/python node tests/test_role_portals.cjs
+```
+
+Kiểm tra trình duyệt dùng Playwright/Chromium và cơ sở dữ liệu tạm riêng. Các luồng gồm hai cổng đăng nhập, giao diện điện thoại, tạo trường/lớp, tham gia lớp, báo cáo học sinh, đổi mật khẩu và phục hồi phiên hết hạn. Patch dọn trang chủ chỉ xóa các phần giới thiệu, giữ nguyên biểu mẫu đăng nhập.
 
 ## AI
 

@@ -15,6 +15,8 @@ COPY question_bank_quality_patch.py /tmp/question_bank_quality_patch.py
 COPY diagnostic_finish_fix.py /tmp/diagnostic_finish_fix.py
 COPY multi_school_home_patch.py /tmp/multi_school_home_patch.py
 COPY homepage_cleanup_patch.py /tmp/homepage_cleanup_patch.py
+COPY role_access_patch.py /tmp/role_access_patch.py
+COPY role_portal_patch.py /tmp/role_portal_patch.py
 COPY v3_patch /app/v3_patch
 RUN python - <<'PY'
 from pathlib import Path
@@ -96,6 +98,8 @@ RUN python /tmp/question_bank_quality_patch.py
 RUN python /tmp/diagnostic_finish_fix.py
 RUN python /tmp/multi_school_home_patch.py
 RUN python /tmp/homepage_cleanup_patch.py
+RUN python /tmp/role_access_patch.py
+RUN python /tmp/role_portal_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/models

@@ -12,7 +12,7 @@ s=s.replace(
 old='''        self.data = json.loads(self.path.read_text(encoding="utf-8"))
         self.questions = self.data["questions"]'''
 new='''        self.data = json.loads(self.path.read_text(encoding="utf-8"))
-        patch_parts = sorted(Path("/app/v3_patch").glob("part*.b64"))
+        patch_parts = sorted((Path(__file__).resolve().parents[1] / "v3_patch").glob("part*.b64"))
         if patch_parts:
             patch_b64 = "".join(p.read_text(encoding="utf-8").strip() for p in patch_parts)
         else:
