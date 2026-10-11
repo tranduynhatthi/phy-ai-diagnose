@@ -3,6 +3,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 
 COPY deploy_bundle /tmp/deploy_bundle
+COPY answer_flow_patch.py /tmp/answer_flow_patch.py
 COPY math_patch.py /tmp/math_patch.py
 COPY math_render_fix_v2.py /tmp/math_render_fix_v2.py
 COPY teacher_patch.py /tmp/teacher_patch.py
@@ -81,6 +82,7 @@ html = re.sub(
 frontend.write_text(html, encoding='utf-8')
 PY
 
+RUN python /tmp/answer_flow_patch.py
 RUN python /tmp/math_patch.py
 RUN python /tmp/math_render_fix_v2.py
 RUN python /tmp/teacher_patch.py
