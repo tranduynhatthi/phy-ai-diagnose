@@ -30,7 +30,7 @@ html = frontend.read_text(encoding='utf-8')
 
 # Browser fix: window.top is a reserved browser global.
 html = html.replace('function top(){', 'function renderTop(){')
-html = html.replace('top();', 'renderTop();')
+html = re.sub(r'(?<![\\w.])top\\s*\\(', 'renderTop(', html)
 
 # Make validation errors readable and normalize registration input.
 html = html.replace(
