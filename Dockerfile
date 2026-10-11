@@ -23,6 +23,15 @@ if not source.exists():
     raise SystemExit('production source directory missing from archive')
 
 shutil.copytree(source, Path('/app'), dirs_exist_ok=True)
+
+# Browser hotfix: "window.top" is a reserved browser global. A global
+# function named top() can prevent the inline application script from
+# initializing, which means login/register buttons never reach the API.
+frontend = Path('/app/app/static/index.html')
+html = frontend.read_text(encoding='utf-8')
+html = html.replace('function top(){', 'function renderTop(){')
+html = html.replace('top();', 'renderTop();')
+frontend.write_text(html, encoding='utf-8')
 PY
 
 RUN pip install --no-cache-dir -r requirements.txt
