@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY deploy_bundle /tmp/deploy_bundle
 COPY math_patch.py /tmp/math_patch.py
+COPY teacher_patch.py /tmp/teacher_patch.py
 RUN python - <<'PY'
 from pathlib import Path
 import base64, zipfile, shutil, re
@@ -73,6 +74,7 @@ frontend.write_text(html, encoding='utf-8')
 PY
 
 RUN python /tmp/math_patch.py
+RUN python /tmp/teacher_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/models
