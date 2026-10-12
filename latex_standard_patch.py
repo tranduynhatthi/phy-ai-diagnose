@@ -15,7 +15,7 @@ const phyMath=(()=>{
  const sup={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁺':'+','⁻':'-'};
  const sub={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','₊':'+','₋':'-'};
  const greek={'Δ':'Delta','Φ':'Phi','φ':'varphi','λ':'lambda','ρ':'rho','η':'eta','ω':'omega','α':'alpha','β':'beta','γ':'gamma','θ':'theta','μ':'mu','π':'pi','σ':'sigma','ε':'varepsilon','τ':'tau','Ω':'Omega','ν':'nu'};
- const units=['nucleon','mmHg','MeV','keV','GeV','MBq','kBq','MHz','kHz','GHz','kPa','MPa','GPa','kJ','MJ','mJ','μJ','mW','kW','MW','mV','kV','mA','μA','mT','mWb','kΩ','MΩ','nm','μm','mm','cm','dm','km','mg','μg','kg','min','h','ms','μs','ns','mol','rad','sr','Hz','Pa','atm','bar','eV','Wb','Bq','Gy','Sv','mL','dB','mN','J','N','W','C','V','A','T','K','Ω','u','g','m','s','L','H'];
+ const units=['nucleon','mmHg','MeV','keV','GeV','MBq','kBq','MHz','kHz','GHz','kPa','MPa','GPa','kWh','Wh','kcal','cal','mbar','kJ','MJ','mJ','μJ','mW','kW','MW','mV','kV','mA','μA','mT','mWb','kΩ','MΩ','nm','μm','mm','cm','dm','km','mg','μg','kg','min','h','ms','μs','ns','mol','rad','sr','Hz','Pa','atm','bar','eV','Wb','Bq','Gy','Sv','mL','dB','mN','J','N','W','C','V','A','T','K','Ω','u','g','m','s','L','H'];
  const elements={H:1,He:2,Li:3,Be:4,B:5,C:6,N:7,O:8,F:9,Ne:10,Na:11,Mg:12,Al:13,Si:14,P:15,S:16,Cl:17,Ar:18,K:19,Ca:20,Fe:26,Co:27,Ni:28,Cu:29,Zn:30,Sr:38,I:53,Cs:55,Ba:56,Au:79,Hg:80,Pb:82,Bi:83,Po:84,Rn:86,Ra:88,Th:90,U:92,Pu:94};
  const letter=/[\p{L}\p{M}]/u;
  const named=['hữu ích','cung cấp','khí quyển','hóa hơi','phân rã','hạt nhân'];
@@ -200,7 +200,9 @@ const phyMath=(()=>{
   while(i<s.length){
    if(s.startsWith('@@',i)){const close=s.indexOf('@@',i+2);if(close>=0){i=close+2;continue;}}
    if(i>0&&(letter.test(s[i-1])||/[\d_]/.test(s[i-1]))){i++;continue;}
-   const e=expression(s,i,ctx);
+   const unitCue=/((?:đơn vị|đơn vị SI|theo SI|đo bằng|tính theo)\s*(?:là|:)?\s*)$/iu.test(s.slice(Math.max(0,i-40),i));
+   const directUnit=unitCue?unit(s,i):null;
+   const e=directUnit?{end:directUnit.end,tex:directUnit.tex,kind:'expression'}:expression(s,i,ctx);
    if(!e){i++;continue;}
    if(i>textStart)result.push({kind:'text',text:s.slice(textStart,i)});
    result.push({kind:'math',tex:e.tex});i=e.end;textStart=i;
