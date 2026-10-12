@@ -1,0 +1,4027 @@
+{
+  "schema_version": 1,
+  "base_version": "2026.10-1000q-quality-v3-senior-physics-audit",
+  "baseline_sha256": "c56264fbc1e4274f9c54740fb43c2f3daa7af3e92bc393f28bc8396ae9280d4f",
+  "version": "2026.10-1000q-quality-v4-content-render-audit",
+  "coverage": {
+    "date": "2026-10-12",
+    "method": "Internal assisted physics review and independent numeric recomputation",
+    "reviewed_questions": 1000,
+    "reviewed_tf_statements": 872,
+    "recomputed_short_answers": 250,
+    "independent_numeric_checks": 668,
+    "quantitative_questions": 619,
+    "chapters": {
+      "Chương I": 250,
+      "Chương II": 250,
+      "Chương III": 250,
+      "Chương IV": 250
+    },
+    "scope": "Prompt, choices, keys, explanations, assumptions, units and rounding. Source textbook files were not provided for page/provenance verification."
+  },
+  "corrections": [
+    {
+      "id": "SRC-I5-10",
+      "before": {
+        "prompt": "Một thỏi nhôm 1,0 kg ở 80 °C được nung đến nóng chảy hoàn toàn tại 658 °C. Cho c = 880 J/(kg·K), λ = 3,9×10^5 J/kg. Bỏ qua thất thoát nhiệt, hãy tính tổng nhiệt lượng cần cung cấp. Đổi kết quả sang kJ."
+      },
+      "after": {
+        "prompt": "Một thỏi nhôm 1,0 kg ở 80 °C được nung đến nóng chảy hoàn toàn tại 658 °C. Cho c = 880 J/(kg·K), λ = 3,9×10^5 J/kg. Bỏ qua thất thoát nhiệt, hãy tính tổng nhiệt lượng cần cung cấp. Đổi kết quả sang kJ. Làm tròn kết quả đến hàng đơn vị kJ."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Prompt omits the integer-rounding instruction assumed by stored answer and explanation.",
+            "evidence": "Exact result 898.64 kJ; stored answer 899.0 kJ. Existing tolerance accepts the exact value, so this is specification clarity rather than a rejection of the exact answer."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-I6-05",
+      "before": {
+        "options": [
+          "Chỉ mL.",
+          "Mλ + mL.",
+          "McΔT + mL.",
+          "Chỉ mcΔT."
+        ]
+      },
+      "after": {
+        "options": [
+          "Chỉ mL.",
+          "mλ + mL.",
+          "mcΔT + mL.",
+          "Chỉ mcΔT."
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "A case-sensitive physical symbol has been capitalized at the beginning of an option: C_A versus c_A, M versus m, or P versus p. Restore the symbol defined by the prompt and solution.",
+          "origin": "structure-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Keyed formula uses uppercase M for the sensible-heating mass and lowercase m for vaporization without defining separate masses.",
+            "evidence": "Option[2] is \"McΔT + mL.\" although the same quantity of water is heated and entirely vaporized. Use the same mass symbol in both stages."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-I6-09",
+      "before": {
+        "prompt": "Có 200 g nước ban đầu ở 10 °C được đun đến 100 °C, sau đó 10% khối lượng nước hóa hơi. Cho c = 4190 J/(kg·K), L = 2,26×10^6 J/kg. Bỏ qua thất thoát nhiệt, hãy tính tổng nhiệt lượng. Đổi kết quả sang kJ."
+      },
+      "after": {
+        "prompt": "Có 200 g nước ban đầu ở 10 °C được đun đến 100 °C, sau đó 10% khối lượng nước hóa hơi. Cho c = 4190 J/(kg·K), L = 2,26×10^6 J/kg. Bỏ qua thất thoát nhiệt, hãy tính tổng nhiệt lượng. Đổi kết quả sang kJ. Làm tròn kết quả đến hàng đơn vị kJ."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Prompt omits the integer-rounding instruction assumed by stored answer and explanation.",
+            "evidence": "Exact result 120.62 kJ; stored answer 121.0 kJ. Existing tolerance accepts the exact value, so this is specification clarity rather than a rejection of the exact answer."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-I7-01",
+      "before": {
+        "answer": 3
+      },
+      "after": {
+        "answer": 2
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Stored MCQ answer selects five stages, but four are required.",
+            "evidence": "Options[2]=4; options[3]=5; explanation itself lists warm ice, melt, warm water, vaporize."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-I7-06",
+      "before": {
+        "options": [
+          "ηmq.",
+          "Q/(ηm).",
+          "ηm/q.",
+          "Mq/η."
+        ]
+      },
+      "after": {
+        "options": [
+          "ηmq.",
+          "Q/(ηm).",
+          "ηm/q.",
+          "mq/η."
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "A case-sensitive physical symbol has been capitalized at the beginning of an option: C_A versus c_A, M versus m, or P versus p. Restore the symbol defined by the prompt and solution.",
+          "origin": "structure-review.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-I7-09",
+      "before": {
+        "prompt": "Một khối 0,20 kg nước đá ở -20 °C được biến hoàn toàn thành hơi ở 100 °C. Cho c_đá = 2,09×10^3 J/(kg·K), λ = 3,4×10^5 J/kg, c_nước = 4,18×10^3 J/(kg·K), L = 2,3×10^6 J/kg. Hãy tính tổng nhiệt lượng theo kJ.",
+        "tolerance": 3
+      },
+      "after": {
+        "prompt": "Một khối 0,20 kg nước đá ở -20 °C được biến hoàn toàn thành hơi ở 100 °C. Cho c_đá = 2,09×10^3 J/(kg·K), λ = 3,4×10^5 J/kg, c_nước = 4,18×10^3 J/(kg·K), L = 2,3×10^6 J/kg. Hãy tính tổng nhiệt lượng theo kJ. Làm tròn kết quả đến hàng đơn vị kJ.",
+        "tolerance": 0.500000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Prompt omits the integer-rounding instruction assumed by stored answer and explanation.",
+            "evidence": "Exact result 619.96 kJ; stored answer 620 kJ. Existing tolerance accepts the exact value, so this is specification clarity rather than a rejection of the exact answer."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-I7-10",
+      "before": {
+        "prompt": "Một ấm nhôm 0,60 kg chứa 1,5 L nước, cả hai ở 20 °C. Sau 35 phút, nước đạt 100 °C và 20% khối lượng đã hóa hơi. Cho η = 75%, c_nước = 4190, c_Al = 880 J/(kg·K), L = 2,26×10^6 J/kg. Hãy tính công suất bếp theo W.",
+        "tolerance": 5
+      },
+      "after": {
+        "prompt": "Một ấm nhôm 0,60 kg chứa 1,5 L nước, cả hai ở 20 °C. Sau 35 phút, nước đạt 100 °C và 20% khối lượng đã hóa hơi. Cho η = 75%, c_nước = 4190, c_Al = 880 J/(kg·K), L = 2,26×10^6 J/kg. Hãy tính công suất bếp theo W. Làm tròn kết quả đến hàng đơn vị W. Trong bài toán, coi khối lượng riêng của nước bằng 1 kg/L.",
+        "tolerance": 0.500000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Prompt omits the integer-rounding instruction assumed by stored answer and explanation.",
+            "evidence": "Exact result 776.5333333333333333333333333 W; stored answer 777 W. Existing tolerance accepts the exact value, so this is specification clarity rather than a rejection of the exact answer."
+          },
+          "origin": "review-I.json"
+        },
+        {
+          "reason": "State the density used to convert 1.5 L water to 1.5 kg.",
+          "origin": "consolidation"
+        }
+      ]
+    },
+    {
+      "id": "SRC-II8-09",
+      "before": {
+        "answer": 3.35,
+        "explain": "N=(1/18)×6,022×10^23≈3,35×10^22.",
+        "tolerance": 0.02
+      },
+      "after": {
+        "answer": 3.34,
+        "explain": "n=m/M=1/18 mol; N=nN_A=(1/18)×6,02×10^23=3,34444…×10^22 phân tử. Do đó x≈3,34 khi làm tròn đến hai chữ số thập phân.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "SRC-II8-09",
+            "chapter": "Chương II",
+            "answer": 3.35,
+            "tolerance": 0.02,
+            "unit": "×10^22 phân tử",
+            "requested_decimal_places": 2,
+            "formula": "(1.0/18)×6.02×10 = 3.344444…; prompt uses6.02, not6.022",
+            "raw_calculated": "3.344444444444444444444444444",
+            "expected_rounded": "3.34",
+            "target_matches_requested_rounding": false,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": false,
+            "correct_rounded_input_currently_accepted": true,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Stored answer/explanation do not follow the supplied constants and standard decimal ROUND_HALF_UP rounding.",
+            "evidence": {
+              "prompt": "Cho khối lượng mol của nước là 18 g/mol và số Avogadro NA = 6,02×10^23 mol^-1. Số phân tử trong 1,0 g nước được viết dưới dạng x×10^22. Hãy tính x và làm tròn đến hai chữ số thập phân.",
+              "actual_answer": 3.35,
+              "actual_explain": "N=(1/18)×6,022×10^23≈3,35×10^22."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-II10-01",
+      "before": {
+        "options": [
+          "P/T = hằng số.",
+          "PV = hằng số.",
+          "V/T = hằng số.",
+          "VT = hằng số."
+        ]
+      },
+      "after": {
+        "options": [
+          "p/T = hằng số.",
+          "pV = hằng số.",
+          "V/T = hằng số.",
+          "VT = hằng số."
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "A case-sensitive physical symbol has been capitalized at the beginning of an option: C_A versus c_A, M versus m, or P versus p. Restore the symbol defined by the prompt and solution.",
+          "origin": "structure-review.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-II10-06",
+      "before": {
+        "explain": "T1=350 K, T2=300 K; V2=14×300/350=12 cm³.",
+        "prompt": "Một lượng khí có thể tích 14 cm³ ở 77 °C được làm lạnh đến 27 °C trong điều kiện áp suất không đổi. Sau khi đổi nhiệt độ sang kelvin và áp dụng định luật Charles, thể tích cuối gần giá trị nào?"
+      },
+      "after": {
+        "explain": "Theo quy ước gần đúng đã cho, T1≈350 K và T2≈300 K. Áp dụng Charles: V2≈14×300/350=12 cm³; chọn 12 cm³.",
+        "prompt": "Một lượng khí có thể tích 14 cm³ ở 77 °C được làm lạnh đến 27 °C trong điều kiện áp suất không đổi. Sau khi đổi nhiệt độ sang kelvin và áp dụng định luật Charles, thể tích cuối gần giá trị nào? Trong bài toán, lấy gần đúng T(K)≈t(°C)+273."
+      },
+      "reasons": [
+        {
+          "reason": "Numerical explanation uses the school offset273 K, but the prompt does not declare it; exact SI Celsius conversion uses273.15 K.",
+          "origin": "celsius-review.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-II10-09",
+      "before": {
+        "explain": "T1=300 K, T2=400 K; V2=2×400/300≈2,67 L. Kết quả nhập theo yêu cầu: 2,67 L.",
+        "prompt": "Một lượng khí có thể tích V1 = 2,0 L ở 27 °C được nung đến 127 °C trong điều kiện áp suất không đổi. Hãy đổi nhiệt độ sang kelvin và tính thể tích V2, đơn vị L. Làm tròn kết quả đến 2 chữ số thập phân."
+      },
+      "after": {
+        "explain": "Theo quy ước gần đúng đã cho, T1≈300 K và T2≈400 K. Charles: V2≈2×400/300=2,666… L. Làm tròn đến hai chữ số thập phân: V2≈2,67 L.",
+        "prompt": "Một lượng khí có thể tích V1 = 2,0 L ở 27 °C được nung đến 127 °C trong điều kiện áp suất không đổi. Hãy đổi nhiệt độ sang kelvin và tính thể tích V2, đơn vị L. Làm tròn kết quả đến 2 chữ số thập phân. Trong bài toán, lấy gần đúng T(K)≈t(°C)+273."
+      },
+      "reasons": [
+        {
+          "reason": "Numerical explanation uses the school offset273 K, but the prompt does not declare it; exact SI Celsius conversion uses273.15 K.",
+          "origin": "celsius-review.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-II10-10",
+      "before": {
+        "explain": "V2=14×300/350=12 cm³.",
+        "prompt": "Một lượng khí có thể tích V1 = 14 cm³ ở 77 °C được làm lạnh đến 27 °C trong điều kiện áp suất không đổi. Hãy áp dụng định luật Charles để tính thể tích V2, đơn vị cm³."
+      },
+      "after": {
+        "explain": "Theo quy ước gần đúng đã cho, T1≈350 K và T2≈300 K. Charles: V2≈14×300/350=12 cm³.",
+        "prompt": "Một lượng khí có thể tích V1 = 14 cm³ ở 77 °C được làm lạnh đến 27 °C trong điều kiện áp suất không đổi. Hãy áp dụng định luật Charles để tính thể tích V2, đơn vị cm³. Trong bài toán, lấy gần đúng T(K)≈t(°C)+273."
+      },
+      "reasons": [
+        {
+          "reason": "Numerical explanation uses the school offset273 K, but the prompt does not declare it; exact SI Celsius conversion uses273.15 K.",
+          "origin": "celsius-review.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-II11-01",
+      "before": {
+        "options": [
+          "P1V1=p2V2 trong mọi trường hợp.",
+          "V1T1=V2T2.",
+          "P1V1/T1=p2V2/T2.",
+          "P1/T1=p2/T2 trong mọi trường hợp."
+        ]
+      },
+      "after": {
+        "options": [
+          "p1V1=p2V2 trong mọi trường hợp.",
+          "V1T1=V2T2.",
+          "p1V1/T1=p2V2/T2.",
+          "p1/T1=p2/T2 trong mọi trường hợp."
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "A case-sensitive physical symbol has been capitalized at the beginning of an option: C_A versus c_A, M versus m, or P versus p. Restore the symbol defined by the prompt and solution.",
+          "origin": "structure-review.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-II12-08",
+      "before": {
+        "statements": [
+          {
+            "text": "Động năng tịnh tiến trung bình của một phân tử là khoảng 5.17×10⁻²¹ J.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Ē = 3kT/2."
+          },
+          {
+            "text": "Động năng tịnh tiến trung bình tỉ lệ với nhiệt độ tuyệt đối.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Ē = 3kT/2."
+          },
+          {
+            "text": "Hai khí lí tưởng khác nhau ở cùng T nhất thiết có cùng tốc độ phân tử đặc trưng.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cùng T cho cùng động năng trung bình, nhưng tốc độ còn phụ thuộc khối lượng phân tử."
+          },
+          {
+            "text": "Ở cùng T, phân tử nhẹ có tốc độ đặc trưng nhỏ hơn phân tử nặng.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Phân tử nhẹ có tốc độ đặc trưng lớn hơn."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Động năng tịnh tiến trung bình của một phân tử là khoảng 5,18×10⁻²¹ J.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Ē=3kT/2=5,175×10⁻²¹ J≈5,18×10⁻²¹ J khi làm tròn đến hai chữ số thập phân."
+          },
+          {
+            "text": "Động năng tịnh tiến trung bình tỉ lệ với nhiệt độ tuyệt đối.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Ē = 3kT/2."
+          },
+          {
+            "text": "Hai khí lí tưởng khác nhau ở cùng T nhất thiết có cùng tốc độ phân tử đặc trưng.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cùng T cho cùng động năng trung bình, nhưng tốc độ còn phụ thuộc khối lượng phân tử."
+          },
+          {
+            "text": "Ở cùng T, phân tử nhẹ có tốc độ đặc trưng nhỏ hơn phân tử nặng.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Phân tử nhẹ có tốc độ đặc trưng lớn hơn."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The true claim prints the result with an incorrect conventional decimal rounding; clarify the correctly rounded or exact result.",
+            "evidence": {
+              "statement_index": 0,
+              "actual": {
+                "text": "Động năng tịnh tiến trung bình của một phân tử là khoảng 5.17×10⁻²¹ J.",
+                "answer": true,
+                "level": "VD",
+                "competency": "Vận dụng kiến thức, kĩ năng",
+                "explain": "Ē = 3kT/2."
+              },
+              "exact": "5.175×10^-21 J"
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-II12-09",
+      "before": {
+        "explain": "E=3kT/2 với T≈273 K → 5,65×10^-21 J.",
+        "prompt": "Cho hằng số Boltzmann k = 1,38×10^-23 J/K. Hãy tính động năng tịnh tiến trung bình của một phân tử khí lí tưởng ở 0 °C và biểu diễn kết quả dưới dạng x×10^-21 J."
+      },
+      "after": {
+        "explain": "Theo quy ước gần đúng đã cho, ở 0 °C lấy T≈273 K. Ē=3kT/2≈(3/2)×1,38×10^-23×273=5,6511×10^-21 J; do đó x≈5,65.",
+        "prompt": "Cho hằng số Boltzmann k = 1,38×10^-23 J/K. Hãy tính động năng tịnh tiến trung bình của một phân tử khí lí tưởng ở 0 °C và biểu diễn kết quả dưới dạng x×10^-21 J. Trong bài toán, lấy gần đúng T(K)≈t(°C)+273."
+      },
+      "reasons": [
+        {
+          "reason": "Numerical explanation uses the school offset273 K, but the prompt does not declare it; exact SI Celsius conversion uses273.15 K.",
+          "origin": "celsius-review.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-II13-09",
+      "before": {
+        "explain": "V,n không đổi: p/T=hằng số. T2=5×300=1500 K.",
+        "prompt": "Một lượng khí nằm trong bình kín cứng có áp suất p1 = 1,0 atm ở 27 °C. Khi nung nóng, áp suất tăng đến p2 = 5,0 atm và thể tích không đổi. Hãy tính nhiệt độ cuối theo K."
+      },
+      "after": {
+        "explain": "Theo quy ước gần đúng đã cho, ở 27 °C lấy T1≈300 K. Bình kín cứng có V,n không đổi nên p/T không đổi: T2=T1p2/p1≈300×5=1500 K.",
+        "prompt": "Một lượng khí nằm trong bình kín cứng có áp suất p1 = 1,0 atm ở 27 °C. Khi nung nóng, áp suất tăng đến p2 = 5,0 atm và thể tích không đổi. Hãy tính nhiệt độ cuối theo K. Trong bài toán, lấy gần đúng T(K)≈t(°C)+273."
+      },
+      "reasons": [
+        {
+          "reason": "Numerical explanation uses the school offset273 K, but the prompt does not declare it; exact SI Celsius conversion uses273.15 K.",
+          "origin": "celsius-review.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-III15-10",
+      "before": {
+        "prompt": "Một dây dẫn nằm ngang có khối lượng trên một đơn vị chiều dài D = 0,040 kg/m được đặt vuông góc với từ trường đều B = 0,040 T. Lấy g = 10 m/s². Để lực từ hướng lên cân bằng đúng trọng lượng của dây, hãy tính cường độ dòng điện I, đơn vị A."
+      },
+      "after": {
+        "prompt": "Một dây dẫn nằm ngang có khối lượng trên một đơn vị chiều dài D = 0,040 kg/m được đặt trong từ trường đều nằm ngang, vuông góc với dây, có B = 0,040 T. Chọn chiều dòng điện để lực từ hướng lên. Lấy g = 10 m/s². Để lực từ cân bằng đúng trọng lượng của dây, hãy tính cường độ dòng điện I, đơn vị A."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Perpendicular B and wire do not by themselves guarantee a vertically upward magnetic force.",
+            "evidence": "With a vertical B field and horizontal wire, the magnetic force is horizontal; the intended balance requires the wire and B both horizontal and mutually perpendicular."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-III16-04",
+      "before": {
+        "explain": "Độ lớn suất điện động cảm ứng tỉ lệ với |ΔΦ/Δt|.",
+        "prompt": "Hai thí nghiệm làm từ thông qua cùng một vòng dây biến thiên cùng một lượng nhưng thí nghiệm thứ hai diễn ra trong thời gian ngắn hơn. Theo định luật Faraday, độ lớn suất điện động cảm ứng ở thí nghiệm thứ hai sẽ như thế nào?"
+      },
+      "after": {
+        "explain": "Độ lớn suất điện động cảm ứng trung bình bằng |ΔΦ|/Δt. Cùng độ biến thiên từ thông nhưng thời gian ngắn hơn thì giá trị này lớn hơn.",
+        "prompt": "Hai thí nghiệm làm từ thông qua cùng một vòng dây biến thiên cùng một lượng nhưng thí nghiệm thứ hai diễn ra trong thời gian ngắn hơn. Theo định luật Faraday, độ lớn suất điện động cảm ứng trung bình ở thí nghiệm thứ hai sẽ như thế nào?"
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Only the magnitude of average emf can be inferred from a total flux change and duration.",
+            "evidence": "Equal total ΔΦ and shorter Δt imply larger |average emf|, but do not determine instantaneous emf or mean absolute emf for a nonmonotonic variation."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-III16-06",
+      "before": {
+        "explain": "Trong trường hợp vuông góc, e = Blv = 0,20×0,50×3,0 = 0,30 V.",
+        "prompt": "Một thanh dẫn dài 0,50 m chuyển động vuông góc với chính nó trong từ trường đều B = 0,20 T. Vận tốc của thanh vuông góc với B và có độ lớn 3,0 m/s. Độ lớn suất điện động cảm ứng giữa hai đầu thanh gần bằng bao nhiêu?"
+      },
+      "after": {
+        "explain": "Phương thanh, v và B đôi một vuông góc nên e = Blv = 0,20×0,50×3,0 = 0,30 V.",
+        "prompt": "Một thanh dẫn dài 0,50 m chuyển động trong từ trường đều B = 0,20 T với vận tốc có độ lớn 3,0 m/s. Phương của thanh, vectơ vận tốc và vectơ B đôi một vuông góc. Độ lớn suất điện động cảm ứng giữa hai đầu thanh gần bằng bao nhiêu?"
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Motional emf geometry is underdetermined.",
+            "evidence": "e=(v×B)·l. v perpendicular to rod and B still permits rod parallel B, giving e=0 rather than 0.30 V."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-III16-07",
+      "before": {
+        "statements": [
+          {
+            "text": "Khi B vuông góc mặt khung thì α = 0° và |Φ| đạt giá trị lớn nhất BS.",
+            "answer": true,
+            "explain": "B song song pháp tuyến nên cosα = 1.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Khi B song song mặt khung thì từ thông qua khung bằng 0.",
+            "answer": true,
+            "explain": "Lúc này B vuông góc pháp tuyến, α = 90°.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Giữ B và góc không đổi, tăng diện tích S gấp đôi làm từ thông gấp đôi.",
+            "answer": true,
+            "explain": "Φ tỉ lệ với S.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Từ thông chỉ có thể thay đổi khi độ lớn B thay đổi.",
+            "answer": false,
+            "explain": "Từ thông còn thay đổi khi S hoặc góc định hướng thay đổi.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Khi B vuông góc mặt khung thì α = 0° hoặc 180° và |Φ| đạt giá trị lớn nhất BS.",
+            "answer": true,
+            "explain": "B cùng phương pháp tuyến nên α = 0° hoặc 180°; |cosα| = 1 và |Φ| = BS.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Khi B song song mặt khung thì từ thông qua khung bằng 0.",
+            "answer": true,
+            "explain": "Lúc này B vuông góc pháp tuyến, α = 90°.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Giữ B và góc không đổi, tăng diện tích S gấp đôi làm từ thông gấp đôi.",
+            "answer": true,
+            "explain": "Φ tỉ lệ với S.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Từ thông chỉ có thể thay đổi khi độ lớn B thay đổi.",
+            "answer": false,
+            "explain": "Từ thông còn thay đổi khi S hoặc góc định hướng thay đổi.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The oriented normal permits both α=0° and α=180° when B is perpendicular to the frame.",
+            "evidence": "B perpendicular to the plane implies cosα=±1; the magnitude BS is correct but the assertion that α must be 0° is not."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-III16-08",
+      "before": {
+        "statements": [
+          {
+            "text": "Từ thông qua vòng có độ lớn khoảng 0.002 Wb.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Φ = BS cosα."
+          },
+          {
+            "text": "Nếu B vuông góc mặt vòng thì |Φ| = BS.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Khi B cùng phương pháp tuyến, α=0°."
+          },
+          {
+            "text": "Mạch kín đứng yên với từ thông không đổi vẫn có dòng điện cảm ứng liên tục.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cảm ứng xuất hiện khi từ thông biến thiên."
+          },
+          {
+            "text": "Định luật Lenz cho rằng từ trường cảm ứng luôn làm tăng biến thiên từ thông.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Từ trường cảm ứng chống lại sự biến thiên từ thông."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Từ thông qua vòng có độ lớn khoảng 0.002 Wb.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Φ = BS cosα."
+          },
+          {
+            "text": "Nếu B vuông góc mặt vòng thì |Φ| = BS.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "B cùng phương pháp tuyến nên α = 0° hoặc 180°; |cosα| = 1 và |Φ| = BS."
+          },
+          {
+            "text": "Mạch kín đứng yên với từ thông không đổi vẫn có dòng điện cảm ứng liên tục.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cảm ứng xuất hiện khi từ thông biến thiên."
+          },
+          {
+            "text": "Định luật Lenz cho rằng từ trường cảm ứng luôn làm tăng biến thiên từ thông.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Từ trường cảm ứng chống lại sự biến thiên từ thông."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Explanation incorrectly identifies a parallel vector with α=0° only.",
+            "evidence": "Opposite oriented normal gives α=180°, with identical flux magnitude."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-III17-07",
+      "before": {
+        "prompt": "Một khung dây N = 100 vòng, diện tích mỗi vòng S = 0.01 m² quay đều trong từ trường B = 0.1 T với tần số f = 50 Hz. Xét các nhận định sau."
+      },
+      "after": {
+        "prompt": "Một khung dây N = 100 vòng, diện tích mỗi vòng S = 0.01 m² quay đều trong từ trường B = 0.1 T với tần số f = 50 Hz. Trục quay nằm trong mặt phẳng khung và vuông góc với B. Xét các nhận định sau."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "A numeric E0=NBSω claim lacks the required rotation geometry.",
+            "evidence": "A rotation axis parallel to B can produce zero emf despite the same N, B, S and f. The keyed nonzero amplitude follows only in the intended geometry."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-III19-02",
+      "before": {
+        "explain": "Điện trường biến thiên theo thời gian gắn với từ trường biến thiên.",
+        "options": [
+          "Từ trường luôn bằng 0.",
+          "Xuất hiện một từ trường biến thiên.",
+          "Không có ảnh hưởng điện từ nào.",
+          "Chỉ xuất hiện dòng điện dẫn trong kim loại."
+        ]
+      },
+      "after": {
+        "explain": "Theo định luật Maxwell–Ampère, điện trường biến thiên theo thời gian góp phần tạo ra từ trường. Nếu tốc độ biến thiên điện trường không đổi thì từ trường tương ứng có thể không đổi.",
+        "options": [
+          "Từ trường luôn bằng 0.",
+          "Điện trường biến thiên theo thời gian gắn với một từ trường.",
+          "Không có ảnh hưởng điện từ nào.",
+          "Chỉ xuất hiện dòng điện dẫn trong kim loại."
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "A varying electric field does not require B itself to vary.",
+            "evidence": "Maxwell–Ampère relates curl B to dE/dt. A uniformly charging capacitor can have E linear in t and B steady."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-IV24-09",
+      "before": {
+        "explain": "200 MeV = 200×10^6×1,602×10^-19 ≈ 3,204×10^-11 J; 1/3,204×10^-11 ≈ 3,12×10^10."
+      },
+      "after": {
+        "explain": "E mỗi phân hạch = 200×10^6×1,602×10^-19 = 3,204×10^-11 J. Số phân hạch N = 1/(3,204×10^-11) ≈ 3,12×10^10, nên nhập x = 3,12."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Biểu thức nghịch đảo năng lượng thiếu ngoặc quanh toàn bộ mẫu số; đọc theo thứ tự phép tính cho giá trị sai.",
+            "evidence": "“1/3,204×10^-11” theo thứ tự chuẩn là (1/3.204)×10^-11; số phân hạch đúng là 1/(3.204×10^-11)≈3.12×10^10."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-IV24-10",
+      "before": {
+        "prompt": "Một nhà máy điện hạt nhân phát công suất điện 1000 MW liên tục trong 1 ngày với hiệu suất chuyển đổi 33%. Giả sử mỗi phân hạch U-235 giải phóng 200 MeV và mọi hạt U-235 bị tiêu thụ đều phân hạch. Lấy NA = 6,022×10^23 mol^-1. Hãy tính khối lượng U-235 tiêu thụ, đơn vị kg."
+      },
+      "after": {
+        "prompt": "Một nhà máy điện hạt nhân phát công suất điện 1000 MW liên tục trong 1 ngày với hiệu suất chuyển đổi 33%. Giả sử mỗi phân hạch U-235 giải phóng 200 MeV và mọi hạt U-235 bị tiêu thụ đều phân hạch. Lấy NA = 6,022×10^23 mol^-1, khối lượng mol của U-235 là 235 g/mol và 1 eV = 1,602×10^-19 J. Hãy tính khối lượng U-235 tiêu thụ, đơn vị kg."
+      },
+      "reasons": [
+        {
+          "reason": "Bổ sung hằng số quy đổi/khối lượng mol ngay trong đề để câu hỏi tự đủ dữ kiện và thống nhất với đáp án đã kiểm tra.",
+          "origin": "constants-review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "SRC-IV25-08",
+      "before": {
+        "statements": [
+          {
+            "text": "Số hạt mẹ còn lại theo cùng đơn vị tương đối là 15.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Sau 2 chu kì còn 1/4 ban đầu."
+          },
+          {
+            "text": "Trong phóng xạ beta trừ, A không đổi và Z tăng 1.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Beta trừ biến một neutron thành proton ở mức mô hình phổ thông."
+          },
+          {
+            "text": "Các đồng vị của cùng nguyên tố có cùng A nhưng khác Z.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Đồng vị có cùng Z, khác N và thường khác A."
+          },
+          {
+            "text": "Chất thải phóng xạ không cần quản lí đặc biệt nếu khối lượng nhỏ.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cần quản lí, che chắn và lưu giữ theo quy trình an toàn."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Số hạt mẹ còn lại theo cùng đơn vị tương đối là 15.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Sau 2 chu kì còn 1/4 ban đầu."
+          },
+          {
+            "text": "Trong phóng xạ beta trừ, A không đổi và Z tăng 1.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Beta trừ biến một neutron thành proton ở mức mô hình phổ thông."
+          },
+          {
+            "text": "Các đồng vị của cùng nguyên tố có cùng A nhưng khác Z.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Đồng vị có cùng Z nhưng khác N nên có số khối A khác nhau."
+          },
+          {
+            "text": "Chất thải phóng xạ không cần quản lí đặc biệt nếu khối lượng nhỏ.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cần quản lí, che chắn và lưu giữ theo quy trình an toàn."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích sai quan hệ đồng vị: khác N khi cùng Z luôn dẫn tới khác A.",
+            "evidence": "A=Z+N. Khi Z không đổi và N khác nhau, hiệu A đúng bằng hiệu N; không có ngoại lệ để dùng “thường khác A”."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-05-T01",
+      "before": {
+        "statements": [
+          {
+            "text": "Nhiệt nóng chảy riêng λ là năng lượng cần để làm nóng chảy 1 kg chất ở nhiệt độ nóng chảy trong điều kiện xác định.",
+            "answer": true,
+            "explain": "λ đặc trưng cho năng lượng chuyển thể rắn-lỏng trên một đơn vị khối lượng.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Nhiệt lượng nóng chảy được tính Q = mcλ.",
+            "answer": false,
+            "explain": "Công thức chuyển thể không chứa độ tăng nhiệt độ.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Đơn vị SI của λ là J/kg.",
+            "answer": true,
+            "explain": "λ là năng lượng trên một đơn vị khối lượng.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Trong quá trình nóng chảy của chất rắn kết tinh tinh khiết, nhiệt độ luôn tăng đều theo nhiệt lượng cung cấp.",
+            "answer": false,
+            "explain": "Nhiệt nhận trong giai đoạn này dùng cho chuyển thể.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Nhiệt nóng chảy riêng λ là năng lượng cần để làm nóng chảy 1 kg chất ở nhiệt độ nóng chảy trong điều kiện xác định.",
+            "answer": true,
+            "explain": "λ đặc trưng cho năng lượng chuyển thể rắn-lỏng trên một đơn vị khối lượng.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Nhiệt lượng nóng chảy được tính Q = mcλ.",
+            "answer": false,
+            "explain": "Nhiệt lượng nóng chảy đúng là Q = mλ, không có thừa số c. c là nhiệt dung riêng, dùng trong Q = mcΔT để tăng nhiệt độ; mcλ không có đơn vị năng lượng J.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Đơn vị SI của λ là J/kg.",
+            "answer": true,
+            "explain": "λ là năng lượng trên một đơn vị khối lượng.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Trong quá trình nóng chảy của chất rắn kết tinh tinh khiết, nhiệt độ luôn tăng đều theo nhiệt lượng cung cấp.",
+            "answer": false,
+            "explain": "Nhiệt nhận trong giai đoạn này dùng cho chuyển thể.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "False Q=mcλ statement has an explanation about ΔT that does not identify its actual error.",
+            "evidence": "Statement 1 says Q=mcλ; this wrong expression already has no ΔT. Extra c is the error and destroys energy dimensions."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-05-T02",
+      "before": {
+        "statements": [
+          {
+            "text": "Nhiệt lượng nóng chảy được tính Q = mcλ.",
+            "answer": false,
+            "explain": "Công thức chuyển thể không chứa độ tăng nhiệt độ.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Đơn vị SI của λ là J/kg.",
+            "answer": true,
+            "explain": "λ là năng lượng trên một đơn vị khối lượng.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Trong quá trình nóng chảy của chất rắn kết tinh tinh khiết ở áp suất không đổi, nhiệt độ được coi không đổi.",
+            "answer": true,
+            "explain": "Nhiệt nhận trong giai đoạn này dùng cho chuyển thể.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Khi làm nóng chảy vật từ nhiệt độ thấp, chỉ cần tính mλ và bỏ qua giai đoạn tăng nhiệt.",
+            "answer": false,
+            "explain": "Bài toán nhiều giai đoạn phải cộng năng lượng từng giai đoạn.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Nhiệt lượng nóng chảy được tính Q = mcλ.",
+            "answer": false,
+            "explain": "Nhiệt lượng nóng chảy đúng là Q = mλ, không có thừa số c. c là nhiệt dung riêng, dùng trong Q = mcΔT để tăng nhiệt độ; mcλ không có đơn vị năng lượng J.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Đơn vị SI của λ là J/kg.",
+            "answer": true,
+            "explain": "λ là năng lượng trên một đơn vị khối lượng.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Trong quá trình nóng chảy của chất rắn kết tinh tinh khiết ở áp suất không đổi, nhiệt độ được coi không đổi.",
+            "answer": true,
+            "explain": "Nhiệt nhận trong giai đoạn này dùng cho chuyển thể.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Khi làm nóng chảy vật từ nhiệt độ thấp, chỉ cần tính mλ và bỏ qua giai đoạn tăng nhiệt.",
+            "answer": false,
+            "explain": "Bài toán nhiều giai đoạn phải cộng năng lượng từng giai đoạn.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "False Q=mcλ statement has an explanation about ΔT that does not identify its actual error.",
+            "evidence": "Statement 0 says Q=mcλ; this wrong expression already has no ΔT. Extra c is the error and destroys energy dimensions."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-06-T01",
+      "before": {
+        "statements": [
+          {
+            "text": "Nhiệt hóa hơi riêng L là năng lượng cần để hóa hơi 1 kg chất lỏng ở nhiệt độ xác định trong điều kiện đang xét.",
+            "answer": true,
+            "explain": "L đặc trưng năng lượng chuyển thể lỏng-khí trên một đơn vị khối lượng.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Trong giai đoạn hóa hơi, Q = mcL.",
+            "answer": false,
+            "explain": "Công thức chuyển thể lỏng-khí không chứa ΔT.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Đơn vị SI của L là J/kg.",
+            "answer": true,
+            "explain": "L là năng lượng trên một đơn vị khối lượng.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Bay hơi làm mát vì nhiệt độ sôi của chất lỏng luôn giảm về 0 °C.",
+            "answer": false,
+            "explain": "Năng lượng cần cho bay hơi được lấy từ chất lỏng và môi trường xung quanh.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Nhiệt hóa hơi riêng L là năng lượng cần để hóa hơi 1 kg chất lỏng ở nhiệt độ xác định trong điều kiện đang xét.",
+            "answer": true,
+            "explain": "L đặc trưng năng lượng chuyển thể lỏng-khí trên một đơn vị khối lượng.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Trong giai đoạn hóa hơi, Q = mcL.",
+            "answer": false,
+            "explain": "Nhiệt lượng hóa hơi đúng là Q = mL, không có thừa số c. c là nhiệt dung riêng, dùng trong Q = mcΔT để tăng nhiệt độ; mcL không có đơn vị năng lượng J.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Đơn vị SI của L là J/kg.",
+            "answer": true,
+            "explain": "L là năng lượng trên một đơn vị khối lượng.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Bay hơi làm mát vì nhiệt độ sôi của chất lỏng luôn giảm về 0 °C.",
+            "answer": false,
+            "explain": "Năng lượng cần cho bay hơi được lấy từ chất lỏng và môi trường xung quanh.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "False latent-heat formula has an explanation about ΔT that fails to identify its actual error.",
+            "evidence": "Statement 1 says Q=mcL, which already has no ΔT; extra c destroys energy dimensions."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-06-T02",
+      "before": {
+        "statements": [
+          {
+            "text": "Trong giai đoạn hóa hơi, Q = mcL.",
+            "answer": false,
+            "explain": "Công thức chuyển thể lỏng-khí không chứa ΔT.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Đơn vị SI của L là J/kg.",
+            "answer": true,
+            "explain": "L là năng lượng trên một đơn vị khối lượng.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Bay hơi làm mát vì các phân tử thoát khỏi chất lỏng mang theo năng lượng.",
+            "answer": true,
+            "explain": "Năng lượng cần cho bay hơi được lấy từ chất lỏng và môi trường xung quanh.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Để biến nước từ 20 °C thành hơi ở 100 °C chỉ cần tính mL.",
+            "answer": false,
+            "explain": "Bài toán gồm giai đoạn tăng nhiệt và chuyển thể.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Trong giai đoạn hóa hơi, Q = mcL.",
+            "answer": false,
+            "explain": "Nhiệt lượng hóa hơi đúng là Q = mL, không có thừa số c. c là nhiệt dung riêng, dùng trong Q = mcΔT để tăng nhiệt độ; mcL không có đơn vị năng lượng J.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Đơn vị SI của L là J/kg.",
+            "answer": true,
+            "explain": "L là năng lượng trên một đơn vị khối lượng.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Bay hơi làm mát vì các phân tử thoát khỏi chất lỏng mang theo năng lượng.",
+            "answer": true,
+            "explain": "Năng lượng cần cho bay hơi được lấy từ chất lỏng và môi trường xung quanh.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Để biến nước từ 20 °C thành hơi ở 100 °C chỉ cần tính mL.",
+            "answer": false,
+            "explain": "Bài toán gồm giai đoạn tăng nhiệt và chuyển thể.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "False latent-heat formula has an explanation about ΔT that fails to identify its actual error.",
+            "evidence": "Statement 0 says Q=mcL, which already has no ΔT; extra c destroys energy dimensions."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-08-S03",
+      "before": {
+        "explain": "x = 0.2×6,02 = 1.204. Kết quả nhập theo yêu cầu: 1,2 .",
+        "tolerance": 0.050000000001
+      },
+      "after": {
+        "explain": "x=0,20×6,02=1,204. Làm tròn đến hai chữ số thập phân: x=1,20.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "EXT-08-S03",
+            "chapter": "Chương II",
+            "answer": 1.2,
+            "tolerance": 0.050000000001,
+            "unit": "",
+            "requested_decimal_places": 2,
+            "formula": ".2×6.02 = 1.204",
+            "raw_calculated": "1.204",
+            "expected_rounded": "1.20",
+            "target_matches_requested_rounding": true,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": false,
+            "correct_rounded_input_currently_accepted": true,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Prompt explicitly requires two decimal places, but tolerance 0.05 accepts wrong hundredth-place values.",
+            "evidence": {
+              "actual_answer": 1.2,
+              "actual_tolerance": 0.050000000001,
+              "exact": "0.2×6.02=1.204",
+              "expected": "1.20; tolerance approximately0.005"
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-09-T02",
+      "before": {
+        "context": "Một bọt khí nổi từ đáy hồ lên mặt nước; coi nhiệt độ khí gần như không đổi trong quá trình."
+      },
+      "after": {
+        "context": "Một lượng khí xác định được nén đẳng nhiệt từ 5 L xuống 2,5 L; áp suất đầu là 1,5 atm."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The context describes a different experiment or contradicts the constant-amount/heating/compression conditions of the prompt.",
+            "evidence": {
+              "context": "Một bọt khí nổi từ đáy hồ lên mặt nước; coi nhiệt độ khí gần như không đổi trong quá trình.",
+              "prompt": "Một lượng khí xác định biến đổi đẳng nhiệt từ p1 = 1.5 atm, V1 = 5 L đến V2 = 2.5 L. Xét các nhận định sau."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-09-T03",
+      "before": {
+        "context": "Khí trong một bình được bơm thêm từ bên ngoài trong khi nhiệt độ giữ gần không đổi; số mol khí thay đổi."
+      },
+      "after": {
+        "context": "Một lượng khí xác định được nén đẳng nhiệt từ 6 L xuống 3 L; áp suất đầu là 2 atm."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The context describes a different experiment or contradicts the constant-amount/heating/compression conditions of the prompt.",
+            "evidence": {
+              "context": "Khí trong một bình được bơm thêm từ bên ngoài trong khi nhiệt độ giữ gần không đổi; số mol khí thay đổi.",
+              "prompt": "Một lượng khí xác định biến đổi đẳng nhiệt từ p1 = 2 atm, V1 = 6 L đến V2 = 3 L. Xét các nhận định sau."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-11-T02",
+      "before": {
+        "context": "Một bình cứng được bơm thêm khí; nhiệt độ giữ không đổi nhưng lượng chất trong bình tăng."
+      },
+      "after": {
+        "context": "Một lượng khí lí tưởng xác định trong bình kín cứng được nung nóng từ 400 K lên 480 K; áp suất đầu là 1,5 atm."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The context describes a different experiment or contradicts the constant-amount/heating/compression conditions of the prompt.",
+            "evidence": {
+              "context": "Một bình cứng được bơm thêm khí; nhiệt độ giữ không đổi nhưng lượng chất trong bình tăng.",
+              "prompt": "Một lượng khí lí tưởng xác định trong bình cứng có p1 = 1.5 atm, V = 4 L, T1 = 400 K; sau đó nhiệt độ tăng đến T2 = 480 K. Xét các nhận định sau."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-12-C05",
+      "before": {
+        "explain": "Nội năng là tổng động năng tịnh tiến trong mô hình này.",
+        "options": [
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc nhiệt độ.",
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc thể tích.",
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc áp suất, không phụ thuộc nhiệt độ.",
+          "Ở cùng nhiệt độ, nội năng của một lượng khí không phụ thuộc số mol khí."
+        ]
+      },
+      "after": {
+        "explain": "Với số mol n không đổi, U=(3/2)nRT nên nội năng khí lí tưởng đơn nguyên tử chỉ phụ thuộc nhiệt độ.",
+        "options": [
+          "Với một lượng khí lí tưởng đơn nguyên tử có số mol không đổi, nội năng chỉ phụ thuộc nhiệt độ.",
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc thể tích.",
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc áp suất, không phụ thuộc nhiệt độ.",
+          "Ở cùng nhiệt độ, nội năng của một lượng khí không phụ thuộc số mol khí."
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The statement that internal energy depends only on T requires a fixed quantity of gas, because U=(3/2)nRT.",
+            "evidence": {
+              "correct_option": "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc nhiệt độ."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-12-S01",
+      "before": {
+        "answer": 5.17,
+        "explain": "x = 5.1750. Kết quả nhập theo yêu cầu: 5,17 .",
+        "tolerance": 0.0050000000010000005
+      },
+      "after": {
+        "answer": 5.18,
+        "explain": "x=(3/2)×1,38×250×10^-2=5,175. Làm tròn đến hai chữ số thập phân: x=5,18.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "EXT-12-S01",
+            "chapter": "Chương II",
+            "answer": 5.17,
+            "tolerance": 0.0050000000010000005,
+            "unit": "",
+            "requested_decimal_places": 2,
+            "formula": "(3/2)×1.38×250/100 = coefficient of10^−21 J",
+            "raw_calculated": "5.175",
+            "expected_rounded": "5.18",
+            "target_matches_requested_rounding": false,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": true,
+            "correct_rounded_input_currently_accepted": false,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Stored answer/explanation do not follow the supplied constants and standard decimal ROUND_HALF_UP rounding.",
+            "evidence": {
+              "prompt": "Một mẫu khí lí tưởng được giữ ở nhiệt độ tuyệt đối xác định để khảo sát động năng tịnh tiến trung bình của phân tử. Cho T = 250 K và k = 1,38×10⁻²³ J/K. Tính Ē = 3kT/2 dưới dạng x×10⁻²¹ J; nhập x. Làm tròn kết quả đến 2 chữ số thập phân.",
+              "actual_answer": 5.17,
+              "actual_explain": "x = 5.1750. Kết quả nhập theo yêu cầu: 5,17 ."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-12-S03",
+      "before": {
+        "answer": 9.31,
+        "explain": "x = 9.3150. Kết quả nhập theo yêu cầu: 9,31 .",
+        "tolerance": 0.0050000000010000005
+      },
+      "after": {
+        "answer": 9.32,
+        "explain": "x=(3/2)×1,38×450×10^-2=9,315. Làm tròn đến hai chữ số thập phân: x=9,32.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "EXT-12-S03",
+            "chapter": "Chương II",
+            "answer": 9.31,
+            "tolerance": 0.0050000000010000005,
+            "unit": "",
+            "requested_decimal_places": 2,
+            "formula": "(3/2)×1.38×450/100 = coefficient of10^−21 J",
+            "raw_calculated": "9.315",
+            "expected_rounded": "9.32",
+            "target_matches_requested_rounding": false,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": true,
+            "correct_rounded_input_currently_accepted": false,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Stored answer/explanation do not follow the supplied constants and standard decimal ROUND_HALF_UP rounding.",
+            "evidence": {
+              "prompt": "Một mẫu khí lí tưởng được giữ ở nhiệt độ tuyệt đối xác định để khảo sát động năng tịnh tiến trung bình của phân tử. Cho T = 450 K và k = 1,38×10⁻²³ J/K. Tính Ē = 3kT/2 dưới dạng x×10⁻²¹ J; nhập x. Làm tròn kết quả đến 2 chữ số thập phân.",
+              "actual_answer": 9.31,
+              "actual_explain": "x = 9.3150. Kết quả nhập theo yêu cầu: 9,31 ."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-15-S01",
+      "before": {
+        "prompt": "Một đoạn dây dẫn thẳng mang dòng điện được đặt trong vùng từ trường đều của bộ thí nghiệm lực từ. Dây dài 0.1 m, I=6 A, B=0.25 T, α=90°. Tính F=BIl sinα."
+      },
+      "after": {
+        "prompt": "Một đoạn dây dẫn thẳng mang dòng điện được đặt trong vùng từ trường đều của bộ thí nghiệm lực từ. Dây dài 0.1 m, I=6 A, B=0.25 T, α=90°. Tính F=BIl sinα. Góc α là góc giữa chiều dòng điện trong dây và vectơ B."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The numeric angle α is not defined in the self-contained prompt.",
+            "evidence": "F=BIl sinα requires α to be the angle between the current direction and B, rather than a surface normal or another axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-15-S02",
+      "before": {
+        "prompt": "Một đoạn dây dẫn thẳng mang dòng điện được đặt trong vùng từ trường đều của bộ thí nghiệm lực từ. Dây dài 0.3 m, I=2 A, B=0.4 T, α=30°. Tính F=BIl sinα."
+      },
+      "after": {
+        "prompt": "Một đoạn dây dẫn thẳng mang dòng điện được đặt trong vùng từ trường đều của bộ thí nghiệm lực từ. Dây dài 0.3 m, I=2 A, B=0.4 T, α=30°. Tính F=BIl sinα. Góc α là góc giữa chiều dòng điện trong dây và vectơ B."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The numeric angle α is not defined in the self-contained prompt.",
+            "evidence": "F=BIl sinα requires α to be the angle between the current direction and B, rather than a surface normal or another axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-15-S03",
+      "before": {
+        "explain": "F=0.25981 N. Kết quả nhập theo yêu cầu: 0,26 N.",
+        "prompt": "Một đoạn dây dẫn thẳng mang dòng điện được đặt trong vùng từ trường đều của bộ thí nghiệm lực từ. Dây dài 0.2 m, I=10 A, B=0.15 T, α=60°. Tính F=BIl sinα. Làm tròn kết quả đến 3 chữ số thập phân.",
+        "tolerance": 0.0050000000010000005
+      },
+      "after": {
+        "explain": "F = 0,15×10×0,2×sin60° = 0,2598076... N. Làm tròn đến 3 chữ số thập phân: 0,260 N.",
+        "prompt": "Một đoạn dây dẫn thẳng mang dòng điện được đặt trong vùng từ trường đều của bộ thí nghiệm lực từ. Dây dài 0.2 m, I=10 A, B=0.15 T, α=60°. Tính F=BIl sinα. Làm tròn kết quả đến 3 chữ số thập phân. Góc α là góc giữa chiều dòng điện trong dây và vectơ B.",
+        "tolerance": 0.000500000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "EXT-15-S03",
+            "chapter": "Chương III",
+            "answer": 0.26,
+            "tolerance": 0.0050000000010000005,
+            "unit": "N",
+            "requested_decimal_places": 3,
+            "formula": ".15×10×.2×sin60° = .259807621135 N",
+            "raw_calculated": "0.2598076211353316",
+            "expected_rounded": "0.260",
+            "target_matches_requested_rounding": true,
+            "maximum_tolerance_for_requested_precision": 0.0005,
+            "tolerance_matches_requested_precision": false,
+            "correct_rounded_input_currently_accepted": true,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Tolerance exceeds half the explicitly requested rounding quantum. The numeric angle α is not defined in the self-contained prompt.",
+            "evidence": "3 decimal places gives quantum 0.001 N and half quantum 0.0005 N; stored tolerance 0.005 is 10× too loose. Rounded key 0.260 is numerically correct. F=BIl sinα requires α to be the angle between the current direction and B, rather than a surface normal or another axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-15-S04",
+      "before": {
+        "prompt": "Một đoạn dây dẫn thẳng mang dòng điện được đặt trong vùng từ trường đều của bộ thí nghiệm lực từ. Dây dài 0.12 m, I=3 A, B=0.5 T, α=45°. Tính F=BIl sinα. Làm tròn kết quả đến 2 chữ số thập phân."
+      },
+      "after": {
+        "prompt": "Một đoạn dây dẫn thẳng mang dòng điện được đặt trong vùng từ trường đều của bộ thí nghiệm lực từ. Dây dài 0.12 m, I=3 A, B=0.5 T, α=45°. Tính F=BIl sinα. Làm tròn kết quả đến 2 chữ số thập phân. Góc α là góc giữa chiều dòng điện trong dây và vectơ B."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The numeric angle α is not defined in the self-contained prompt.",
+            "evidence": "F=BIl sinα requires α to be the angle between the current direction and B, rather than a surface normal or another axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-16-T03",
+      "before": {
+        "statements": [
+          {
+            "text": "Từ thông qua vòng có độ lớn khoảng 0.003 Wb.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Φ = BS cosα."
+          },
+          {
+            "text": "Nếu B vuông góc mặt vòng thì |Φ| = BS.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Khi B cùng phương pháp tuyến, α=0°."
+          },
+          {
+            "text": "Mạch kín đứng yên với từ thông không đổi vẫn có dòng điện cảm ứng liên tục.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cảm ứng xuất hiện khi từ thông biến thiên."
+          },
+          {
+            "text": "Định luật Lenz cho rằng từ trường cảm ứng luôn làm tăng biến thiên từ thông.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Từ trường cảm ứng chống lại sự biến thiên từ thông."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Từ thông qua vòng có độ lớn khoảng 0.003 Wb.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Φ = BS cosα."
+          },
+          {
+            "text": "Nếu B vuông góc mặt vòng thì |Φ| = BS.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "B cùng phương pháp tuyến nên α = 0° hoặc 180°; |cosα| = 1 và |Φ| = BS."
+          },
+          {
+            "text": "Mạch kín đứng yên với từ thông không đổi vẫn có dòng điện cảm ứng liên tục.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cảm ứng xuất hiện khi từ thông biến thiên."
+          },
+          {
+            "text": "Định luật Lenz cho rằng từ trường cảm ứng luôn làm tăng biến thiên từ thông.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Từ trường cảm ứng chống lại sự biến thiên từ thông."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Explanation incorrectly identifies a parallel vector with α=0° only.",
+            "evidence": "Opposite oriented normal gives α=180°, with identical flux magnitude."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-16-T04",
+      "before": {
+        "statements": [
+          {
+            "text": "Từ thông qua vòng có độ lớn khoảng 3.674e-19 Wb.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Φ = BS cosα."
+          },
+          {
+            "text": "Nếu B vuông góc mặt vòng thì |Φ| = BS.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Khi B cùng phương pháp tuyến, α=0°."
+          },
+          {
+            "text": "Mạch kín đứng yên với từ thông không đổi vẫn có dòng điện cảm ứng liên tục.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cảm ứng xuất hiện khi từ thông biến thiên."
+          },
+          {
+            "text": "Định luật Lenz cho rằng từ trường cảm ứng luôn làm tăng biến thiên từ thông.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Từ trường cảm ứng chống lại sự biến thiên từ thông."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Từ thông qua vòng có độ lớn bằng 0 Wb.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Φ = BS cos90° = 0; ở góc đúng 90°, từ thông bằng 0 chính xác."
+          },
+          {
+            "text": "Nếu B vuông góc mặt vòng thì |Φ| = BS.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "B cùng phương pháp tuyến nên α = 0° hoặc 180°; |cosα| = 1 và |Φ| = BS."
+          },
+          {
+            "text": "Mạch kín đứng yên với từ thông không đổi vẫn có dòng điện cảm ứng liên tục.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cảm ứng xuất hiện khi từ thông biến thiên."
+          },
+          {
+            "text": "Định luật Lenz cho rằng từ trường cảm ứng luôn làm tăng biến thiên từ thông.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Từ trường cảm ứng chống lại sự biến thiên từ thông."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Exact-zero magnetic flux was replaced by a floating-point residue; explanation also ignores opposite normal.",
+            "evidence": "cos90° is exactly zero; 3.674e-19 Wb is numerical noise from binary trigonometry."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-17-C04",
+      "before": {
+        "prompt": "Một khung dây N vòng quay đều trong từ trường đều; suất điện động cảm ứng hình sin được ghi theo thời gian. Phát biểu nào sau đây đúng về các yếu tố quyết định biên độ suất điện động?"
+      },
+      "after": {
+        "prompt": "Một khung dây N vòng quay đều trong từ trường đều; trục quay nằm trong mặt phẳng khung và vuông góc với B, suất điện động cảm ứng hình sin được ghi theo thời gian. Phát biểu nào sau đây đúng về các yếu tố quyết định biên độ suất điện động?"
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The keyed option asserts E0=NBSω without defining the geometry where equality holds.",
+            "evidence": "A sinusoidal emf alone permits a geometrical amplitude factor below 1; specify the conventional perpendicular axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-17-T01",
+      "before": {
+        "prompt": "Một khung dây N = 200 vòng, diện tích mỗi vòng S = 0.015 m² quay đều trong từ trường B = 0.2 T với tần số f = 25 Hz. Xét các nhận định sau."
+      },
+      "after": {
+        "prompt": "Một khung dây N = 200 vòng, diện tích mỗi vòng S = 0.015 m² quay đều trong từ trường B = 0.2 T với tần số f = 25 Hz. Trục quay nằm trong mặt phẳng khung và vuông góc với B. Xét các nhận định sau."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "A numeric E0=NBSω claim lacks the required rotation geometry.",
+            "evidence": "A rotation axis parallel to B can produce zero emf despite the same N, B, S and f. The keyed nonzero amplitude follows only in the intended geometry."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-17-T02",
+      "before": {
+        "statements": [
+          {
+            "text": "Phần ứng luôn tạo từ trường còn phần cảm luôn là tải tiêu thụ.",
+            "answer": false,
+            "explain": "Tên gọi chức năng của hai bộ phận được xác định rõ.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Tăng tốc độ quay làm tăng tần số suất điện động nếu cấu tạo máy không đổi.",
+            "answer": true,
+            "explain": "Tần số liên hệ tốc độ lặp của biến thiên từ thông.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Với khung quay đều, E0 = NBSω nên tăng số vòng làm tăng biên độ suất điện động.",
+            "answer": true,
+            "explain": "E0 tỉ lệ với N.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Giá trị hiệu dụng của suất điện động hình sin bằng √2E0.",
+            "answer": false,
+            "explain": "Quan hệ hiệu dụng-cực đại của đại lượng hình sin.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Phần ứng luôn tạo từ trường còn phần cảm luôn là tải tiêu thụ.",
+            "answer": false,
+            "explain": "Tên gọi chức năng của hai bộ phận được xác định rõ.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Tăng tốc độ quay làm tăng tần số suất điện động nếu cấu tạo máy không đổi.",
+            "answer": true,
+            "explain": "Tần số liên hệ tốc độ lặp của biến thiên từ thông.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Với khung quay đều quanh trục nằm trong mặt phẳng khung và vuông góc với B, E0 = NBSω nên tăng số vòng làm tăng biên độ suất điện động nếu các yếu tố khác không đổi.",
+            "answer": true,
+            "explain": "Trong hình học đã nêu, biên độ từ thông mỗi vòng bằng BS nên E0 = NBSω; giữ B, S và ω không đổi thì E0 tỉ lệ với N.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Giá trị hiệu dụng của suất điện động hình sin bằng √2E0.",
+            "answer": false,
+            "explain": "Quan hệ hiệu dụng-cực đại của đại lượng hình sin.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "An unqualified E0=NBSω statement is not true for every rotating frame or generator.",
+            "evidence": "Equality requires the frame rotation axis in its plane and perpendicular to the uniform B field, while the other factors stay fixed."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-17-T03",
+      "before": {
+        "statements": [
+          {
+            "text": "Tăng tốc độ quay làm tăng tần số suất điện động nếu cấu tạo máy không đổi.",
+            "answer": true,
+            "explain": "Tần số liên hệ tốc độ lặp của biến thiên từ thông.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Với khung quay đều, E0 = NBSω nên tăng số vòng làm tăng biên độ suất điện động.",
+            "answer": true,
+            "explain": "E0 tỉ lệ với N.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Giá trị hiệu dụng của suất điện động hình sin bằng √2E0.",
+            "answer": false,
+            "explain": "Quan hệ hiệu dụng-cực đại của đại lượng hình sin.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Máy phát biến đổi điện năng thành cơ năng như động cơ.",
+            "answer": false,
+            "explain": "Chức năng năng lượng của máy phát.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Tăng tốc độ quay làm tăng tần số suất điện động nếu cấu tạo máy không đổi.",
+            "answer": true,
+            "explain": "Tần số liên hệ tốc độ lặp của biến thiên từ thông.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Với khung quay đều quanh trục nằm trong mặt phẳng khung và vuông góc với B, E0 = NBSω nên tăng số vòng làm tăng biên độ suất điện động nếu các yếu tố khác không đổi.",
+            "answer": true,
+            "explain": "Trong hình học đã nêu, biên độ từ thông mỗi vòng bằng BS nên E0 = NBSω; giữ B, S và ω không đổi thì E0 tỉ lệ với N.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Giá trị hiệu dụng của suất điện động hình sin bằng √2E0.",
+            "answer": false,
+            "explain": "Quan hệ hiệu dụng-cực đại của đại lượng hình sin.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Máy phát biến đổi điện năng thành cơ năng như động cơ.",
+            "answer": false,
+            "explain": "Chức năng năng lượng của máy phát.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "An unqualified E0=NBSω statement is not true for every rotating frame or generator.",
+            "evidence": "Equality requires the frame rotation axis in its plane and perpendicular to the uniform B field, while the other factors stay fixed."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-22-M01",
+      "before": {
+        "explain": "E=Δm·931,5=2.236 MeV."
+      },
+      "after": {
+        "explain": "E = Δm×931,5 = 0,0024×931,5 = 2,2356 MeV ≈ 2,236 MeV."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích viết dấu bằng cho một giá trị đã làm tròn; cần nêu giá trị chính xác hoặc dùng dấu xấp xỉ.",
+            "evidence": "0.0024×931.5=2.2356, không bằng chính xác 2.236."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-22-M02",
+      "before": {
+        "explain": "E=Δm·931,5=4.657 MeV.",
+        "options": [
+          "0.005 MeV",
+          "0.466 MeV",
+          "46.575 MeV",
+          "4.657 MeV"
+        ]
+      },
+      "after": {
+        "explain": "E = Δm×931,5 = 0,005×931,5 = 4,6575 MeV ≈ 4,658 MeV.",
+        "options": [
+          "0.005 MeV",
+          "0.466 MeV",
+          "46.575 MeV",
+          "4.658 MeV"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Kết quả trong phương án đúng và giải thích làm tròn sai ở chữ số thập phân thứ ba.",
+            "evidence": "0.005 × 931.5 = 4.6575 MeV; ROUND_HALF_UP tới 0.001 cho 4.658 MeV, không phải 4.657."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-22-M04",
+      "before": {
+        "explain": "E=Δm·931,5=1.397 MeV."
+      },
+      "after": {
+        "explain": "E = Δm×931,5 = 0,0015×931,5 = 1,39725 MeV ≈ 1,397 MeV."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích viết dấu bằng cho một giá trị đã làm tròn; cần nêu giá trị chính xác hoặc dùng dấu xấp xỉ.",
+            "evidence": "0.0015×931.5=1.39725, không bằng chính xác 1.397."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-22-T03",
+      "before": {
+        "statements": [
+          {
+            "text": "Năng lượng liên kết riêng là 7.67 MeV/nucleon.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "W riêng = W/A."
+          },
+          {
+            "text": "Năng lượng liên kết là năng lượng tối thiểu cần để tách hạt nhân thành các nucleon riêng lẻ.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Đây là ý nghĩa của năng lượng liên kết."
+          },
+          {
+            "text": "Độ hụt khối bằng khối lượng hạt nhân trừ tổng khối lượng các nucleon tự do.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Độ hụt khối lấy tổng khối lượng nucleon tự do trừ khối lượng hạt nhân."
+          },
+          {
+            "text": "Năng lượng liên kết riêng càng nhỏ thì hạt nhân luôn càng bền.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Trong so sánh thông thường, năng lượng liên kết riêng lớn hơn biểu thị liên kết chặt hơn."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Năng lượng liên kết riêng xấp xỉ 7,67 MeV/nucleon.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "W riêng = W/A = 92/12 ≈ 7,67 MeV/nucleon."
+          },
+          {
+            "text": "Năng lượng liên kết là năng lượng tối thiểu cần để tách hạt nhân thành các nucleon riêng lẻ.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Đây là ý nghĩa của năng lượng liên kết."
+          },
+          {
+            "text": "Độ hụt khối bằng khối lượng hạt nhân trừ tổng khối lượng các nucleon tự do.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Độ hụt khối lấy tổng khối lượng nucleon tự do trừ khối lượng hạt nhân."
+          },
+          {
+            "text": "Năng lượng liên kết riêng càng nhỏ thì hạt nhân luôn càng bền.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Trong so sánh thông thường, năng lượng liên kết riêng lớn hơn biểu thị liên kết chặt hơn."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Mệnh đề đúng/sai trình bày kết quả đã làm tròn như giá trị chính xác; cần nói xấp xỉ để khóa Đúng không mơ hồ.",
+            "evidence": "92/12 = 7.666666… MeV/nucleon, giá trị trong mệnh đề chỉ là làm tròn đến 2 chữ số thập phân."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-24-S01",
+      "before": {
+        "explain": "x=2.884. Kết quả nhập theo yêu cầu: 2,88 ."
+      },
+      "after": {
+        "explain": "x = 180×10^6×1,602×10^-19/(10^-11) = 2,8836. Làm tròn đến 2 chữ số thập phân: 2,88."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích viết dấu bằng cho một giá trị đã làm tròn; cần nêu giá trị chính xác hoặc dùng dấu xấp xỉ.",
+            "evidence": "180×0.01602=2.8836, không bằng chính xác 2.884."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-24-S02",
+      "before": {
+        "explain": "x=3.204. Kết quả nhập theo yêu cầu: 3,2 .",
+        "tolerance": 0.050000000001
+      },
+      "after": {
+        "explain": "x = 3,204. Kết quả nhập theo yêu cầu: 3,20.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "EXT-24-S02",
+            "chapter": "Chương IV",
+            "answer": 3.2,
+            "tolerance": 0.050000000001,
+            "unit": "",
+            "requested_decimal_places": 2,
+            "formula": "200×10^6×1.602×10^−19/10^−11 = 3.20400",
+            "raw_calculated": "3.20400",
+            "expected_rounded": "3.20",
+            "target_matches_requested_rounding": true,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": false,
+            "correct_rounded_input_currently_accepted": true,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Đề yêu cầu 2 chữ số thập phân nhưng dung sai được đặt theo 1 chữ số, chấp nhận kết quả làm tròn sai.",
+            "evidence": "tolerance hiện tại 0.050000000001; bước ở 2dp là 0.01, nửa bước là 0.005. Ví dụ đáp án sai lệch 0.01 vẫn được chấp nhận."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-24-S03",
+      "before": {
+        "explain": "x=3.364. Kết quả nhập theo yêu cầu: 3,36 ."
+      },
+      "after": {
+        "explain": "x = 210×10^6×1,602×10^-19/(10^-11) = 3,3642. Làm tròn đến 2 chữ số thập phân: 3,36."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích viết dấu bằng cho một giá trị đã làm tròn; cần nêu giá trị chính xác hoặc dùng dấu xấp xỉ.",
+            "evidence": "210×0.01602=3.3642, không bằng chính xác 3.364."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-24-S04",
+      "before": {
+        "explain": "x=2.403. Kết quả nhập theo yêu cầu: 2,4 .",
+        "tolerance": 0.050000000001
+      },
+      "after": {
+        "explain": "x = 2,403. Kết quả nhập theo yêu cầu: 2,40.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "EXT-24-S04",
+            "chapter": "Chương IV",
+            "answer": 2.4,
+            "tolerance": 0.050000000001,
+            "unit": "",
+            "requested_decimal_places": 2,
+            "formula": "150×10^6×1.602×10^−19/10^−11 = 2.40300",
+            "raw_calculated": "2.40300",
+            "expected_rounded": "2.40",
+            "target_matches_requested_rounding": true,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": false,
+            "correct_rounded_input_currently_accepted": true,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Đề yêu cầu 2 chữ số thập phân nhưng dung sai được đặt theo 1 chữ số, chấp nhận kết quả làm tròn sai.",
+            "evidence": "tolerance hiện tại 0.050000000001; bước ở 2dp là 0.01, nửa bước là 0.005. Ví dụ đáp án sai lệch 0.01 vẫn được chấp nhận."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-07-T02",
+      "before": {
+        "statements": [
+          {
+            "text": "Nội năng chỉ có thể thay đổi khi vật nhận hoặc tỏa nhiệt.",
+            "answer": false,
+            "explain": "Bài 2: Có hai cách cơ bản làm thay đổi nội năng: truyền nhiệt và thực hiện công.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Nhiệt kế phải có giới hạn đo phù hợp với nhiệt độ cần đo.",
+            "answer": true,
+            "explain": "Bài 3: Chọn dụng cụ đo cần xét giới hạn đo và độ chia.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Trong Q = mcΔT, dùng ΔT theo K hay °C cho cùng giá trị số.",
+            "answer": true,
+            "explain": "Bài 4: Khoảng nhiệt độ Kelvin và Celsius bằng nhau về độ lớn.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Nhiệt lượng nóng chảy được tính Q = mcλ.",
+            "answer": false,
+            "explain": "Bài 5: Công thức chuyển thể không chứa độ tăng nhiệt độ.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Nội năng chỉ có thể thay đổi khi vật nhận hoặc tỏa nhiệt.",
+            "answer": false,
+            "explain": "Bài 2: Có hai cách cơ bản làm thay đổi nội năng: truyền nhiệt và thực hiện công.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Nhiệt kế phải có giới hạn đo phù hợp với nhiệt độ cần đo.",
+            "answer": true,
+            "explain": "Bài 3: Chọn dụng cụ đo cần xét giới hạn đo và độ chia.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Trong Q = mcΔT, dùng ΔT theo K hay °C cho cùng giá trị số.",
+            "answer": true,
+            "explain": "Bài 4: Khoảng nhiệt độ Kelvin và Celsius bằng nhau về độ lớn.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Nhiệt lượng nóng chảy được tính Q = mcλ.",
+            "answer": false,
+            "explain": "Nhiệt lượng nóng chảy đúng là Q = mλ, không có thừa số c. c là nhiệt dung riêng, dùng trong Q = mcΔT để tăng nhiệt độ; mcλ không có đơn vị năng lượng J.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "False latent-heat formula has an explanation about ΔT that fails to identify its actual error.",
+            "evidence": "Statement 3 says Q=mcλ, which already has no ΔT; extra c destroys energy dimensions."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-07-S01",
+      "before": {
+        "answer": 95.5,
+        "explain": "Q=95.55 kJ. Kết quả nhập theo yêu cầu: 95,5 kJ."
+      },
+      "after": {
+        "answer": 95.6,
+        "explain": "Q = mcΔT = 0,35 × 4200 × (90 - 25) = 95550 J = 95,55 kJ. Làm tròn đến 1 chữ số thập phân: 95,6 kJ."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "EXT-07-S01",
+            "chapter": "Chương I",
+            "answer": 95.5,
+            "tolerance": 0.050000000001,
+            "unit": "kJ",
+            "requested_decimal_places": 1,
+            "formula": ".35×4200×(90−25)/1000 = 95.55 kJ",
+            "raw_calculated": "95.55",
+            "expected_rounded": "95.6",
+            "target_matches_requested_rounding": false,
+            "maximum_tolerance_for_requested_precision": 0.05,
+            "tolerance_matches_requested_precision": true,
+            "correct_rounded_input_currently_accepted": false,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Exact half-step is rounded down instead of conventional ROUND_HALF_UP.",
+            "evidence": "0.35*4200*(90-25)/1000=95.55 kJ; 1 decimal ROUND_HALF_UP is 95.6, stored 95.5."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-13-C05",
+      "before": {
+        "explain": "Nội năng là tổng động năng tịnh tiến trong mô hình này.",
+        "options": [
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc nhiệt độ.",
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc thể tích.",
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc áp suất, không phụ thuộc nhiệt độ.",
+          "Ở cùng nhiệt độ, nội năng của một lượng khí không phụ thuộc số mol khí."
+        ]
+      },
+      "after": {
+        "explain": "Với số mol n không đổi, U=(3/2)nRT nên nội năng khí lí tưởng đơn nguyên tử chỉ phụ thuộc nhiệt độ.",
+        "options": [
+          "Với một lượng khí lí tưởng đơn nguyên tử có số mol không đổi, nội năng chỉ phụ thuộc nhiệt độ.",
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc thể tích.",
+          "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc áp suất, không phụ thuộc nhiệt độ.",
+          "Ở cùng nhiệt độ, nội năng của một lượng khí không phụ thuộc số mol khí."
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The statement that internal energy depends only on T requires a fixed quantity of gas, because U=(3/2)nRT.",
+            "evidence": {
+              "correct_option": "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc nhiệt độ."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-13-T02",
+      "before": {
+        "context": "Một chu trình khí lí tưởng được biểu diễn trên các đồ thị p-V và V-T."
+      },
+      "after": {
+        "context": "Một lượng khí lí tưởng xác định chuyển từ p1=1 atm, V1=2 L, T1=300 K đến V2=1,6 L, T2=360 K."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The context describes a different experiment or contradicts the constant-amount/heating/compression conditions of the prompt.",
+            "evidence": {
+              "context": "Một chu trình khí lí tưởng được biểu diễn trên các đồ thị p-V và V-T.",
+              "prompt": "Một lượng khí lí tưởng xác định chuyển từ p1 = 1 atm, V1 = 2 L, T1 = 300 K đến V2 = 1.6 L, T2 = 360 K. Xét các nhận định sau."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-13-T03",
+      "before": {
+        "context": "Một bình cứng được nung nóng; một xilanh khác biến đổi đẳng áp để so sánh hai quá trình."
+      },
+      "after": {
+        "context": "Một lượng khí lí tưởng xác định chuyển từ p1=1,5 atm, V1=3 L, T1=300 K đến V2=2,4 L, T2=360 K."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The context describes a different experiment or contradicts the constant-amount/heating/compression conditions of the prompt.",
+            "evidence": {
+              "context": "Một bình cứng được nung nóng; một xilanh khác biến đổi đẳng áp để so sánh hai quá trình.",
+              "prompt": "Một lượng khí lí tưởng xác định chuyển từ p1 = 1.5 atm, V1 = 3 L, T1 = 300 K đến V2 = 2.4 L, T2 = 360 K. Xét các nhận định sau."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-13-T05",
+      "before": {
+        "statements": [
+          {
+            "text": "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc nhiệt độ.",
+            "answer": true,
+            "explain": "Bài 12: Nội năng là tổng động năng tịnh tiến trong mô hình này.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Trong mô hình khí lí tưởng, thể tích mỗi phân tử chiếm gần như toàn bộ thể tích bình.",
+            "answer": false,
+            "explain": "Bài 8: Khí lí tưởng bỏ qua thể tích riêng của phân tử so với thể tích bình.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Nếu thể tích giảm một nửa trong quá trình đẳng nhiệt, áp suất cũng giảm một nửa.",
+            "answer": false,
+            "explain": "Bài 9: p1V1 = p2V2.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Phải đổi nhiệt độ Celsius sang kelvin trước khi lập tỉ số V1/T1 = V2/T2.",
+            "answer": true,
+            "explain": "Bài 10: Nhiệt độ tuyệt đối mới dùng trong định luật khí.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Với một lượng khí lí tưởng đơn nguyên tử có số mol không đổi, nội năng chỉ phụ thuộc nhiệt độ.",
+            "answer": true,
+            "explain": "U=(3/2)nRT; với n không đổi, nội năng chỉ phụ thuộc T.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Trong mô hình khí lí tưởng, thể tích mỗi phân tử chiếm gần như toàn bộ thể tích bình.",
+            "answer": false,
+            "explain": "Bài 8: Khí lí tưởng bỏ qua thể tích riêng của phân tử so với thể tích bình.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Nếu thể tích giảm một nửa trong quá trình đẳng nhiệt, áp suất cũng giảm một nửa.",
+            "answer": false,
+            "explain": "Bài 9: p1V1 = p2V2.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Phải đổi nhiệt độ Celsius sang kelvin trước khi lập tỉ số V1/T1 = V2/T2.",
+            "answer": true,
+            "explain": "Bài 10: Nhiệt độ tuyệt đối mới dùng trong định luật khí.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The internal-energy claim should explicitly preserve gas amount.",
+            "evidence": {
+              "statement_index": 0,
+              "actual": {
+                "text": "Với khí lí tưởng đơn nguyên tử, nội năng chỉ phụ thuộc nhiệt độ.",
+                "answer": true,
+                "explain": "Bài 12: Nội năng là tổng động năng tịnh tiến trong mô hình này.",
+                "level": "NB",
+                "competency": "Nhận biết vật lí"
+              }
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-13-T06",
+      "before": {
+        "context": "Một tình huống có số mol thay đổi được dùng để kiểm tra điều kiện áp dụng các định luật khí."
+      },
+      "after": {
+        "context": "Một lượng khí lí tưởng xác định chuyển giữa hai trạng thái có thể tích giảm từ 5 L xuống 4 L và nhiệt độ tăng từ 300 K lên 360 K."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The context describes a different experiment or contradicts the constant-amount/heating/compression conditions of the prompt.",
+            "evidence": {
+              "context": "Một tình huống có số mol thay đổi được dùng để kiểm tra điều kiện áp dụng các định luật khí.",
+              "prompt": "Một lượng khí lí tưởng xác định chuyển từ p1 = 2.5 atm, V1 = 5 L, T1 = 300 K đến V2 = 4 L, T2 = 360 K. Xét các nhận định sau."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-13-S06",
+      "before": {
+        "answer": 10.3,
+        "explain": "x=10.350. Kết quả nhập theo yêu cầu: 10,3 ."
+      },
+      "after": {
+        "answer": 10.4,
+        "explain": "x=(3/2)×1,38×500×10^-2=10,35. Làm tròn đến một chữ số thập phân: x=10,4."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "EXT-13-S06",
+            "chapter": "Chương II",
+            "answer": 10.3,
+            "tolerance": 0.050000000001,
+            "unit": "",
+            "requested_decimal_places": 1,
+            "formula": "(3/2)×1.38×500/100 = coefficient of10^−21 J",
+            "raw_calculated": "10.350",
+            "expected_rounded": "10.4",
+            "target_matches_requested_rounding": false,
+            "maximum_tolerance_for_requested_precision": 0.05,
+            "tolerance_matches_requested_precision": true,
+            "correct_rounded_input_currently_accepted": false,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Stored answer/explanation do not follow the supplied constants and standard decimal ROUND_HALF_UP rounding.",
+            "evidence": {
+              "prompt": "Một mẫu khí lí tưởng được giữ ở nhiệt độ tuyệt đối xác định để khảo sát động năng phân tử. Cho T=500 K,k=1,38×10^-23. Tính x nếu Ē=3kT/2=x×10^-21 J. Làm tròn kết quả đến 1 chữ số thập phân.",
+              "actual_answer": 10.3,
+              "actual_explain": "x=10.350. Kết quả nhập theo yêu cầu: 10,3 ."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-20-C04",
+      "before": {
+        "prompt": "Trong một bài toán tổng hợp của chương, một khung dây N vòng quay đều trong từ trường đều; suất điện động cảm ứng hình sin được ghi theo thời gian. Phát biểu nào sau đây đúng về các yếu tố quyết định biên độ suất điện động máy phát?"
+      },
+      "after": {
+        "prompt": "Trong một bài toán tổng hợp của chương, một khung dây N vòng quay đều trong từ trường đều; trục quay nằm trong mặt phẳng khung và vuông góc với B, suất điện động cảm ứng hình sin được ghi theo thời gian. Phát biểu nào sau đây đúng về các yếu tố quyết định biên độ suất điện động máy phát?"
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The keyed option asserts E0=NBSω without defining the geometry where equality holds.",
+            "evidence": "A sinusoidal emf alone permits a geometrical amplitude factor below 1; specify the conventional perpendicular axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-20-M01",
+      "before": {
+        "prompt": "Một bộ thí nghiệm điện từ kết hợp dây dẫn mang dòng điện và từ trường đều. Dây dài 0.2 m,I=3 A,B=0.4 T,α=90°. Tính lực từ?"
+      },
+      "after": {
+        "prompt": "Một bộ thí nghiệm điện từ kết hợp dây dẫn mang dòng điện và từ trường đều. Dây dài 0.2 m,I=3 A,B=0.4 T,α=90°. Tính lực từ? Góc α là góc giữa chiều dòng điện trong dây và vectơ B."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The numeric angle α is not defined in the self-contained prompt.",
+            "evidence": "F=BIl sinα requires α to be the angle between the current direction and B, rather than a surface normal or another axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-20-M02",
+      "before": {
+        "prompt": "Một bộ thí nghiệm điện từ kết hợp dây dẫn mang dòng điện và từ trường đều. Dây dài 0.06 m,I=5 A,B=0.5 T,α=30°. Tính lực từ?"
+      },
+      "after": {
+        "prompt": "Một bộ thí nghiệm điện từ kết hợp dây dẫn mang dòng điện và từ trường đều. Dây dài 0.06 m,I=5 A,B=0.5 T,α=30°. Tính lực từ? Góc α là góc giữa chiều dòng điện trong dây và vectơ B."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The numeric angle α is not defined in the self-contained prompt.",
+            "evidence": "F=BIl sinα requires α to be the angle between the current direction and B, rather than a surface normal or another axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-20-M03",
+      "before": {
+        "prompt": "Một bộ thí nghiệm điện từ kết hợp dây dẫn mang dòng điện và từ trường đều. Dây dài 0.25 m,I=8 A,B=0.2 T,α=60°. Tính lực từ?"
+      },
+      "after": {
+        "prompt": "Một bộ thí nghiệm điện từ kết hợp dây dẫn mang dòng điện và từ trường đều. Dây dài 0.25 m,I=8 A,B=0.2 T,α=60°. Tính lực từ? Góc α là góc giữa chiều dòng điện trong dây và vectơ B."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The numeric angle α is not defined in the self-contained prompt.",
+            "evidence": "F=BIl sinα requires α to be the angle between the current direction and B, rather than a surface normal or another axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-20-S01",
+      "before": {
+        "prompt": "Một đoạn dây mang dòng điện được đặt trong từ trường đều để đo lực từ. B=0.25 T,I=6 A,l=0.1 m,α=90°. Tính F."
+      },
+      "after": {
+        "prompt": "Một đoạn dây mang dòng điện được đặt trong từ trường đều để đo lực từ. B=0.25 T,I=6 A,l=0.1 m,α=90°. Tính F. Góc α là góc giữa chiều dòng điện trong dây và vectơ B."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The numeric angle α is not defined in the self-contained prompt.",
+            "evidence": "F=BIl sinα requires α to be the angle between the current direction and B, rather than a surface normal or another axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-20-S02",
+      "before": {
+        "prompt": "Một đoạn dây mang dòng điện được đặt trong từ trường đều để đo lực từ. B=0.4 T,I=2 A,l=0.3 m,α=30°. Tính F."
+      },
+      "after": {
+        "prompt": "Một đoạn dây mang dòng điện được đặt trong từ trường đều để đo lực từ. B=0.4 T,I=2 A,l=0.3 m,α=30°. Tính F. Góc α là góc giữa chiều dòng điện trong dây và vectơ B."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The numeric angle α is not defined in the self-contained prompt.",
+            "evidence": "F=BIl sinα requires α to be the angle between the current direction and B, rather than a surface normal or another axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-20-S04",
+      "before": {
+        "explain": "E=7.5.",
+        "prompt": "Một cuộn dây nhiều vòng có từ thông qua mỗi vòng biến thiên theo thời gian. Cuộn 250 vòng,ΔΦ=1.2 mWb/vòng trong 0.04s. Tính E."
+      },
+      "after": {
+        "explain": "Độ lớn suất điện động cảm ứng trung bình E = N|ΔΦ|/Δt = 250×1,2×10^-3/0,04 = 7,5 V.",
+        "prompt": "Một cuộn dây nhiều vòng có từ thông qua mỗi vòng biến thiên theo thời gian. Cuộn có 250 vòng, độ biến thiên từ thông qua mỗi vòng là 1,2 mWb trong 0,04 s. Tính độ lớn suất điện động cảm ứng trung bình, đơn vị V."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "A total ΔΦ over a duration does not specify instantaneous emf.",
+            "evidence": "The stated data determine only |average emf|=250×0.0012/0.04=7.5 V unless flux is said to vary uniformly."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-25-M03",
+      "before": {
+        "explain": "E=2.236 MeV."
+      },
+      "after": {
+        "explain": "E = Δm×931,5 = 0,0024×931,5 = 2,2356 MeV ≈ 2,236 MeV."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích viết dấu bằng cho một giá trị đã làm tròn; cần nêu giá trị chính xác hoặc dùng dấu xấp xỉ.",
+            "evidence": "0.0024×931.5=2.2356, không bằng chính xác 2.236."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-25-M04",
+      "before": {
+        "explain": "E=4.657 MeV.",
+        "options": [
+          "4.657 MeV",
+          "0.466 MeV",
+          "46.575 MeV",
+          "0.005 MeV"
+        ]
+      },
+      "after": {
+        "explain": "E = Δm×931,5 = 0,005×931,5 = 4,6575 MeV ≈ 4,658 MeV.",
+        "options": [
+          "4.658 MeV",
+          "0.466 MeV",
+          "46.575 MeV",
+          "0.005 MeV"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Kết quả trong phương án đúng và giải thích làm tròn sai ở chữ số thập phân thứ ba.",
+            "evidence": "0.005 × 931.5 = 4.6575 MeV; ROUND_HALF_UP tới 0.001 cho 4.658 MeV, không phải 4.657."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-25-M10",
+      "before": {
+        "explain": "x=2.884.",
+        "prompt": "Một mô hình lò phản ứng dùng năng lượng phân hạch; năng lượng mỗi sự kiện được quy đổi sang joule. Mỗi phân hạch tỏa 180 MeV. Nếu E=x×10^-11 J, lấy 1eV=1,602×10^-19J, x bằng bao nhiêu?"
+      },
+      "after": {
+        "explain": "x = 180×10^6×1,602×10^-19/(10^-11) = 2,8836 ≈ 2,884.",
+        "prompt": "Một mô hình lò phản ứng dùng năng lượng phân hạch; năng lượng mỗi sự kiện được quy đổi sang joule. Mỗi phân hạch tỏa 180 MeV. Nếu E=x×10^-11 J, lấy 1eV=1,602×10^-19J, x gần bằng bao nhiêu?"
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích viết dấu bằng cho một giá trị đã làm tròn; cần nêu giá trị chính xác hoặc dùng dấu xấp xỉ.",
+            "evidence": "180×0.01602=2.8836, không bằng chính xác 2.884; đề hỏi “bằng bao nhiêu” nhưng phương án đúng đã làm tròn."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-25-T02",
+      "before": {
+        "statements": [
+          {
+            "text": "Số hạt mẹ còn lại theo cùng đơn vị tương đối là 22.5.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Sau 2 chu kì còn 1/4 ban đầu."
+          },
+          {
+            "text": "Trong phóng xạ beta trừ, A không đổi và Z tăng 1.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Beta trừ biến một neutron thành proton ở mức mô hình phổ thông."
+          },
+          {
+            "text": "Các đồng vị của cùng nguyên tố có cùng A nhưng khác Z.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Đồng vị có cùng Z, khác N và thường khác A."
+          },
+          {
+            "text": "Chất thải phóng xạ không cần quản lí đặc biệt nếu khối lượng nhỏ.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cần quản lí, che chắn và lưu giữ theo quy trình an toàn."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Số hạt mẹ còn lại theo cùng đơn vị tương đối là 22.5.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Sau 2 chu kì còn 1/4 ban đầu."
+          },
+          {
+            "text": "Trong phóng xạ beta trừ, A không đổi và Z tăng 1.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Beta trừ biến một neutron thành proton ở mức mô hình phổ thông."
+          },
+          {
+            "text": "Các đồng vị của cùng nguyên tố có cùng A nhưng khác Z.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Đồng vị có cùng Z nhưng khác N nên có số khối A khác nhau."
+          },
+          {
+            "text": "Chất thải phóng xạ không cần quản lí đặc biệt nếu khối lượng nhỏ.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cần quản lí, che chắn và lưu giữ theo quy trình an toàn."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích sai quan hệ đồng vị: khác N khi cùng Z luôn dẫn tới khác A.",
+            "evidence": "A=Z+N. Khi Z không đổi và N khác nhau, hiệu A đúng bằng hiệu N; không có ngoại lệ để dùng “thường khác A”."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-25-T04",
+      "before": {
+        "statements": [
+          {
+            "text": "Số hạt mẹ còn lại theo cùng đơn vị tương đối là 30.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Sau 2 chu kì còn 1/4 ban đầu."
+          },
+          {
+            "text": "Trong phóng xạ beta trừ, A không đổi và Z tăng 1.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Beta trừ biến một neutron thành proton ở mức mô hình phổ thông."
+          },
+          {
+            "text": "Các đồng vị của cùng nguyên tố có cùng A nhưng khác Z.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Đồng vị có cùng Z, khác N và thường khác A."
+          },
+          {
+            "text": "Chất thải phóng xạ không cần quản lí đặc biệt nếu khối lượng nhỏ.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cần quản lí, che chắn và lưu giữ theo quy trình an toàn."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Số hạt mẹ còn lại theo cùng đơn vị tương đối là 30.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Sau 2 chu kì còn 1/4 ban đầu."
+          },
+          {
+            "text": "Trong phóng xạ beta trừ, A không đổi và Z tăng 1.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Beta trừ biến một neutron thành proton ở mức mô hình phổ thông."
+          },
+          {
+            "text": "Các đồng vị của cùng nguyên tố có cùng A nhưng khác Z.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Đồng vị có cùng Z nhưng khác N nên có số khối A khác nhau."
+          },
+          {
+            "text": "Chất thải phóng xạ không cần quản lí đặc biệt nếu khối lượng nhỏ.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cần quản lí, che chắn và lưu giữ theo quy trình an toàn."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích sai quan hệ đồng vị: khác N khi cùng Z luôn dẫn tới khác A.",
+            "evidence": "A=Z+N. Khi Z không đổi và N khác nhau, hiệu A đúng bằng hiệu N; không có ngoại lệ để dùng “thường khác A”."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "EXT-25-S06",
+      "before": {
+        "explain": "x=3.364. Kết quả nhập theo yêu cầu: 3,36 .",
+        "prompt": "Một lò phản ứng được mô hình hóa từ năng lượng giải phóng trong từng sự kiện phân hạch. Một phân hạch tỏa 210MeV. Tính x nếu E=x×10^-11J. Làm tròn kết quả đến 2 chữ số thập phân."
+      },
+      "after": {
+        "explain": "Dùng 1 MeV = 1,602×10^-13 J: x = 210×1,602×10^-13/(10^-11) = 3,3642. Làm tròn đến 2 chữ số thập phân: 3,36.",
+        "prompt": "Một lò phản ứng được mô hình hóa từ năng lượng giải phóng trong từng sự kiện phân hạch. Một phân hạch tỏa 210MeV. Lấy 1 eV = 1,602×10^-19 J. Tính x nếu E=x×10^-11J. Làm tròn kết quả đến 2 chữ số thập phân."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích viết dấu bằng cho một giá trị đã làm tròn; cần nêu giá trị chính xác hoặc dùng dấu xấp xỉ.",
+            "evidence": "210×0.01602=3.3642, không bằng chính xác 3.364."
+          },
+          "origin": "review-IV.json"
+        },
+        {
+          "reason": "Bổ sung hằng số quy đổi/khối lượng mol ngay trong đề để câu hỏi tự đủ dữ kiện và thống nhất với đáp án đã kiểm tra.",
+          "origin": "constants-review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-02-M01",
+      "before": {
+        "options": [
+          "20 J",
+          "420 J",
+          "-20 J",
+          "525"
+        ]
+      },
+      "after": {
+        "options": [
+          "20 J",
+          "420 J",
+          "-20 J",
+          "525 J"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "One numeric distractor has no unit while the other three include the quantity's unit.",
+          "origin": "structure-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Numeric distractor omits the energy unit supplied in the other options.",
+            "evidence": "Option[3] is \"525\"; all other options have J and ΔU is an energy."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-04-C01",
+      "before": {
+        "options": [
+          "CA = 2cB",
+          "CA = 4cB",
+          "CA = cB",
+          "CA = cB/2"
+        ]
+      },
+      "after": {
+        "options": [
+          "c_A = 2c_B",
+          "c_A = 4c_B",
+          "c_A = c_B",
+          "c_A = c_B/2"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "A case-sensitive physical symbol has been capitalized at the beginning of an option: C_A versus c_A, M versus m, or P versus p. Restore the symbol defined by the prompt and solution.",
+          "origin": "structure-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Options mix uppercase C_A (heat capacity notation) with lowercase c_B while asking about specific heat capacity.",
+            "evidence": "All four options use \"CA\" on left and cB on right. Standard specific-heat notation is c_A and c_B."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-08-S01",
+      "before": {
+        "answer": 1.5,
+        "explain": "x = 0.25×6,02 = 1.505. Kết quả nhập theo yêu cầu: 1,5 .",
+        "tolerance": 0.050000000001
+      },
+      "after": {
+        "answer": 1.51,
+        "explain": "x=nN_A/10^23=0,25×6,02=1,505. Làm tròn đến hai chữ số thập phân: x=1,51.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "NEW-08-S01",
+            "chapter": "Chương II",
+            "answer": 1.5,
+            "tolerance": 0.050000000001,
+            "unit": "",
+            "requested_decimal_places": 2,
+            "formula": ".25×6.02 = 1.505",
+            "raw_calculated": "1.5050",
+            "expected_rounded": "1.51",
+            "target_matches_requested_rounding": false,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": false,
+            "correct_rounded_input_currently_accepted": true,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Stored answer/explanation do not follow the supplied constants and standard decimal ROUND_HALF_UP rounding.",
+            "evidence": {
+              "prompt": "Một bình chứa 0.25 mol khí. Lấy NA = 6,02×10^23 mol⁻¹. Số phân tử được viết dưới dạng x×10^23. Giá trị x bằng bao nhiêu? Làm tròn kết quả đến 2 chữ số thập phân.",
+              "actual_answer": 1.5,
+              "actual_explain": "x = 0.25×6,02 = 1.505. Kết quả nhập theo yêu cầu: 1,5 ."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-08-S03",
+      "before": {
+        "explain": "x = 0.2×6,02 = 1.204. Kết quả nhập theo yêu cầu: 1,2 .",
+        "tolerance": 0.050000000001
+      },
+      "after": {
+        "explain": "x=0,20×6,02=1,204. Làm tròn đến hai chữ số thập phân: x=1,20.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "NEW-08-S03",
+            "chapter": "Chương II",
+            "answer": 1.2,
+            "tolerance": 0.050000000001,
+            "unit": "",
+            "requested_decimal_places": 2,
+            "formula": ".2×6.02 = 1.204",
+            "raw_calculated": "1.204",
+            "expected_rounded": "1.20",
+            "target_matches_requested_rounding": true,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": false,
+            "correct_rounded_input_currently_accepted": true,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Prompt explicitly requires two decimal places, but tolerance 0.05 accepts wrong hundredth-place values.",
+            "evidence": {
+              "actual_answer": 1.2,
+              "actual_tolerance": 0.050000000001,
+              "exact": "0.2×6.02=1.204",
+              "expected": "1.20; tolerance approximately0.005"
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-11-M01",
+      "before": {
+        "options": [
+          "1.02275",
+          "2.75 atm",
+          "1.5 atm",
+          "0.8182 atm"
+        ]
+      },
+      "after": {
+        "options": [
+          "1.02275 atm",
+          "2.75 atm",
+          "1.5 atm",
+          "0.8182 atm"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "One numeric distractor has no unit while the other three include the quantity's unit.",
+          "origin": "structure-review.json"
+        },
+        {
+          "reason": {
+            "reason": "One numerical pressure option lacks the atm unit used by the other pressure options.",
+            "evidence": {
+              "option_index": 0,
+              "actual_option": "1.02275",
+              "answer_index": 3
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-11-C02",
+      "before": {
+        "options": [
+          "P1V1 = p2V2.",
+          "V1/T1 = V2/T2.",
+          "P1V1/T1 = p2V2/T2.",
+          "P1/T1 = p2/T2."
+        ]
+      },
+      "after": {
+        "options": [
+          "p1V1 = p2V2.",
+          "V1/T1 = V2/T2.",
+          "p1V1/T1 = p2V2/T2.",
+          "p1/T1 = p2/T2."
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "A case-sensitive physical symbol has been capitalized at the beginning of an option: C_A versus c_A, M versus m, or P versus p. Restore the symbol defined by the prompt and solution.",
+          "origin": "structure-review.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-11-T02",
+      "before": {
+        "context": "Một bình cứng được bơm thêm khí trong khi nhiệt độ giữ không đổi."
+      },
+      "after": {
+        "context": "Một lượng khí lí tưởng xác định trong bình kín cứng được nung nóng từ 300 K lên 360 K; áp suất đầu là 1,2 atm."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The context describes a different experiment or contradicts the constant-amount/heating/compression conditions of the prompt.",
+            "evidence": {
+              "context": "Một bình cứng được bơm thêm khí trong khi nhiệt độ giữ không đổi.",
+              "prompt": "Một lượng khí lí tưởng xác định trong bình cứng có p1 = 1.2 atm, V = 3 L, T1 = 300 K; sau đó nhiệt độ tăng đến T2 = 360 K. Xét các nhận định sau."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-12-T02",
+      "before": {
+        "statements": [
+          {
+            "text": "Động năng tịnh tiến trung bình của một phân tử là khoảng 10.3×10⁻²¹ J.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Ē = 3kT/2."
+          },
+          {
+            "text": "Động năng tịnh tiến trung bình tỉ lệ với nhiệt độ tuyệt đối.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Ē = 3kT/2."
+          },
+          {
+            "text": "Hai khí lí tưởng khác nhau ở cùng T nhất thiết có cùng tốc độ phân tử đặc trưng.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cùng T cho cùng động năng trung bình, nhưng tốc độ còn phụ thuộc khối lượng phân tử."
+          },
+          {
+            "text": "Ở cùng T, phân tử nhẹ có tốc độ đặc trưng nhỏ hơn phân tử nặng.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Phân tử nhẹ có tốc độ đặc trưng lớn hơn."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Động năng tịnh tiến trung bình của một phân tử bằng 10,35×10⁻²¹ J.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Ē=3kT/2=(3/2)×1,38×10⁻²³×500=10,35×10⁻²¹ J."
+          },
+          {
+            "text": "Động năng tịnh tiến trung bình tỉ lệ với nhiệt độ tuyệt đối.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Ē = 3kT/2."
+          },
+          {
+            "text": "Hai khí lí tưởng khác nhau ở cùng T nhất thiết có cùng tốc độ phân tử đặc trưng.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cùng T cho cùng động năng trung bình, nhưng tốc độ còn phụ thuộc khối lượng phân tử."
+          },
+          {
+            "text": "Ở cùng T, phân tử nhẹ có tốc độ đặc trưng nhỏ hơn phân tử nặng.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Phân tử nhẹ có tốc độ đặc trưng lớn hơn."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The true claim prints the result with an incorrect conventional decimal rounding; clarify the correctly rounded or exact result.",
+            "evidence": {
+              "statement_index": 0,
+              "actual": {
+                "text": "Động năng tịnh tiến trung bình của một phân tử là khoảng 10.3×10⁻²¹ J.",
+                "answer": true,
+                "level": "VD",
+                "competency": "Vận dụng kiến thức, kĩ năng",
+                "explain": "Ē = 3kT/2."
+              },
+              "exact": "10.35×10^-21 J"
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-12-S03",
+      "before": {
+        "answer": 9.31,
+        "explain": "x = 9.315. Kết quả nhập theo yêu cầu: 9,31 .",
+        "tolerance": 0.0050000000010000005
+      },
+      "after": {
+        "answer": 9.32,
+        "explain": "x=(3/2)×1,38×450×10^-2=9,315. Làm tròn đến hai chữ số thập phân: x=9,32.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "NEW-12-S03",
+            "chapter": "Chương II",
+            "answer": 9.31,
+            "tolerance": 0.0050000000010000005,
+            "unit": "",
+            "requested_decimal_places": 2,
+            "formula": "(3/2)×1.38×450/100 = coefficient of10^−21 J",
+            "raw_calculated": "9.315",
+            "expected_rounded": "9.32",
+            "target_matches_requested_rounding": false,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": true,
+            "correct_rounded_input_currently_accepted": false,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Stored answer/explanation do not follow the supplied constants and standard decimal ROUND_HALF_UP rounding.",
+            "evidence": {
+              "prompt": "Một phân tử khí lí tưởng ở T = 450 K. Lấy k = 1,38×10^-23 J/K và Ē = 3kT/2. Nếu Ē = x×10^-21 J thì x bằng bao nhiêu? Làm tròn kết quả đến 2 chữ số thập phân.",
+              "actual_answer": 9.31,
+              "actual_explain": "x = 9.315. Kết quả nhập theo yêu cầu: 9,31 ."
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-15-M01",
+      "before": {
+        "options": [
+          "0.3 N",
+          "0.075 N",
+          "0.15 N",
+          "0.1875"
+        ]
+      },
+      "after": {
+        "options": [
+          "0.3 N",
+          "0.075 N",
+          "0.15 N",
+          "0.1875 N"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "One numeric distractor has no unit while the other three include the quantity's unit.",
+          "origin": "structure-review.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-15-S01",
+      "before": {
+        "answer": 11.2,
+        "explain": "F = BIl sinα = 0.0112 N. Kết quả nhập theo yêu cầu: 11,2 mN."
+      },
+      "after": {
+        "answer": 11.3,
+        "explain": "F = BIl sinα = 0,15×3×0,05×0,5 = 0,01125 N = 11,25 mN. Làm tròn đến 1 chữ số thập phân: 11,3 mN."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "NEW-15-S01",
+            "chapter": "Chương III",
+            "answer": 11.2,
+            "tolerance": 0.050000000001,
+            "unit": "mN",
+            "requested_decimal_places": 1,
+            "formula": ".05×3×.15×sin30°×1000 = 11.25 mN",
+            "raw_calculated": "11.25000",
+            "expected_rounded": "11.3",
+            "target_matches_requested_rounding": false,
+            "maximum_tolerance_for_requested_precision": 0.05,
+            "tolerance_matches_requested_precision": true,
+            "correct_rounded_input_currently_accepted": false,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Wrong ROUND_HALF_UP answer at an exact decimal midpoint.",
+            "evidence": "F=0.15×3×0.05×sin30°=0.01125 N=11.25 mN; 1 decimal ROUND_HALF_UP gives 11.3."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-16-M01",
+      "before": {
+        "options": [
+          "0 mWb",
+          "0.1 mWb",
+          "0",
+          "0.75 mWb"
+        ]
+      },
+      "after": {
+        "options": [
+          "0 mWb",
+          "0.1 mWb",
+          "0.375 mWb",
+          "0.75 mWb"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "Options 0 and 2 both represent zero mWb; answer0 makes option2 unfairly wrong.",
+          "origin": "structure-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Two numerically equivalent correct MCQ choices.",
+            "evidence": "cos90°=0; options 0 (0 mWb) and 2 (0) are both zero in the requested unit."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-17-T01",
+      "before": {
+        "prompt": "Một khung dây quay đều trong từ trường tạo suất điện động xoay chiều hình sin. Hãy xác định từng nhận định sau là đúng hay sai.",
+        "statements": [
+          {
+            "text": "Biên độ suất điện động tỉ lệ với tốc độ góc.",
+            "answer": true,
+            "explain": "E0=NBSω.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Tăng số vòng dây làm biên độ tăng nếu các yếu tố khác không đổi.",
+            "answer": true,
+            "explain": "E0∝N.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Giá trị hiệu dụng bằng E0√2.",
+            "answer": false,
+            "explain": "E=E0/√2.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Máy phát điện biến điện năng thành cơ năng.",
+            "answer": false,
+            "explain": "Máy phát biến cơ năng thành điện năng.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "prompt": "Một khung dây quay đều quanh trục nằm trong mặt phẳng khung và vuông góc với từ trường đều, tạo suất điện động xoay chiều hình sin. Hãy xác định từng nhận định sau là đúng hay sai.",
+        "statements": [
+          {
+            "text": "Giữ số vòng, diện tích khung và từ trường không đổi, biên độ suất điện động tỉ lệ với tốc độ góc.",
+            "answer": true,
+            "explain": "Trong hình học đã nêu, E0 = NBSω; giữ N, B và S không đổi thì E0 tỉ lệ với ω.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Tăng số vòng dây làm biên độ tăng nếu các yếu tố khác không đổi.",
+            "answer": true,
+            "explain": "E0∝N.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Giá trị hiệu dụng bằng E0√2.",
+            "answer": false,
+            "explain": "E=E0/√2.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Máy phát điện biến điện năng thành cơ năng.",
+            "answer": false,
+            "explain": "Máy phát biến cơ năng thành điện năng.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The amplitude proportionality explanation uses a geometry-specific equality and omits fixed-other-factor conditions.",
+            "evidence": "E0 is proportional to ω only with N, B, S and rotation geometry fixed; E0=NBSω further requires the conventional perpendicular rotation axis."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-22-T03",
+      "before": {
+        "statements": [
+          {
+            "text": "Năng lượng liên kết tổng xấp xỉ 18,63 MeV.",
+            "answer": true,
+            "explain": "0,020×931,5.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Năng lượng liên kết riêng xấp xỉ 4,66 MeV/nucleon.",
+            "answer": true,
+            "explain": "18,63/4.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Năng lượng liên kết riêng bằng 18,63×4 MeV/nucleon.",
+            "answer": false,
+            "explain": "Phải chia cho A.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Đổi Δm sang năng lượng không cần dùng hệ số 931,5 MeV/u.",
+            "answer": false,
+            "explain": "Đây là hệ số quy đổi.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Năng lượng liên kết tổng xấp xỉ 18,63 MeV.",
+            "answer": true,
+            "explain": "0,020×931,5.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Năng lượng liên kết riêng xấp xỉ 4,66 MeV/nucleon.",
+            "answer": true,
+            "explain": "18,63/4.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Năng lượng liên kết riêng bằng 18,63×4 MeV/nucleon.",
+            "answer": false,
+            "explain": "Phải chia cho A.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Khi đổi trực tiếp độ hụt khối tính bằng u sang năng lượng tính bằng MeV, có thể giữ nguyên giá trị số của Δm mà không nhân hệ số quy đổi.",
+            "answer": false,
+            "explain": "Phải dùng E(MeV) = Δm(u)×931,5; với Δm = 0,020 u, E = 18,63 MeV. Giá trị số của Δm không bằng giá trị số của năng lượng.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Mệnh đề d không đơn nghĩa: có thể đổi Δm sang kg rồi dùng c², không bắt buộc dùng trực tiếp hệ số 931,5 MeV/u.",
+            "evidence": "“Đổi Δm sang năng lượng không cần dùng hệ số 931,5 MeV/u” bị khóa Sai; nhưng E=Δm c² trong SI là một đường tính đúng khác."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-22-T04",
+      "before": {
+        "statements": [
+          {
+            "text": "Năng lượng liên kết riêng là 8.79 MeV/nucleon.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "W riêng = W/A."
+          },
+          {
+            "text": "Năng lượng liên kết là năng lượng tối thiểu cần để tách hạt nhân thành các nucleon riêng lẻ.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Đây là ý nghĩa của năng lượng liên kết."
+          },
+          {
+            "text": "Độ hụt khối bằng khối lượng hạt nhân trừ tổng khối lượng các nucleon tự do.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Độ hụt khối lấy tổng khối lượng nucleon tự do trừ khối lượng hạt nhân."
+          },
+          {
+            "text": "Năng lượng liên kết riêng càng nhỏ thì hạt nhân luôn càng bền.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Trong so sánh thông thường, năng lượng liên kết riêng lớn hơn biểu thị liên kết chặt hơn."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Năng lượng liên kết riêng xấp xỉ 8,79 MeV/nucleon.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "W riêng = W/A = 492/56 ≈ 8,79 MeV/nucleon."
+          },
+          {
+            "text": "Năng lượng liên kết là năng lượng tối thiểu cần để tách hạt nhân thành các nucleon riêng lẻ.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Đây là ý nghĩa của năng lượng liên kết."
+          },
+          {
+            "text": "Độ hụt khối bằng khối lượng hạt nhân trừ tổng khối lượng các nucleon tự do.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Độ hụt khối lấy tổng khối lượng nucleon tự do trừ khối lượng hạt nhân."
+          },
+          {
+            "text": "Năng lượng liên kết riêng càng nhỏ thì hạt nhân luôn càng bền.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Trong so sánh thông thường, năng lượng liên kết riêng lớn hơn biểu thị liên kết chặt hơn."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Mệnh đề đúng/sai trình bày kết quả đã làm tròn như giá trị chính xác; cần nói xấp xỉ để khóa Đúng không mơ hồ.",
+            "evidence": "492/56 = 8.785714… MeV/nucleon, giá trị trong mệnh đề chỉ là làm tròn đến 2 chữ số thập phân."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-22-S05",
+      "before": {
+        "answer": 9.31,
+        "explain": "E = Δm×931,5 = 9.315 MeV. Kết quả nhập theo yêu cầu: 9,31 MeV.",
+        "tolerance": 0.0050000000010000005
+      },
+      "after": {
+        "answer": 9.32,
+        "explain": "E = Δm×931,5 = 0,01×931,5 = 9,315 MeV. Làm tròn đến 2 chữ số thập phân: 9,32 MeV.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "NEW-22-S05",
+            "chapter": "Chương IV",
+            "answer": 9.31,
+            "tolerance": 0.0050000000010000005,
+            "unit": "MeV",
+            "requested_decimal_places": 2,
+            "formula": ".01×931.5 = 9.315 MeV",
+            "raw_calculated": "9.315",
+            "expected_rounded": "9.32",
+            "target_matches_requested_rounding": false,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": true,
+            "correct_rounded_input_currently_accepted": false,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Sai làm tròn ở đúng điểm giữa; đáp án đúng 9,32 MeV hiện bị từ chối.",
+            "evidence": "Decimal(\"0.01\") * Decimal(\"931.5\") = 9.315; ROUND_HALF_UP tới 0.01 cho 9.32; |9.32 - 9.31| = 0.01 > tolerance 0.005000000001."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-23-M01",
+      "before": {
+        "options": [
+          "72 g",
+          "30",
+          "24 g",
+          "48 g"
+        ]
+      },
+      "after": {
+        "options": [
+          "72 g",
+          "30 g",
+          "24 g",
+          "48 g"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "One numeric distractor has no unit while the other three include the quantity's unit.",
+          "origin": "structure-review.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-23-M02",
+      "before": {
+        "options": [
+          "40 g",
+          "120 g",
+          "80 g",
+          "150"
+        ]
+      },
+      "after": {
+        "options": [
+          "40 g",
+          "120 g",
+          "80 g",
+          "150 g"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "One numeric distractor has no unit while the other three include the quantity's unit.",
+          "origin": "structure-review.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-24-S04",
+      "before": {
+        "explain": "x = 3.204. Kết quả nhập theo yêu cầu: 3,2 .",
+        "tolerance": 0.050000000001
+      },
+      "after": {
+        "explain": "x = 3,204. Kết quả nhập theo yêu cầu: 3,20.",
+        "tolerance": 0.005000000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "NEW-24-S04",
+            "chapter": "Chương IV",
+            "answer": 3.2,
+            "tolerance": 0.050000000001,
+            "unit": "",
+            "requested_decimal_places": 2,
+            "formula": "200×10^6×1.602×10^−19/10^−11 = 3.20400",
+            "raw_calculated": "3.20400",
+            "expected_rounded": "3.20",
+            "target_matches_requested_rounding": true,
+            "maximum_tolerance_for_requested_precision": 0.005,
+            "tolerance_matches_requested_precision": false,
+            "correct_rounded_input_currently_accepted": true,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Đề yêu cầu 2 chữ số thập phân nhưng dung sai được đặt theo 1 chữ số, chấp nhận kết quả làm tròn sai.",
+            "evidence": "tolerance hiện tại 0.050000000001; bước ở 2dp là 0.01, nửa bước là 0.005. Ví dụ đáp án sai lệch 0.01 vẫn được chấp nhận."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-07-VDC-S03",
+      "before": {
+        "explain": "m_cu c_cu(100-T)=m_n c_n(T-20). Kết quả nhập theo yêu cầu: 25,4 °C.",
+        "tolerance": 0.050000000001
+      },
+      "after": {
+        "explain": "Cân bằng nhiệt: 0,40 × 380 × (100 - T) = 0,50 × 4200 × (T - 20). Suy ra T = 57200/2252 ≈ 25,399645 °C. Làm tròn đến 3 chữ số thập phân: 25,400 °C.",
+        "tolerance": 0.000500000001
+      },
+      "reasons": [
+        {
+          "reason": {
+            "id": "NEW-07-VDC-S03",
+            "chapter": "Chương I",
+            "answer": 25.4,
+            "tolerance": 0.050000000001,
+            "unit": "°C",
+            "requested_decimal_places": 3,
+            "formula": "(.40×380×100 + .50×4200×20)/(.40×380 + .50×4200) = 25.3996447602 °C",
+            "raw_calculated": "25.39964476021314387211367673",
+            "expected_rounded": "25.400",
+            "target_matches_requested_rounding": true,
+            "maximum_tolerance_for_requested_precision": 0.0005,
+            "tolerance_matches_requested_precision": false,
+            "correct_rounded_input_currently_accepted": true,
+            "status": "FIX_REQUIRED"
+          },
+          "origin": "rounding-review.json"
+        },
+        {
+          "reason": {
+            "reason": "Tolerance and displayed explanation do not enforce prompt precision of three decimal places.",
+            "evidence": "T=57200/2252=25.399644760... °C; required 25.400 °C. Numeric answer 25.4 is equal to 25.400, but tolerance 0.05 accepts 25.350 and 25.450."
+          },
+          "origin": "review-I.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-13-VDC-M02",
+      "before": {
+        "options": [
+          "1.35 atm",
+          "2.4 atm",
+          "3",
+          "1.2 atm"
+        ]
+      },
+      "after": {
+        "options": [
+          "1.35 atm",
+          "2.4 atm",
+          "3 atm",
+          "1.2 atm"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "One numeric distractor has no unit while the other three include the quantity's unit.",
+          "origin": "structure-review.json"
+        },
+        {
+          "reason": {
+            "reason": "One numerical pressure option lacks the atm unit used by the other pressure options.",
+            "evidence": {
+              "option_index": 2,
+              "actual_option": "3",
+              "answer_index": 1
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-13-VDC-M07",
+      "before": {
+        "options": [
+          "1 atm",
+          "1.5 atm",
+          "0.6667 atm",
+          "1.25"
+        ]
+      },
+      "after": {
+        "options": [
+          "1 atm",
+          "1.5 atm",
+          "0.6667 atm",
+          "1.25 atm"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "One numeric distractor has no unit while the other three include the quantity's unit.",
+          "origin": "structure-review.json"
+        },
+        {
+          "reason": {
+            "reason": "One numerical pressure option lacks the atm unit used by the other pressure options.",
+            "evidence": {
+              "option_index": 3,
+              "actual_option": "1.25",
+              "answer_index": 0
+            }
+          },
+          "origin": "review-II.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-20-VDC-M01",
+      "before": {
+        "prompt": "Một đoạn dây thẳng dài 0.2 m, khối lượng 0.02 kg được đặt vuông góc với từ trường đều B=0.5 T. Bỏ qua lực khác và lấy g=10 m/s². Để lực từ cân bằng trọng lực, cường độ dòng điện trong dây bằng bao nhiêu?"
+      },
+      "after": {
+        "prompt": "Một đoạn dây thẳng nằm ngang dài 0,2 m, khối lượng 0,02 kg được đặt trong từ trường đều nằm ngang, vuông góc với dây, có B = 0,5 T. Chọn chiều dòng điện để lực từ hướng lên. Bỏ qua lực khác và lấy g = 10 m/s². Để lực từ cân bằng trọng lực, cường độ dòng điện trong dây bằng bao nhiêu?"
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Perpendicular B and wire do not by themselves guarantee a vertically upward magnetic force.",
+            "evidence": "With a vertical B field and horizontal wire, the magnetic force is horizontal; the intended balance requires the wire and B both horizontal and mutually perpendicular."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-20-VDC-M02",
+      "before": {
+        "options": [
+          "44.4288 V",
+          "277.68",
+          "222.1441 V",
+          "314.1593 V"
+        ]
+      },
+      "after": {
+        "options": [
+          "44.4288 V",
+          "277.68 V",
+          "222.1441 V",
+          "314.1593 V"
+        ]
+      },
+      "reasons": [
+        {
+          "reason": "One numeric distractor has no unit while the other three include the quantity's unit.",
+          "origin": "structure-review.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-20-VDC-M03",
+      "before": {
+        "prompt": "Một cuộn 300 vòng có từ thông qua mỗi vòng giảm đều một lượng 1.2 mWb trong 0.04 s. Cuộn được nối với điện trở R=6 Ω, bỏ qua điện trở cuộn. Cường độ dòng điện cảm ứng trung bình bằng bao nhiêu?"
+      },
+      "after": {
+        "prompt": "Một cuộn 300 vòng có từ thông qua mỗi vòng giảm đều một lượng 1.2 mWb trong 0.04 s. Cuộn được nối với điện trở R=6 Ω, bỏ qua điện trở và độ tự cảm của cuộn. Cường độ dòng điện cảm ứng trung bình bằng bao nhiêu?"
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The simple resistive current model needs an explicit neglect of self-inductance.",
+            "evidence": "For a 300-turn coil the applied emf is balanced by RI+L dI/dt; I=e/R assumes negligible self-inductance."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-20-VDC-T01",
+      "before": {
+        "prompt": "Một đoạn dây dài 0,20 m, khối lượng 0,020 kg đặt vuông góc trong từ trường đều 0,50 T. Lấy g=10 m/s² và điều chỉnh dòng điện để lực từ cân bằng trọng lực. Hãy xác định từng nhận định sau là đúng hay sai."
+      },
+      "after": {
+        "prompt": "Một đoạn dây nằm ngang dài 0,20 m, khối lượng 0,020 kg đặt trong từ trường đều nằm ngang, vuông góc với dây, có B = 0,50 T. Lấy g = 10 m/s² và chọn chiều dòng điện để lực từ hướng lên, cân bằng trọng lực. Hãy xác định từng nhận định sau là đúng hay sai."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Perpendicular B and wire do not by themselves guarantee a vertically upward magnetic force.",
+            "evidence": "With a vertical B field and horizontal wire, the magnetic force is horizontal; the intended balance requires the wire and B both horizontal and mutually perpendicular."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-20-VDC-T02",
+      "before": {
+        "statements": [
+          {
+            "text": "Biên độ suất điện động máy phát tỉ lệ với số vòng dây và tốc độ góc.",
+            "answer": true,
+            "explain": "E0=NBSω.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Giá trị hiệu dụng của điện áp hình sin bằng E0√2.",
+            "answer": false,
+            "explain": "E=E0/√2.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Máy biến áp lí tưởng có N2/N1=5 thì U2/U1=5.",
+            "answer": true,
+            "explain": "Tỉ số điện áp bằng tỉ số vòng dây.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Máy biến áp lí tưởng tăng điện áp 5 lần đồng thời cũng tăng dòng điện 5 lần.",
+            "answer": false,
+            "explain": "Công suất bảo toàn nên dòng giảm 5 lần.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Khi giữ nguyên từ trường, diện tích khung và hình học quay, biên độ suất điện động máy phát tỉ lệ với số vòng dây và tốc độ góc.",
+            "answer": true,
+            "explain": "Với khung quay quanh trục nằm trong mặt phẳng khung và vuông góc với B, E0 = NBSω; giữ B và S không đổi thì E0 tỉ lệ với N và ω.",
+            "level": "NB",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Giá trị hiệu dụng của điện áp hình sin bằng E0√2.",
+            "answer": false,
+            "explain": "E=E0/√2.",
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên"
+          },
+          {
+            "text": "Máy biến áp lí tưởng có N2/N1=5 thì U2/U1=5.",
+            "answer": true,
+            "explain": "Tỉ số điện áp bằng tỉ số vòng dây.",
+            "level": "TH",
+            "competency": "Nhận biết vật lí"
+          },
+          {
+            "text": "Máy biến áp lí tưởng tăng điện áp 5 lần đồng thời cũng tăng dòng điện 5 lần.",
+            "answer": false,
+            "explain": "Công suất bảo toàn nên dòng giảm 5 lần.",
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng"
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The proportionality statement does not state that the other generator factors are fixed.",
+            "evidence": "Increasing N or ω alongside a compensating decrease in B or S need not increase E0."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-20-VDC-T03",
+      "before": {
+        "prompt": "Một cuộn 300 vòng có từ thông qua mỗi vòng giảm 1.2 mWb trong 0.04 s và nối với điện trở 6 Ω. Hãy xác định từng nhận định sau là đúng hay sai."
+      },
+      "after": {
+        "prompt": "Một cuộn 300 vòng có từ thông ngoài qua mỗi vòng giảm đều 1,2 mWb trong 0,04 s và nối với điện trở 6 Ω. Bỏ qua điện trở và độ tự cảm của cuộn. Hãy xác định từng nhận định sau là đúng hay sai."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The current 1.5 A requires coil resistance and inductance assumptions absent from the prompt.",
+            "evidence": "External R=6 Ω alone does not determine I if the coil has unknown winding resistance. With inductance, e=R_total I+L dI/dt."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-20-VDC-S03",
+      "before": {
+        "prompt": "Cuộn 400 vòng có từ thông qua mỗi vòng giảm 0,80 mWb trong 0,020 s và nối với điện trở 8 Ω. Bỏ qua điện trở cuộn. Tính dòng điện cảm ứng trung bình."
+      },
+      "after": {
+        "prompt": "Cuộn 400 vòng có từ thông qua mỗi vòng giảm 0,80 mWb trong 0,020 s và nối với điện trở 8 Ω. Bỏ qua điện trở và độ tự cảm của cuộn. Tính dòng điện cảm ứng trung bình."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "The simple resistive current model needs an explicit neglect of self-inductance.",
+            "evidence": "An average current cannot be inferred from external resistance alone when LΔI/Δt is unknown."
+          },
+          "origin": "review-III.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-25-VDC-M09",
+      "before": {
+        "explain": "E_hạt nhân=P_e t/η; N=E/E_f; m=N·235/NA≈3.190 kg."
+      },
+      "after": {
+        "explain": "E hạt nhân = P điện×t/η; N = E hạt nhân/E phân hạch; m = N×(0,235 kg/mol)/NA ≈ 3,1899 kg."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Công thức giải thích dùng 235 với kết quả tính theo kg mà thiếu đổi g sang kg.",
+            "evidence": "235 g/mol = 0.235 kg/mol. Khi P tính bằng W, t bằng s, E phân hạch bằng J, m=N×235/NA có đơn vị g; phải chia 1000 để cho kg."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-25-VDC-M10",
+      "before": {
+        "prompt": "Một nguồn U-235 tinh khiết khối lượng 0,50 kg được dùng trong mô hình nhà máy có hiệu suất 20% và công suất điện 160 kW. Mỗi phân hạch tỏa 200 MeV, lấy NA=6,02×10^23 mol^-1. Nếu toàn bộ hạt nhân U-235 đều phân hạch, thời gian hoạt động gần bằng bao nhiêu ngày?"
+      },
+      "after": {
+        "prompt": "Một nguồn U-235 tinh khiết khối lượng 0,50 kg được dùng trong mô hình nhà máy có hiệu suất 20% và công suất điện 160 kW. Mỗi phân hạch tỏa 200 MeV. Lấy NA = 6,02×10^23 mol^-1, khối lượng mol của U-235 là 235 g/mol và 1 eV = 1,602×10^-19 J. Nếu toàn bộ hạt nhân U-235 đều phân hạch, thời gian hoạt động gần bằng bao nhiêu ngày?"
+      },
+      "reasons": [
+        {
+          "reason": "Bổ sung hằng số quy đổi/khối lượng mol ngay trong đề để câu hỏi tự đủ dữ kiện và thống nhất với đáp án đã kiểm tra.",
+          "origin": "constants-review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-25-VDC-T04",
+      "before": {
+        "prompt": "Một phản ứng hạt nhân có tổng khối lượng nghỉ ban đầu lớn hơn tổng khối lượng nghỉ sản phẩm 0,0188 u. Hãy xác định từng nhận định sau là đúng hay sai."
+      },
+      "after": {
+        "prompt": "Một phản ứng hạt nhân có tổng khối lượng nghỉ ban đầu lớn hơn tổng khối lượng nghỉ sản phẩm 0,0188 u. Lấy 1 u·c² = 931,5 MeV. Hãy xác định từng nhận định sau là đúng hay sai."
+      },
+      "reasons": [
+        {
+          "reason": "Bổ sung hằng số quy đổi/khối lượng mol ngay trong đề để câu hỏi tự đủ dữ kiện và thống nhất với đáp án đã kiểm tra.",
+          "origin": "constants-review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-25-VDC-T06",
+      "before": {
+        "prompt": "Một nhà máy điện hạt nhân dùng U-235, mỗi phân hạch tỏa 200 MeV. Xét quan hệ giữa công suất điện, hiệu suất và lượng nhiên liệu. Hãy xác định từng nhận định sau là đúng hay sai."
+      },
+      "after": {
+        "prompt": "Một nhà máy điện hạt nhân dùng U-235, mỗi phân hạch tỏa 200 MeV. Xét quan hệ giữa công suất điện, hiệu suất và lượng nhiên liệu. Lấy NA = 6,02×10^23 mol^-1, khối lượng mol của U-235 là 235 g/mol và 1 eV = 1,602×10^-19 J. Hãy xác định từng nhận định sau là đúng hay sai."
+      },
+      "reasons": [
+        {
+          "reason": "Bổ sung hằng số quy đổi/khối lượng mol ngay trong đề để câu hỏi tự đủ dữ kiện và thống nhất với đáp án đã kiểm tra.",
+          "origin": "constants-review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-25-VDC-T07",
+      "before": {
+        "statements": [
+          {
+            "text": "Số hạt mẹ còn lại theo cùng đơn vị tương đối là 37.5.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Sau 2 chu kì còn 1/4 ban đầu."
+          },
+          {
+            "text": "Trong phóng xạ beta trừ, A không đổi và Z tăng 1.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Beta trừ biến một neutron thành proton ở mức mô hình phổ thông."
+          },
+          {
+            "text": "Các đồng vị của cùng nguyên tố có cùng A nhưng khác Z.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Đồng vị có cùng Z, khác N và thường khác A."
+          },
+          {
+            "text": "Chất thải phóng xạ không cần quản lí đặc biệt nếu khối lượng nhỏ.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cần quản lí, che chắn và lưu giữ theo quy trình an toàn."
+          }
+        ]
+      },
+      "after": {
+        "statements": [
+          {
+            "text": "Số hạt mẹ còn lại theo cùng đơn vị tương đối là 37.5.",
+            "answer": true,
+            "level": "VD",
+            "competency": "Vận dụng kiến thức, kĩ năng",
+            "explain": "Sau 2 chu kì còn 1/4 ban đầu."
+          },
+          {
+            "text": "Trong phóng xạ beta trừ, A không đổi và Z tăng 1.",
+            "answer": true,
+            "level": "NB",
+            "competency": "Nhận biết vật lí",
+            "explain": "Beta trừ biến một neutron thành proton ở mức mô hình phổ thông."
+          },
+          {
+            "text": "Các đồng vị của cùng nguyên tố có cùng A nhưng khác Z.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Đồng vị có cùng Z nhưng khác N nên có số khối A khác nhau."
+          },
+          {
+            "text": "Chất thải phóng xạ không cần quản lí đặc biệt nếu khối lượng nhỏ.",
+            "answer": false,
+            "level": "TH",
+            "competency": "Tìm hiểu tự nhiên",
+            "explain": "Cần quản lí, che chắn và lưu giữ theo quy trình an toàn."
+          }
+        ]
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Giải thích sai quan hệ đồng vị: khác N khi cùng Z luôn dẫn tới khác A.",
+            "evidence": "A=Z+N. Khi Z không đổi và N khác nhau, hiệu A đúng bằng hiệu N; không có ngoại lệ để dùng “thường khác A”."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    },
+    {
+      "id": "NEW-25-VDC-S06",
+      "before": {
+        "explain": "m=(P_e t/ηE_f)·235/NA. Kết quả nhập theo yêu cầu: 1,75 kg."
+      },
+      "after": {
+        "explain": "E hạt nhân = P điện×t/η; N = E hạt nhân/E phân hạch; m = N×(0,235 kg/mol)/NA ≈ 1,75446 kg. Làm tròn đến 2 chữ số thập phân: 1,75 kg."
+      },
+      "reasons": [
+        {
+          "reason": {
+            "reason": "Công thức giải thích dùng 235 với kết quả tính theo kg mà thiếu đổi g sang kg.",
+            "evidence": "235 g/mol = 0.235 kg/mol. Khi P tính bằng W, t bằng s, E phân hạch bằng J, m=N×235/NA có đơn vị g; phải chia 1000 để cho kg."
+          },
+          "origin": "review-IV.json"
+        }
+      ]
+    }
+  ]
+}

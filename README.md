@@ -67,6 +67,19 @@ Kiểm tra trình duyệt dùng Playwright/Chromium và cơ sở dữ liệu t�
 
 Trang quản trị đặt lại bộ lọc khi đăng nhập để hiển thị danh sách tài khoản đã đăng kí. Nếu tìm kiếm không có kết quả, chọn **Xóa bộ lọc** cạnh danh sách để xem tất cả; lỗi tải danh sách có nút thử lại. Khi đăng xuất, danh sách và các ô mật khẩu admin được xóa khỏi giao diện.
 
+## Kiểm tra nội dung và LaTeX
+
+Ngân hàng hiệu lực gồm bản V3 và các sửa đổi đã rà soát trong `question_bank_audit.json`. [Báo cáo rà soát](audit/QUESTION_BANK_REVIEW.md) ghi phạm vi 1.000 câu, 872 mệnh đề Đúng/Sai và 668 phép tính độc lập; [sổ tính kiểm tra](audit/question-bank-review.json) lưu dữ kiện và kết quả. Không dùng riêng JSON gốc trong bundle để kết luận bản hiệu lực đã được kiểm tra.
+
+```bash
+PHY_APP_ROOT=/path/to/generated-app python scripts/validate_audited_bank.py --export /tmp/phy-reviewed-bank.json
+PHY_APP_ROOT=/path/to/generated-app python -m pytest -q tests/test_question_content_audit.py
+npm install --prefix /tmp/phy-math-tests mathjax-full@3.2.2
+PHY_APP_ROOT=/path/to/generated-app PHY_BANK_JSON=/tmp/phy-reviewed-bank.json PHY_MATHJAX_ROOT=/tmp/phy-math-tests/node_modules/mathjax-full PHY_MATH_AUDIT_DIR=/tmp/phy-math-results node tests/test_math_rendering.cjs
+```
+
+Bộ kiểm tra trình duyệt cần Playwright và Chromium (đã có trong môi trường cloud). Nó dùng MathJax 3.2.2 thực để kiểm tra toàn bộ câu dẫn, lựa chọn, mệnh đề, lời giải, đơn vị và nội dung sửa lỗi ở tám đường hiển thị. Bộ xử lí LaTeX thống nhất giữ công thức đã có, không dùng mã giữ chỗ và không bọc công thức lồng nhau. Kiểm tra chấm bài dùng Decimal ở các điểm làm tròn giữa, từ chối chuỗi nhiều đáp án, giữ dấu âm và kiểm tra dung sai theo yêu cầu câu hỏi.
+
 ## AI
 
 Bản public hoạt động hoàn chỉnh bằng Evidence Engine + adaptive engine ngay cả khi chưa có ML model đã huấn luyện.

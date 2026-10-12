@@ -12,6 +12,8 @@ COPY admin_patch.py /tmp/admin_patch.py
 COPY admin_bootstrap_patch.py /tmp/admin_bootstrap_patch.py
 COPY admin_password_patch.py /tmp/admin_password_patch.py
 COPY question_bank_quality_patch.py /tmp/question_bank_quality_patch.py
+COPY question_bank_content_audit_patch.py /tmp/question_bank_content_audit_patch.py
+COPY question_bank_audit.json /app/app/data/question_bank_audit.json
 COPY diagnostic_finish_fix.py /tmp/diagnostic_finish_fix.py
 COPY multi_school_home_patch.py /tmp/multi_school_home_patch.py
 COPY homepage_cleanup_patch.py /tmp/homepage_cleanup_patch.py
@@ -97,6 +99,7 @@ RUN python /tmp/admin_patch.py
 RUN python /tmp/admin_bootstrap_patch.py
 RUN python /tmp/admin_password_patch.py
 RUN python /tmp/question_bank_quality_patch.py
+RUN python /tmp/question_bank_content_audit_patch.py
 RUN python /tmp/diagnostic_finish_fix.py
 RUN python /tmp/multi_school_home_patch.py
 RUN python /tmp/homepage_cleanup_patch.py
