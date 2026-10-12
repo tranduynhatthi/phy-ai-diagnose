@@ -103,3 +103,16 @@ Dữ liệu người dùng được lưu trong PostgreSQL:
 - teacher_labels
 
 Không dùng họ tên học sinh trực tiếp trong file training export; script xuất training data băm student ID.
+
+
+## Hybrid AI v1.1 — OpenAI Responses API
+
+Bản này bổ sung LLM API thật nhưng không thay Evidence Engine. Trong phiên Chẩn đoán, học sinh có thể nhập 1–3 câu giải thích cách nghĩ; backend gửi phần lập luận cùng ngữ cảnh câu hỏi tới OpenAI Responses API và chỉ nhận candidate evidence theo ontology lỗi hợp lệ.
+
+- LLM không tự gán trạng thái lỗi và không thể một mình tạo hồ sơ lỗi.
+- Evidence Engine vẫn là lớp quyết định chính; tín hiệu LLM chỉ hỗ trợ khi đã có bằng chứng sai định lượng.
+- Request dùng Structured Outputs, `store=false`, và không gửi họ tên/tên đăng nhập học sinh.
+- Thiếu API key hoặc provider lỗi thì hệ thống tự động fallback về Evidence Engine.
+- Kiểm tra trạng thái tại `GET /api/ai/status`; smoke test dành cho giáo viên/admin tại `POST /api/ai/analyze-reasoning`.
+
+Để kích hoạt, đặt `OPENAI_API_KEY` trong Railway Variables. Mặc định dùng `OPENAI_MODEL=gpt-6-luna` để giảm chi phí cho tác vụ phân loại/chiết xuất ngắn.
