@@ -3,7 +3,7 @@ from pathlib import Path
 p = Path('/app/app/static/index.html')
 html = p.read_text(encoding='utf-8')
 
-marker = '<!-- PHY_AI_LATEX_STANDARD_V1 -->'
+marker = '<!-- PHY_AI_LATEX_STANDARD_V2 -->'
 if marker not in html:
     script = r'''
 <!-- PHY_AI_LATEX_STANDARD_V1 -->
@@ -19,7 +19,10 @@ if marker not in html:
     'mW','kW','MW','mV','kV','mA','μA','mT','mWb','kΩ','MΩ',
     'nm','μm','mm','cm','dm','km','mg','μg','kg','ms','μs','ns',
     'mol','rad','sr','Hz','Pa','atm','bar','eV','J','N','W','C','V','A','T','K','Wb','Ω',
-    'Bq','Gy','Sv','u','g','m','s','L','mL','dB','%'
+    'Bq','Gy','Sv','u','g','m','s','L','mL','dB','%',
+    'J/kg','J/(kg.K)','J/(kg·K)','J/(kg K)','W/(m.K)','W/(m·K)','N/A','N/(A.m)','N/(A·m)',
+    'kg/m3','kg/m^3','kg/m³','m/s','m/s2','m/s^2','m/s²','m2','m^2','m²','m3','m^3','m³',
+    'C/kg','J/mol','J/(mol.K)','J/(mol·K)','Pa.s','Pa·s','N.m','N·m','V/m','A/m','W/m2','W/m^2','W/m²'
   ].sort((a,b)=>b.length-a.length);
 
   const unitAtom = '(?:' + baseUnits.map(u=>u.replace(/[.*+?^$()|[\]\\{}]/g,'\\$&')).join('|') + ')';
@@ -69,7 +72,8 @@ if marker not in html:
     return out;
   }
   function unitToTex(raw){
-    let s=String(raw).trim().replace(/[()]/g,'').replace(/⋅/g,'·');
+    let s=String(raw).trim().replace(/⋅/g,'·').replace(/\.K\b/g,'·K').replace(/\.m\b/g,'·m').replace(/\.s\b/g,'·s');
+    s=s.replace(/\(([^()]*)\)/g,'$1');
     if(s==='°C' || s==='℃') return '^{\\circ}\\mathrm{C}';
     if(s==='°') return '^{\\circ}';
     if(s==='%') return '\\%';
@@ -77,6 +81,7 @@ if marker not in html:
     const slash=s.indexOf('/');
     let num=s, den='';
     if(slash>=0){ num=s.slice(0,slash); den=s.slice(slash+1); }
+    den=den.replace(/^\s*\(|\)\s*$/g,'');
 
     const splitPart=(part,denom)=>part
       .split(/\s*(?:[·.]|\s)\s*/u)
@@ -126,6 +131,7 @@ if marker not in html:
 
     s=s.replace(/√\s*\(([^)]+)\)/g,'\\sqrt{$1}')
        .replace(/√\s*([A-Za-z0-9]+)/g,'\\sqrt{$1}');
+    s=s.replace(/\b([0-9]{1,3})\s*([A-Z][a-z]?)\b/g,'{}^{$1}\\mathrm{$2}');
     s=s.replace(/\bsin\s*/g,'\\sin ').replace(/\bcos\s*/g,'\\cos ')
        .replace(/\btan\s*/g,'\\tan ').replace(/\bln\s*/g,'\\ln ')
        .replace(/\blog\s*/g,'\\log ');
@@ -163,9 +169,14 @@ if marker not in html:
 
     raw=raw.replace(quantityRe,(m,n,u)=>hold(quantityToTex(n,u)));
 
+    // Common SI compound units written in textbook style, e.g. kg/m³, J/(kg·K), m/s².
+    raw=raw.replace(/\b(J\s*\/\s*\(?\s*kg\s*[·.]?\s*K\s*\)?|W\s*\/\s*\(?\s*m\s*[·.]?\s*K\s*\)?|kg\s*\/\s*m(?:\^?3|³)|m\s*\/\s*s(?:\^?2|²)|m\s*\/\s*s|N\s*\/\s*\(?\s*A\s*[·.]?\s*m\s*\)?|W\s*\/\s*m(?:\^?2|²)|J\s*\/\s*kg|J\s*\/\s*mol)\b/gu,
+      m=>hold(unitToTex(m.replace(/\s+/g,''))));
+
     raw=raw.replace(/\(([^()]{1,28})\)/gu,(m,u)=>isUnitExpr(u)?'('+hold(unitToTex(u))+')':m);
 
     raw=raw.replace(/\\\((.+?)\\\)/gs,(_,x)=>hold(standardTexCore(x)));
+    raw=raw.replace(/\\\[(.+?)\\\]/gs,(_,x)=>hold(standardTexCore(x)));
     raw=raw.replace(/\$([^$\n]+)\$/g,(_,x)=>hold(standardTexCore(x)));
 
     let out = legacyMathHtml ? legacyMathHtml(raw) : esc(raw);
