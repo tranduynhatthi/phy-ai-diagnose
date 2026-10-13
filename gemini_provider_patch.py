@@ -21,14 +21,14 @@ pattern = re.compile(
     r'    llm_min_reasoning_chars: int = [^\n]+\n'
     r'    llm_max_confidence_boost: float = [^\n]+\n'
 )
-replacement = '''    # Hybrid LLM provider. Evidence Engine remains authoritative and works without an API key.\n    llm_enabled: bool = True\n    ai_provider: str = "gemini"  # gemini | openai | auto\n\n    # Gemini Developer API\n    gemini_api_key: str = ""\n    gemini_model: str = "gemini-3.5-flash-lite"\n    gemini_timeout_seconds: float = 12.0\n    gemini_max_retries: int = 1\n\n    # OpenAI fallback/compatibility (optional)\n    openai_api_key: str = ""\n    openai_model: str = "gpt-6-luna"\n    openai_timeout_seconds: float = 12.0\n    openai_max_retries: int = 1\n\n    llm_max_output_tokens: int = 500\n    llm_min_reasoning_chars: int = 8\n    llm_max_confidence_boost: float = 10.0\n'''
+replacement = '''    # Hybrid LLM provider. Evidence Engine remains authoritative and works without an API key.\n    llm_enabled: bool = True\n    ai_provider: str = "gemini"  # gemini | openai | auto\n\n    # Gemini Developer API\n    gemini_api_key: str = ""\n    gemini_model: str = "gemini-3.1-flash-lite"\n    gemini_timeout_seconds: float = 12.0\n    gemini_max_retries: int = 1\n\n    # OpenAI fallback/compatibility (optional)\n    openai_api_key: str = ""\n    openai_model: str = "gpt-6-luna"\n    openai_timeout_seconds: float = 12.0\n    openai_max_retries: int = 1\n\n    llm_max_output_tokens: int = 500\n    llm_min_reasoning_chars: int = 8\n    llm_max_confidence_boost: float = 10.0\n'''
 config2, n = pattern.subn(replacement, config, count=1)
 if n != 1:
     if 'gemini_api_key:' not in config:
         anchor = '    llm_enabled: bool = True\n'
         if anchor not in config:
             raise SystemExit('Could not locate LLM config block')
-        config2 = config.replace(anchor, anchor + '''    ai_provider: str = "gemini"\n    gemini_api_key: str = ""\n    gemini_model: str = "gemini-3.5-flash-lite"\n    gemini_timeout_seconds: float = 12.0\n    gemini_max_retries: int = 1\n''', 1)
+        config2 = config.replace(anchor, anchor + '''    ai_provider: str = "gemini"\n    gemini_api_key: str = ""\n    gemini_model: str = "gemini-3.1-flash-lite"\n    gemini_timeout_seconds: float = 12.0\n    gemini_max_retries: int = 1\n''', 1)
     else:
         config2 = config
 config_path.write_text(config2, encoding='utf-8')
@@ -119,7 +119,7 @@ class LLMGateway:
         if provider == "gemini":
             configured = bool(self.settings.llm_enabled and getattr(self.settings, "gemini_api_key", ""))
             client_ready = configured
-            model = getattr(self.settings, "gemini_model", "gemini-3.5-flash-lite")
+            model = getattr(self.settings, "gemini_model", "gemini-3.1-flash-lite")
         else:
             configured = bool(self.settings.llm_enabled and self.settings.openai_api_key)
             client_ready = self._get_openai_client() is not None if configured else False
@@ -170,7 +170,7 @@ class LLMGateway:
         return sorted(seen.values(), key=lambda x: x["strength"], reverse=True)[:5]
 
     def _gemini_request(self, *, instructions: str, payload: dict) -> tuple[dict, str | None, int]:
-        model = str(getattr(self.settings, "gemini_model", "gemini-3.5-flash-lite"))
+        model = str(getattr(self.settings, "gemini_model", "gemini-3.1-flash-lite"))
         key = str(getattr(self.settings, "gemini_api_key", ""))
         if not key:
             raise RuntimeError("gemini_not_configured")
@@ -250,7 +250,7 @@ class LLMGateway:
         return {
             "used": True,
             "provider": "gemini",
-            "model": data.get("modelVersion") or getattr(self.settings, "gemini_model", "gemini-3.5-flash-lite"),
+            "model": data.get("modelVersion") or getattr(self.settings, "gemini_model", "gemini-3.1-flash-lite"),
             "request_id": request_id,
             "candidate_errors": candidates,
             "feedback": str(parsed.get("feedback", ""))[:800],
@@ -370,7 +370,7 @@ env_path = ROOT / '.env.example'
 if env_path.exists():
     env = env_path.read_text(encoding='utf-8')
     if 'GEMINI_API_KEY=' not in env:
-        env += '''\n# Hybrid AI provider\nAI_PROVIDER=gemini\nGEMINI_API_KEY=\nGEMINI_MODEL=gemini-3.5-flash-lite\nGEMINI_TIMEOUT_SECONDS=12\nGEMINI_MAX_RETRIES=1\n'''
+        env += '''\n# Hybrid AI provider\nAI_PROVIDER=gemini\nGEMINI_API_KEY=\nGEMINI_MODEL=gemini-3.1-flash-lite\nGEMINI_TIMEOUT_SECONDS=12\nGEMINI_MAX_RETRIES=1\n'''
         env_path.write_text(env, encoding='utf-8')
 
 print('Gemini provider patch applied')
