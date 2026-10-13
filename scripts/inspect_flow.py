@@ -9,7 +9,7 @@ def section(path, start, end):
         print(f"NOT_FOUND {path} :: {start}")
         return
     if b<0:
-        b=min(len(s),a+14000)
+        b=min(len(s),a+16000)
     print(f"=== {path} :: {start} ===")
     print(s[a:b])
 
@@ -18,14 +18,10 @@ section("app/services.py",'def diagnostic_profiles_from_session','def recent_per
 section("app/services.py",'def build_repair','def grade_repair_item')
 section("app/services.py",'def grade_repair_item','def ')
 
-p=Path("app/data/question_bank.json")
-data=json.loads(p.read_text(encoding="utf-8"))
-errs=data.get("errors",[])
-match=[e for e in errs if e.get("id")=="VLN-01"]
-print("=== VLN-01 ERROR ===")
-print(json.dumps(match,ensure_ascii=False,indent=2))
-print("=== QUESTIONS TAGGED VLN-01 ===")
-for q in data.get("questions",[]):
-    blob=json.dumps(q,ensure_ascii=False)
-    if "VLN-01" in blob:
+from app.main import bank
+print("=== EFFECTIVE VLN-01 ERROR ===")
+print(json.dumps(bank.error_by_id.get("VLN-01"),ensure_ascii=False,indent=2))
+print("=== EFFECTIVE QUESTIONS TAGGED VLN-01 ===")
+for q in bank.questions:
+    if "VLN-01" in json.dumps(q,ensure_ascii=False):
         print(json.dumps(q,ensure_ascii=False,indent=2))
