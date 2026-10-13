@@ -24,6 +24,7 @@ COPY latex_standard_patch.py /tmp/latex_standard_patch.py
 COPY hybrid_patch /tmp/hybrid_patch
 COPY gemini_provider_patch.py /tmp/gemini_provider_patch.py
 COPY v3_patch /app/v3_patch
+COPY scripts/inspect_flow.py /app/scripts/inspect_flow.py
 RUN python - <<'PY'
 from pathlib import Path
 import base64, zipfile, shutil, re
