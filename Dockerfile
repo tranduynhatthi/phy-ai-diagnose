@@ -83,7 +83,7 @@ html = html.replace(
     '<div class="field"><label>Mức đề</label><select id="examLevel"><option value="balanced" selected>Cân bằng</option><option value="foundation">Củng cố nền tảng</option><option value="developing">Đang phát triển</option><option value="proficient">Khá – vững</option><option value="advanced">Nâng cao</option></select></div>'
 )
 html = re.sub(
-    r"let p=await api\('/api/profile'\);let a=p\.ability;\$('abilityBox'\)\.innerHTML=\`.*?\`;\$('errorProfile'\)",
+    r"let p=await api\('/api/profile'\);let a=p\.ability;\$\('abilityBox'\)\.innerHTML=\`.*?\`;\$\('errorProfile'\)",
     "let p=await api('/api/profile');$('errorProfile')",
     html,
     count=1
