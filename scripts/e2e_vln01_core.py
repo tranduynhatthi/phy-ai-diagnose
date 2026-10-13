@@ -137,14 +137,13 @@ try:
     questions = started["questions"]
     qids = [q["id"] for q in questions]
 
-    tagged = [
-        qid for qid in qids
-        if TARGET_ERROR in json.dumps(m.bank.by_id[qid], ensure_ascii=False)
-    ]
+    # These two validated Bài 1 diagnostic items expose the target
+    # misconception through statement 3: "các hạt trong vật rắn đứng yên".
     preferred = [qid for qid in ("EXT-01-T01", "EXT-01-T04") if qid in qids]
-    targets = preferred if len(preferred) >= 2 else tagged[:2]
-    if len(targets) < 2:
-        raise RuntimeError(f"Need >=2 VLN-01 questions; found {tagged}")
+    if len(preferred) < 2:
+        emit("DIAG_START", {"session_id": diag_id, "question_ids": qids, "targets": preferred})
+        raise RuntimeError(f"Expected EXT-01-T01 and EXT-01-T04 in standard Bài 1 diagnostic; got {qids}")
+    targets = preferred
     emit("DIAG_START", {"session_id": diag_id, "question_ids": qids, "targets": targets})
 
     ai_evidence = []
