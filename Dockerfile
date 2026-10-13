@@ -22,6 +22,7 @@ COPY role_portal_patch.py /tmp/role_portal_patch.py
 COPY admin_accounts_patch.py /tmp/admin_accounts_patch.py
 COPY latex_standard_patch.py /tmp/latex_standard_patch.py
 COPY hybrid_patch /tmp/hybrid_patch
+COPY gemini_provider_patch.py /tmp/gemini_provider_patch.py
 COPY v3_patch /app/v3_patch
 RUN python - <<'PY'
 from pathlib import Path
@@ -82,7 +83,7 @@ html = html.replace(
     '<div class="field"><label>Mức đề</label><select id="examLevel"><option value="balanced" selected>Cân bằng</option><option value="foundation">Củng cố nền tảng</option><option value="developing">Đang phát triển</option><option value="proficient">Khá – vững</option><option value="advanced">Nâng cao</option></select></div>'
 )
 html = re.sub(
-    r"let p=await api\('/api/profile'\);let a=p\.ability;\$\('abilityBox'\)\.innerHTML=\`.*?\`;\$\('errorProfile'\)",
+    r"let p=await api\('/api/profile'\);let a=p\.ability;\$('abilityBox'\)\.innerHTML=\`.*?\`;\$('errorProfile'\)",
     "let p=await api('/api/profile');$('errorProfile')",
     html,
     count=1
@@ -109,6 +110,7 @@ RUN python /tmp/role_portal_patch.py
 RUN python /tmp/admin_accounts_patch.py
 RUN python /tmp/latex_standard_patch.py
 RUN cat /tmp/hybrid_patch/part*.b64 | base64 -d | gzip -d > /tmp/hybrid_ai_patch.py && python /tmp/hybrid_ai_patch.py
+RUN python /tmp/gemini_provider_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/models
