@@ -232,6 +232,7 @@ class LLMGateway:
 
     def _analyze_gemini(self, *, payload: dict, instructions: str, valid_codes: set[str]) -> dict:
         data, request_id, _status = self._gemini_request(instructions=instructions, payload=payload)
+        request_id = request_id or data.get("responseId")
         candidates_raw = data.get("candidates") or []
         if not candidates_raw:
             self._last_error = "empty_response"
