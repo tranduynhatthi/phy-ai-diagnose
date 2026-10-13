@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import itertools
 import json
+import sys
 from dataclasses import asdict
 from datetime import datetime, timezone
 
 from sqlalchemy import delete, select
 
+sys.path.insert(0, "/app")
 import app.main as m
 
 
