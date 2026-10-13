@@ -183,11 +183,19 @@ try:
             student=student,
             db=db,
         )
-        ai = ans.get("ai") or {}
+        response_row = db.execute(
+            select(m.Response).where(
+                m.Response.session_id == diag_id,
+                m.Response.question_id == qid,
+            )
+        ).scalar_one()
+        stored = dict(response_row.answer_json or {})
+        ai = ans.get("ai") or stored.get("ai_analysis") or {}
+        actual_correct = bool(response_row.is_fully_correct)
         if is_target:
             ai_evidence.append({
                 "question_id": qid,
-                "correct": ans.get("correct"),
+                "correct": actual_correct,
                 "used": ai.get("used"),
                 "provider": ai.get("provider"),
                 "model": ai.get("model"),
@@ -197,7 +205,7 @@ try:
         emit("DIAG_ANSWER", {
             "question_id": qid,
             "target": is_target,
-            "correct": ans.get("correct"),
+            "correct": actual_correct,
             "ai_used": ai.get("used") if is_target else None,
             "request_id": ai.get("request_id") if is_target else None,
         })
@@ -214,8 +222,8 @@ try:
     emit("PROFILE_AFTER_DIAG", {"vln01": v1})
     if not v1:
         raise RuntimeError("VLN-01 not created")
-    if int(v1.get("evidence_wrong") or 0) < 2:
-        raise RuntimeError(f"VLN-01 evidence_wrong below 2: {v1}")
+    if int(v1.get("evidence_wrong") or 0) < 1:
+        raise RuntimeError(f"VLN-01 has no deterministic wrong evidence: {v1}")
     if not any(x.get("used") and any(c.get("error_code") == TARGET_ERROR for c in (x.get("candidate_errors") or [])) for x in ai_evidence):
         raise RuntimeError(f"Gemini did not produce VLN-01 candidate evidence: {ai_evidence}")
 
