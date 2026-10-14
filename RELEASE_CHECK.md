@@ -67,3 +67,5 @@ Selector cũ chọn ngẫu nhiên đã được giữ cho chế độ luyện t�
 - không ghi nhận HTTP 5xx trong cửa sổ 24 giờ được kiểm tra.
 
 Sau khi merge, phải chạy lại E2E production bằng selector một lần duy nhất rồi gỡ pre-deploy smoke command trước khi mở cho học sinh.
+
+<!-- production-e2e-trigger: 2026-10-14-v1.3 -->
