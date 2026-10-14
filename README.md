@@ -6,7 +6,8 @@ Bản triển khai server của PHY-AI DIAGNOSE cho Vật lí 12.
 
 - 1.000 câu, 250 câu/chương.
 - Ôn tập theo bài / theo chương.
-- Chẩn đoán lỗi tư duy bằng Evidence Engine.
+- Chẩn đoán lỗi tư duy bằng Evidence Engine + Gemini candidate evidence.
+- Chẩn đoán thích ứng: phủ lỗi theo bài/chương và ưu tiên xác nhận lại hồ sơ lỗi đã phát hiện/đã sửa.
 - Hồ sơ lỗi cá nhân.
 - Phiên sửa lỗi 10 câu.
 - Đề luyện cuối năm 18 MCQ + 4 Đúng/Sai + 6 trả lời ngắn, 50 phút.
@@ -20,6 +21,7 @@ Bản triển khai server của PHY-AI DIAGNOSE cho Vật lí 12.
 - Xuất CSV lớp và nhãn giáo viên cho nghiên cứu.
 - PostgreSQL production; SQLite dùng được cho chạy thử.
 - JWT authentication + Argon2 password hashing.
+- Privacy notice cho học sinh và security headers cho bản public.
 - Docker / Railway / Render / VPS ready.
 - AI model registry tùy chọn; AI không tự ghi đè hồ sơ lỗi.
 
@@ -105,7 +107,7 @@ Dữ liệu người dùng được lưu trong PostgreSQL:
 Không dùng họ tên học sinh trực tiếp trong file training export; script xuất training data băm student ID.
 
 
-## Hybrid AI v1.2 — Gemini + Evidence Engine
+## Hybrid AI v1.3 — Gemini + Evidence Engine
 
 Bản production dùng Gemini API để phân tích phần giải thích của học sinh nhưng không thay Evidence Engine. Trong phiên Chẩn đoán, học sinh có thể nhập 1–3 câu giải thích cách nghĩ; backend gửi phần lập luận cùng ngữ cảnh câu hỏi tới Gemini và chỉ nhận candidate evidence theo ontology lỗi hợp lệ.
 
@@ -114,8 +116,16 @@ Bản production dùng Gemini API để phân tích phần giải thích của h
 - Production hiện dùng `GEMINI_MODEL=gemini-3.1-flash-lite`.
 - Mỗi response thành công lưu `responseId` của Gemini làm `request_id` phục vụ kiểm tra/audit.
 - Thiếu API key, timeout hoặc provider lỗi thì hệ thống fallback về Evidence Engine và phiên chẩn đoán vẫn tiếp tục.
+- Phiên chẩn đoán mới dùng `coverage_first`; khi đã có hồ sơ lỗi dùng `profile_targeted`, ưu tiên hai probe độc lập cho lỗi cần xác nhận lại khi ngân hàng có đủ câu.
 - Sau can thiệp, một phiên chẩn đoán lại có ít nhất hai probe đúng cho cùng lỗi sẽ giảm độ tin cậy hồ sơ lỗi, nhưng vẫn giữ lịch sử bằng chứng và trạng thái sửa lỗi.
 - Kiểm tra trạng thái tại `GET /api/ai/status`; smoke test dành cho giáo viên/admin tại `POST /api/ai/analyze-reasoning`.
 - Regression E2E cho luồng VLN-01 nằm tại `scripts/e2e_vln01_core.py`.
 
 Để kích hoạt, đặt `AI_PROVIDER=gemini`, `GEMINI_API_KEY` và `GEMINI_MODEL=gemini-3.1-flash-lite` trong Railway Variables.
+
+
+## Release gate v1.3
+
+Release candidate ngày 14/10/2026 được kiểm tra bằng `Dockerfile.releasecheck`: 77 Python regressions, Playwright cho hai cổng người dùng và trang quản trị, audit 1.000 câu, cùng full MathJax rendering 7.034 trường/8.190 biểu thức đều đạt. Chi tiết xem `RELEASE_CHECK.md`.
+
+Bản public bổ sung các header chống MIME sniffing/clickjacking, cache policy cho API/HTML và thông báo quyền riêng tư ngay tại cổng học sinh.

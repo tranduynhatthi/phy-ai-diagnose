@@ -11,3 +11,11 @@
 - Rotate `SECRET_KEY` nếu bị lộ; thao tác này sẽ làm token cũ mất hiệu lực.
 - Backup PostgreSQL định kỳ.
 - Khi dùng AI model, chỉ deploy model đã được đánh giá độc lập.
+
+## Public web hardening
+
+- API dùng `Cache-Control: no-store`; HTML dùng `Cache-Control: no-cache`.
+- Response public thêm `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: same-origin` và `Permissions-Policy` khóa camera/microphone/geolocation.
+- HTTPS response thêm HSTS.
+- Trang và API đặt `X-Robots-Tag: noindex, nofollow` để tránh index dữ liệu học tập.
+- Gemini failure/timeout không làm hỏng phiên chẩn đoán; hệ thống fallback về Evidence Engine.
