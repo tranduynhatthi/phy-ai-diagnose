@@ -1,8 +1,6 @@
 name: Socratic Tutor v1.6 release gate
 
 on:
-  push:
-    branches: [feature/socratic-tutor-v1-6]
   pull_request:
     branches: [main]
   workflow_dispatch:
