@@ -332,7 +332,9 @@ main = main.replace(old_answer, new_answer, 1)
 
 # Diagnostic finish: Gemini becomes a visible coach, but only after the Evidence
 # Engine has created/updated the profile.
-old_finish = '    return {"session":public_session(s),"profiles":profiles}\n\n@app.post("/api/repair/start")'
+finish_pattern = re.compile(
+    r'    return \\{"session":public_session\\(s\\),"profiles":profiles\\}\\n+(?=@app\\.post\\("/api/repair/start"\\))'
+)
 new_finish = '''    coach_profiles = []
     reasoning_evidence = []
     if s.kind == "diagnostic":
@@ -375,9 +377,9 @@ new_finish = '''    coach_profiles = []
     return {"session":public_session(s),"profiles":profiles,"ai_coach":ai_coach}
 
 @app.post("/api/repair/start")'''
-if old_finish not in main:
-    raise SystemExit("AI coach patch: finish_practice return marker not found")
-main = main.replace(old_finish, new_finish, 1)
+main, finish_matches = finish_pattern.subn(new_finish, main, count=1)
+if finish_matches != 1:
+    raise SystemExit(f"AI coach patch: finish_practice return marker matches={finish_matches}")
 
 # Exam finish: AI summarizes only already-verified profiles and chapter scores.
 old_exam_return = '    return {"session":public_session(s),"result":result,"review":review,"ability_after":recent_performance(db,student.id),"post_exam_diagnosis":{"profiles":post_exam_profiles,"weak_chapter":weak_chapter,"weak_rate":round(weak_rate,4) if weak_rate is not None else None}}\n'
