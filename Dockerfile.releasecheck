@@ -41,6 +41,7 @@ COPY v3_patch /app/v3_patch
 COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
 COPY scripts/validate_audited_bank.py /app/scripts/validate_audited_bank.py
 COPY scripts/inspect_release_flow.py /app/scripts/inspect_release_flow.py
+COPY scripts/audit_formula_stems.py /app/scripts/audit_formula_stems.py
 COPY tests /app/tests
 COPY homepage_cleanup_patch.py /app/homepage_cleanup_patch.py
 COPY multi_school_home_patch.py /app/multi_school_home_patch.py
@@ -138,6 +139,7 @@ RUN python /tmp/public_release_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python /app/scripts/inspect_release_flow.py
+RUN python /app/scripts/audit_formula_stems.py
 RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_homepage_cleanup.py /app/tests/test_role_access.py /app/tests/test_question_content_audit.py /app/tests/test_adaptive_diagnostic.py /app/tests/test_public_release.py
 RUN PHY_APP_ROOT=/app PHY_PYTHON=/usr/local/bin/python node /app/tests/test_role_portals.cjs
 RUN PHY_APP_ROOT=/app PHY_PYTHON=/usr/local/bin/python node /app/tests/test_admin_accounts.cjs
