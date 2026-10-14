@@ -26,7 +26,6 @@ COPY gemini_provider_patch.py /tmp/gemini_provider_patch.py
 COPY diagnostic_ai_flow_patch.py /tmp/diagnostic_ai_flow_patch.py
 COPY recheck_profile_patch.py /tmp/recheck_profile_patch.py
 COPY v3_patch /app/v3_patch
-COPY scripts/inspect_flow.py /app/scripts/inspect_flow.py
 COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
 RUN python - <<'PY'
 from pathlib import Path
