@@ -1,0 +1,48 @@
+name: Socratic Tutor v1.6 release gate
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: socratic-v16-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  releasecheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GEMINI_API_KEY: ""
+      OPENAI_API_KEY: ""
+      LLM_ENABLED: "false"
+      SOCRATIC_TUTOR_ENABLED: "false"
+      SOCRATIC_TUTOR_LLM_ENABLED: "false"
+    steps:
+      - name: Checkout proposed revision only
+        uses: actions/checkout@v4
+      - name: Build isolated release-check image (offline AI)
+        run: docker build --progress=plain --file Dockerfile.releasecheck --tag phy-ai-socratic-v16:ci .
+      - name: Smoke check API and Socratic feature-off on temporary SQLite
+        run: |
+          set -euo pipefail
+          docker run --rm -d --name phy-ai-socratic-ci -p 18080:8000 \
+            -e ENVIRONMENT=development \
+            -e DATABASE_URL=sqlite:////tmp/phy_ai_ci.sqlite3 \
+            -e SECRET_KEY=ci-only-test-key-please-never-deploy \
+            -e LLM_ENABLED=false \
+            -e SOCRATIC_TUTOR_ENABLED=false \
+            -e SOCRATIC_TUTOR_LLM_ENABLED=false \
+            phy-ai-socratic-v16:ci
+          trap 'docker logs phy-ai-socratic-ci || true; docker rm -f phy-ai-socratic-ci || true' EXIT
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:18080/api/health >/tmp/phy-health.json; then break; fi
+            sleep 2
+          done
+          cat /tmp/phy-health.json
+          test "$(curl -s -o /tmp/tutor-off.json -w '%{http_code}' -X POST http://127.0.0.1:18080/api/tutor/start -H 'Content-Type: application/json' -d '{"error_id":"VLN-01"}')" != "500"
+          echo 'Smoke checked: /api/health ready, tutor rejects anonymous without 5xx'
