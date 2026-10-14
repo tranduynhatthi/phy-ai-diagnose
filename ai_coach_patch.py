@@ -333,7 +333,8 @@ main = main.replace(old_answer, new_answer, 1)
 # Diagnostic finish: Gemini becomes a visible coach, but only after the Evidence
 # Engine has created/updated the profile.
 finish_pattern = re.compile(
-    r'    return \\{"session":public_session\\(s\\),"profiles":profiles\\}\\n+(?=@app\\.post\\("/api/repair/start"\\))'
+    re.escape('    return {"session":public_session(s),"profiles":profiles}') +
+    r'\\s+(?=@app\\.post\\("/api/repair/start"\\))'
 )
 new_finish = '''    coach_profiles = []
     reasoning_evidence = []
