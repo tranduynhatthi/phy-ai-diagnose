@@ -1,6 +1,6 @@
-# PHY-AI DIAGNOSE — Production Server
+# PHY-AI DIAGNOSE — Trợ lý tự học Vật lí 12
 
-Bản triển khai server của PHY-AI DIAGNOSE cho Vật lí 12.
+PHY-AI DIAGNOSE hướng tới học sinh trung bình và yếu: giúp các em tự học theo vòng lặp làm bài → nhận diện lỗi tư duy → sửa đúng lỗi → luyện đề → kiểm tra lại.
 
 ## Tính năng đã hoàn thiện
 
@@ -16,9 +16,9 @@ Bản triển khai server của PHY-AI DIAGNOSE cho Vật lí 12.
 - Hai khu đăng nhập riêng dành cho giáo viên và học sinh; đăng kí học sinh bằng mã lớp.
 - Tài khoản giáo viên / quản trị viên bootstrap bằng biến môi trường.
 - Lớp học + mã tham gia.
-- Dashboard giáo viên.
-- Quản lí học sinh lớp giáo viên phụ trách; giữ tổng quan trường để phối hợp theo dõi.
-- Xuất CSV lớp và nhãn giáo viên cho nghiên cứu.
+- Giao diện public tập trung hoàn toàn vào học sinh; không hiển thị dashboard quản lí giáo viên.
+- Sau mỗi đề ôn tập, hệ thống dùng bằng chứng từ bài làm để tạo chẩn đoán sau đề, gợi ý sửa lỗi hoặc chẩn đoán sâu chương yếu.
+- Khung giải thích cách nghĩ được mở rộng để học sinh mô tả lập luận rõ hơn cho AI và Evidence Engine.
 - PostgreSQL production; SQLite dùng được cho chạy thử.
 - JWT authentication + Argon2 password hashing.
 - Privacy notice cho học sinh và security headers cho bản public.
@@ -129,3 +129,12 @@ Bản production dùng Gemini API để phân tích phần giải thích của h
 Release candidate ngày 14/10/2026 được kiểm tra bằng `Dockerfile.releasecheck`: 77 Python regressions, Playwright cho hai cổng người dùng và trang quản trị, audit 1.000 câu, cùng full MathJax rendering 7.034 trường/8.190 biểu thức đều đạt. Chi tiết xem `RELEASE_CHECK.md`.
 
 Bản public bổ sung các header chống MIME sniffing/clickjacking, cache policy cho API/HTML và thông báo quyền riêng tư ngay tại cổng học sinh.
+
+
+## Định hướng tự học v1.4
+
+Bản v1.4 chuyển trọng tâm từ quản lí lớp sang năng lực tự học của học sinh trung bình và yếu. Giao diện giáo viên được loại khỏi cổng public; backend phân quyền quản trị vẫn được giữ để vận hành hệ thống.
+
+Sau mỗi đề ôn tập, response có thêm post_exam_diagnosis. Các câu trong đề có mapping lỗi hợp lệ được dùng như bằng chứng; học sinh có thể chọn “Sửa lỗi ngay”. Nếu chưa đủ bằng chứng cho một lỗi cụ thể, hệ thống xác định chương yếu nhất và mở một phiên chẩn đoán sâu.
+
+Question bank áp dụng chính sách không đưa sẵn trong câu dẫn các công thức đã học trong SGK Vật lí 12. Dữ kiện, hằng số và công thức ngoài phạm vi đã học vẫn được giữ khi cần. Chi tiết xem audit/SGK_FORMULA_STEM_POLICY.md.

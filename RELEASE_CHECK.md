@@ -82,3 +82,39 @@ Selector cũ chọn ngẫu nhiên đã được giữ cho chế độ luyện t�
 
 Pre-deploy E2E command đã được gỡ sau kiểm thử; các deployment tiếp theo không tự chạy smoke test với Gemini.
 
+
+
+# Release candidate v1.4 — Student self-study
+
+## Mục tiêu sản phẩm
+
+- Trọng tâm: tăng khả năng tự học và năng lực Vật lí của học sinh trung bình, yếu.
+- Public UI chỉ còn cổng học sinh; giao diện quản lí giáo viên không còn hiển thị.
+- Lộ trình hiển thị trực tiếp: Chẩn đoán → Sửa lỗi → Luyện đề → Kiểm tra lại.
+- Đề ôn tập dùng mức Tự động theo kết quả gần đây làm lựa chọn mặc định.
+- Khung nhập phần giải thích cách nghĩ có chiều cao tối thiểu 160 px và cho phép kéo giãn.
+
+## Chẩn đoán sau đề
+
+Endpoint nộp đề trả thêm post_exam_diagnosis:
+- tổng hợp bằng chứng lỗi từ các câu có mapping lỗi hợp lệ;
+- trả danh sách lỗi, tiêu đề, bài/chương và confidence;
+- xác định chương có tỉ lệ làm đúng thấp nhất;
+- UI cung cấp nút Sửa lỗi ngay;
+- nếu chưa đủ bằng chứng cho một lỗi cụ thể, học sinh được chuyển sang Chẩn đoán sâu ở chương yếu nhất.
+
+## Kiểm duyệt công thức SGK
+
+Question bank hiệu lực áp dụng student_selfstudy_policy sau content audit. Release gate kiểm tra rằng các công thức đã học trong SGK Vật lí 12 không còn bị chép lại như gợi ý trong câu dẫn. Công thức chỉ được dùng ở lời giải/sửa lỗi sau khi học sinh trả lời.
+
+Kết quả release gate:
+- SGK_FORMULA_STEM_VIOLATIONS = 0.
+- Python regressions: 81 passed, 1 deprecation warning; không có test lỗi.
+- Browser regression student-only: PASS.
+- Đăng kí không cần mã lớp, đăng nhập và điều hướng student-only: PASS.
+- Khung giải thích chẩn đoán >= 150 px trên browser test: PASS.
+- Tạo đề tự động và submit đề: PASS.
+- Response sau đề có post_exam_diagnosis và weak_chapter: PASS.
+- Audit ngân hàng: 1.000 câu, 250 câu/chương, issues = [].
+- MathJax: 7.034 trường, 8.119 biểu thức, 8 đường hiển thị, errors = [], status = passed.
+- Release-check container khởi động Uvicorn thành công.
