@@ -72,6 +72,10 @@ async function run() {
   await page.getByRole('button',{name:'Tạo tài khoản học sinh',exact:true}).click();
   await page.locator('#studentView').waitFor({state:'visible'});
   assert(await page.locator('#selfStudyGuide').isVisible());
+  const legacyClassCard=page.locator('#studentView [data-student-class-panel="hidden"]');
+  assert.equal(await legacyClassCard.count(),1,'student class panel must be retained for JS but hidden');
+  assert.equal(await legacyClassCard.isVisible(),false,'student class join card must not be visible');
+  assert(await page.locator('#studentView').isVisible(),'student dashboard should remain visible');
 
   const diag=await page.evaluate(async()=>api('/api/practice/start',{
     method:'POST',
