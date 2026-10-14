@@ -160,3 +160,23 @@ Kết quả release gate:
 - Pre-deploy smoke command đã được gỡ ngay sau kiểm thử để các lần deploy tiếp theo không tự tiêu thụ Gemini API.
 
 Fallback khi Gemini không khả dụng đã được kiểm chứng bằng regression: Evidence Engine vẫn tạo kế hoạch 3 bước và phiên học không bị gián đoạn.
+
+
+## Hardening v1.5.1 — AI Coach hiển thị rõ vai trò
+
+Mục tiêu: làm rõ chuỗi giá trị AI ngay trên trải nghiệm học sinh mà không chuyển quyền quyết định chẩn đoán từ Evidence Engine sang Gemini.
+
+- Card AI Coach hiển thị 4 bước: **Gemini đọc lập luận → Evidence Engine kiểm chứng → AI giải thích điểm nghẽn → lập kế hoạch sửa lỗi**.
+- Mỗi lỗi trong kế hoạch có nhãn **Evidence Engine đã kiểm chứng lỗi này trước khi AI lập kế hoạch**.
+- Mỗi lỗi có nút **Sửa lỗi này ngay** để chuyển trực tiếp vào phiên remediation tương ứng.
+- Candidate evidence ở từng câu vẫn mang trạng thái chưa phải kết luận cuối cùng.
+- Gemini chỉ được lập kế hoạch trên verified profiles; mã lỗi ngoài verified profiles bị loại.
+- Khi Gemini lỗi/quota/timeout, Evidence Engine fallback vẫn tạo kế hoạch tự học.
+- Sửa lỗi production đã phát hiện ở repair flow: đáp án trống/NULL không còn gây HTTP 500 mà được chấm là chưa đúng.
+
+Release gate v1.5.1:
+- SGK_FORMULA_STEM_VIOLATIONS = 0.
+- **88 Python tests passed**, 1 deprecation warning không ảnh hưởng chức năng.
+- Student-only Playwright flow: **passed**.
+- Ngân hàng: **1.000 câu**, issues = [].
+- MathJax: **7.034 trường / 8.119 biểu thức**, errors = [], status = passed.
