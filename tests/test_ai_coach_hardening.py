@@ -19,12 +19,18 @@ def test_repair_grader_has_explicit_none_guard():
     assert "answer is not None" in source
 
 
-def test_ai_coach_ui_shows_four_stage_role_and_direct_repair_action():
+def test_ai_coach_student_ui_is_concise_and_actions_work():
     root = Path(os.environ.get("PHY_APP_ROOT", "/app"))
     html = (root / "app/static/index.html").read_text(encoding="utf-8")
-    assert "Gemini đọc lập luận" in html
-    assert "Evidence Engine kiểm chứng" in html
-    assert "AI giải thích điểm nghẽn" in html
-    assert "Lập kế hoạch sửa lỗi" in html
-    assert "Evidence Engine đã kiểm chứng lỗi này trước khi AI lập kế hoạch" in html
+    for text in (
+        "1 · Gemini đọc lập luận", "2 · Evidence Engine kiểm chứng",
+        "3 · AI giải thích điểm nghẽn", "4 · Lập kế hoạch sửa lỗi",
+        "Evidence Engine đã kiểm chứng lỗi này trước khi AI lập kế hoạch",
+        "AI không tự quyết định em mắc lỗi",
+        "AI Coach tạm thời chưa khả dụng",
+    ):
+        assert text not in html
+    assert "Lỗi cần ưu tiên" in html
     assert "Sửa lỗi này ngay" in html
+    assert "function renderAiCoach(" in html
+    assert "function socraticLauncher(" in html

@@ -128,8 +128,8 @@ def test_public_html_makes_ai_role_explicit():
     html = (root / "app/static/index.html").read_text(encoding="utf-8")
     assert "AI đã đọc cách em suy nghĩ" in html
     assert "Dấu hiệu cần kiểm chứng" in html
-    assert "Gemini + Evidence Engine" in html
-    assert "AI không tự quyết định em mắc lỗi" in html
+    assert "Gemini hỗ trợ" in html
+    assert "AI không tự quyết định em mắc lỗi" not in html
     assert "AI Coach" in html
 
 
