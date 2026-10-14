@@ -11,6 +11,7 @@ POLICY = r'''"""Student-first release policy for PHY-AI DIAGNOSE v1.4."""
 import re
 
 FORMULA_RULES = [
+    (r"(?:Trong bài toán,\\s*)?(?:lấy|dùng)\\s+(?:hệ thức\\s+)?gần đúng\\s*T\\s*\\(K\\)\\s*[≈=]\\s*t\\s*\\(°C\\)\\s*\\+\\s*273\\s*[,.]?", ""),
     # Chapter I - thermal physics
     (r"\b(?:Với|Theo|Dùng)\s+quy\s+ước\s*ΔU\s*=\s*A\s*\+\s*Q\b", "Theo quy ước dấu của SGK"),
     (r"\btheo\s+quy\s+ước\s*ΔU\s*=\s*A\s*\+\s*Q\b", "theo quy ước dấu của SGK"),
