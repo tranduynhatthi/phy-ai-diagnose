@@ -180,6 +180,8 @@ try:
         ai = ans.get("ai") or stored.get("ai_analysis") or {}
         actual_correct = bool(response_row.is_fully_correct)
         if is_target:
+            raw_ai = stored.get("ai_analysis") or {}
+            candidates = ai.get("signals") or raw_ai.get("candidate_errors") or []
             ai_evidence.append({
                 "question_id": qid,
                 "correct": actual_correct,
@@ -187,7 +189,9 @@ try:
                 "provider": ai.get("provider"),
                 "model": ai.get("model"),
                 "request_id": ai.get("request_id"),
-                "candidate_errors": ai.get("candidate_errors"),
+                "candidate_errors": candidates,
+                "decision_authority": ai.get("decision_authority"),
+                "status": ai.get("status"),
             })
         emit("DIAG_ANSWER", {
             "question_id": qid,
@@ -198,11 +202,27 @@ try:
         })
 
     finished = m.finish_practice(session_id=diag_id, student=student, db=db)
+    ai_coach = finished.get("ai_coach") or {}
     emit("DIAG_FINISH", {
         "session": finished.get("session"),
         "profiles": finished.get("profiles"),
         "ai_evidence": ai_evidence,
+        "ai_coach": ai_coach,
     })
+    if not ai_coach.get("used"):
+        raise RuntimeError(f"Live Gemini AI Coach was not used: {ai_coach}")
+    if ai_coach.get("provider") != "gemini" or not ai_coach.get("request_id"):
+        raise RuntimeError(f"AI Coach provider/request audit missing: {ai_coach}")
+    if ai_coach.get("decision_authority") != "Evidence Engine":
+        raise RuntimeError(f"AI Coach authority is not Evidence Engine: {ai_coach}")
+    if len(ai_coach.get("plan") or []) != 3:
+        raise RuntimeError(f"AI Coach did not produce exactly three steps: {ai_coach}")
+    verified_codes = {str(p.get("error_id") or "") for p in (finished.get("profiles") or [])}
+    coach_codes = {str(p.get("error_code") or "") for p in (ai_coach.get("focus_errors") or [])}
+    if coach_codes - verified_codes:
+        raise RuntimeError(f"AI Coach surfaced unverified errors: coach={coach_codes}, verified={verified_codes}")
+    if TARGET_ERROR not in coach_codes:
+        raise RuntimeError(f"AI Coach did not focus on verified VLN-01: {ai_coach}")
 
     p1 = m.profile(student=student, db=db)
     v1 = error_from_profile(p1)
@@ -332,6 +352,15 @@ try:
         "repair_score": repair_finish.get("repair_score"),
         "repair_total": repair_finish.get("total"),
         "ai_evidence": ai_evidence,
+        "ai_coach": {
+            "used": ai_coach.get("used"),
+            "provider": ai_coach.get("provider"),
+            "model": ai_coach.get("model"),
+            "request_id": ai_coach.get("request_id"),
+            "focus_errors": [x.get("error_code") for x in (ai_coach.get("focus_errors") or [])],
+            "plan_steps": len(ai_coach.get("plan") or []),
+            "decision_authority": ai_coach.get("decision_authority"),
+        },
     })
 
 finally:
