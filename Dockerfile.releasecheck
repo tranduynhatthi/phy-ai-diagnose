@@ -124,7 +124,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir pytest==8.3.5 httpx==0.28.1
 RUN apt-get update && apt-get install -y --no-install-recommends nodejs npm chromium && rm -rf /var/lib/apt/lists/*
 RUN npm install --prefix /tmp/phy-node-tests playwright@1.55.0 mathjax-full@3.2.2
-ENV NODE_PATH=/tmp/phy-node-tests/node_modules PHY_CHROMIUM=/usr/bin/chromium
+ENV NODE_PATH=/tmp/phy-node-tests/node_modules PHY_CHROMIUM=/usr/bin/chromium PYTHONPATH=/app
 RUN python /app/scripts/inspect_release_flow.py
 RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_homepage_cleanup.py /app/tests/test_role_access.py /app/tests/test_question_content_audit.py
 RUN PHY_APP_ROOT=/app PHY_PYTHON=/usr/local/bin/python node /app/tests/test_role_portals.cjs
