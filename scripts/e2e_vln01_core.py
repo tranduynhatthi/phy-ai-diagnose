@@ -255,38 +255,34 @@ try:
     v2 = error_from_profile(p2)
     emit("PROFILE_AFTER_REPAIR", {"vln01": v2})
 
-    # Recheck in a new diagnostic context. Because the selector is random,
-    # require the same two validated VLN-01 probes before judging whether the
-    # repaired misconception has persisted.
-    recheck = None
-    for attempt in range(1, 31):
-        candidate = m.start_practice(
-            req=m.StartPracticeRequest(
-                chapter="Chương I",
-                scope="lesson",
-                lesson="Bài 1",
-                mode="diagnostic",
-                intensity="standard",
-            ),
-            student=student,
-            db=db,
-        )
-        candidate_id = candidate["session"]["id"]
-        created_sessions.append(candidate_id)
-        candidate_qids = [q["id"] for q in candidate["questions"]]
-        found = [qid for qid in ("EXT-01-T01", "EXT-01-T04") if qid in candidate_qids]
-        emit("RECHECK_SELECT_ATTEMPT", {
-            "attempt": attempt,
-            "session_id": candidate_id,
-            "targets_found": found,
-        })
-        if len(found) == 2:
-            recheck = candidate
-            break
-    if recheck is None:
-        raise RuntimeError("Could not sample both VLN-01 probes for recheck in 30 attempts")
-
+    # A repaired ErrorProfile must trigger a targeted recheck immediately.
+    recheck = m.start_practice(
+        req=m.StartPracticeRequest(
+            chapter="Chương I",
+            scope="lesson",
+            lesson="Bài 1",
+            mode="diagnostic",
+            intensity="standard",
+        ),
+        student=student,
+        db=db,
+    )
     re_id = recheck["session"]["id"]
+    created_sessions.append(re_id)
+    re_qids = [q["id"] for q in recheck["questions"]]
+    re_targets = [qid for qid in re_qids if TARGET_ERROR in str(m.bank.by_id[qid])]
+    re_meta = dict((db.get(m.LearningSession, re_id).meta_json or {}))
+    emit("RECHECK_SELECT", {
+        "session_id": re_id,
+        "targets_found": re_targets,
+        "strategy": re_meta.get("diagnostic_strategy"),
+        "target_errors": re_meta.get("diagnostic_target_errors"),
+    })
+    if len(re_targets) < 2:
+        raise RuntimeError(f"Targeted recheck did not include two VLN-01 probes: {re_qids}")
+    if re_meta.get("diagnostic_strategy") != "profile_targeted":
+        raise RuntimeError(f"Recheck did not use profile_targeted strategy: {re_meta}")
+
     for pq in recheck["questions"]:
         qid = pq["id"]
         m.answer_practice(
