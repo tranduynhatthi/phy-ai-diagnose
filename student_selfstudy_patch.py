@@ -126,6 +126,8 @@ if "post_exam_diagnosis" not in main:
     main_path.write_text(main, encoding="utf-8")
 
 html = html_path.read_text(encoding="utf-8")
+html = html.replace("Tạo tài khoản học sinh. Nhập mã lớp giáo viên cung cấp để tham gia lớp của bạn.", "Tạo tài khoản để bắt đầu lộ trình tự học Vật lí 12 theo lỗi sai của chính em.")
+html = html.replace("PHY-AI DIAGNOSE lưu tên đăng nhập, họ tên hiển thị, lớp, câu trả lời và kết quả học tập để tạo hồ sơ học tập và hỗ trợ giáo viên theo dõi tiến bộ.", "PHY-AI DIAGNOSE lưu tên đăng nhập, họ tên hiển thị, câu trả lời và kết quả học tập để tạo hồ sơ tự học, theo dõi tiến bộ và cá nhân hóa các phiên chẩn đoán – sửa lỗi.")
 
 # Student-only public interface. Teacher/admin APIs remain server-side for maintenance.
 html = re.sub(r'\s*<article class="portal-card teacher-portal"[\s\S]*?</article>', "", html, count=1)
