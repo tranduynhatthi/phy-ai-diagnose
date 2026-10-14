@@ -103,3 +103,19 @@ Dữ liệu người dùng được lưu trong PostgreSQL:
 - teacher_labels
 
 Không dùng họ tên học sinh trực tiếp trong file training export; script xuất training data băm student ID.
+
+
+## Hybrid AI v1.2 — Gemini + Evidence Engine
+
+Bản production dùng Gemini API để phân tích phần giải thích của học sinh nhưng không thay Evidence Engine. Trong phiên Chẩn đoán, học sinh có thể nhập 1–3 câu giải thích cách nghĩ; backend gửi phần lập luận cùng ngữ cảnh câu hỏi tới Gemini và chỉ nhận candidate evidence theo ontology lỗi hợp lệ.
+
+- Gemini không tự gán trạng thái lỗi và không thể một mình tạo hồ sơ lỗi.
+- Evidence Engine vẫn là lớp quyết định chính; tín hiệu Gemini chỉ hỗ trợ khi đã có bằng chứng sai định lượng.
+- Production hiện dùng `GEMINI_MODEL=gemini-3.1-flash-lite`.
+- Mỗi response thành công lưu `responseId` của Gemini làm `request_id` phục vụ kiểm tra/audit.
+- Thiếu API key, timeout hoặc provider lỗi thì hệ thống fallback về Evidence Engine và phiên chẩn đoán vẫn tiếp tục.
+- Sau can thiệp, một phiên chẩn đoán lại có ít nhất hai probe đúng cho cùng lỗi sẽ giảm độ tin cậy hồ sơ lỗi, nhưng vẫn giữ lịch sử bằng chứng và trạng thái sửa lỗi.
+- Kiểm tra trạng thái tại `GET /api/ai/status`; smoke test dành cho giáo viên/admin tại `POST /api/ai/analyze-reasoning`.
+- Regression E2E cho luồng VLN-01 nằm tại `scripts/e2e_vln01_core.py`.
+
+Để kích hoạt, đặt `AI_PROVIDER=gemini`, `GEMINI_API_KEY` và `GEMINI_MODEL=gemini-3.1-flash-lite` trong Railway Variables.
