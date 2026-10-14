@@ -118,3 +118,29 @@ Kết quả release gate:
 - Audit ngân hàng: 1.000 câu, 250 câu/chương, issues = [].
 - MathJax: 7.034 trường, 8.119 biểu thức, 8 đường hiển thị, errors = [], status = passed.
 - Release-check container khởi động Uvicorn thành công.
+
+
+# Release candidate v1.5 — Visible AI Coach
+
+## Vai trò AI được nâng cấp
+
+- Per-question diagnostic: Gemini đọc phần giải thích của học sinh và trả candidate signals hiển thị trực tiếp trên giao diện dưới nhãn **Dấu hiệu cần kiểm chứng**.
+- Candidate signals luôn ghi rõ chưa phải kết luận cuối cùng; Evidence Engine giữ quyền cập nhật hồ sơ lỗi.
+- Diagnostic finish: Gemini AI Coach tạo giải thích ngắn và kế hoạch tự học 3 bước dựa trên hồ sơ lỗi đã được Evidence Engine kiểm chứng.
+- Exam finish: AI Coach tổng hợp lỗi đã kiểm chứng + chương yếu nhất để tạo kế hoạch 15–20 phút sau đề.
+- Mọi `focus_errors` từ mô hình được lọc theo mã lỗi có trong verified profiles; mã do mô hình tự tạo bị loại.
+- Mỗi AI Coach response lưu audit metadata: provider/model/request_id và `decision_authority=Evidence Engine`.
+- Provider error/quota/timeout dùng Evidence Engine fallback và không làm hỏng phiên học.
+
+## Kết quả release gate v1.5
+
+- AI Coach patch: applied successfully.
+- Python regressions: **85 passed**, 1 deprecation warning; 0 failed.
+- Test riêng kiểm tra AI Coach: fallback có 3 bước, lọc mã lỗi bịa, giữ Evidence Engine authority, UI có thông điệp AI rõ ràng.
+- Student-only Playwright: **PASS**.
+- SGK formula-stem audit: **0 violations**.
+- Question bank audit: 1.000 câu, 250 câu/chương, `issues=[]`.
+- MathJax: 7.034 trường, 8.119 biểu thức, 8 render paths, `errors=[]`, `status=passed`.
+- Release-check deployment Railway: **SUCCESS**.
+
+Trước khi đánh dấu production v1.5 hoàn tất cần chạy một request Gemini thật trên production để kiểm tra `ai.used=true`, `request_id`, verified `focus_errors`, kế hoạch đúng 3 bước và fallback đã được kiểm thử bằng regression.
