@@ -121,45 +121,32 @@ try:
         }
     emit("PROFILE_BEFORE", {"vln01": error_from_profile(baseline)})
 
-    # The diagnostic selector is intentionally random. Start bounded candidate
-    # sessions until the same real production selector gives us both validated
-    # VLN-01 probes in one session; unused attempts are deleted in cleanup.
-    started = None
-    questions = None
-    qids = []
-    targets = []
-    for attempt in range(1, 31):
-        candidate = m.start_practice(
-            req=m.StartPracticeRequest(
-                chapter="Chương I",
-                scope="lesson",
-                lesson="Bài 1",
-                mode="diagnostic",
-                intensity="standard",
-            ),
-            student=student,
-            db=db,
-        )
-        candidate_id = candidate["session"]["id"]
-        created_sessions.append(candidate_id)
-        candidate_questions = candidate["questions"]
-        candidate_qids = [q["id"] for q in candidate_questions]
-        preferred = [qid for qid in ("EXT-01-T01", "EXT-01-T04") if qid in candidate_qids]
-        emit("DIAG_SELECT_ATTEMPT", {
-            "attempt": attempt,
-            "session_id": candidate_id,
-            "targets_found": preferred,
-        })
-        if len(preferred) == 2:
-            started = candidate
-            questions = candidate_questions
-            qids = candidate_qids
-            targets = preferred
-            break
-    if started is None or questions is None:
-        raise RuntimeError("Could not sample both EXT-01-T01 and EXT-01-T04 in 30 production diagnostic starts")
+    # A real diagnostic must cover mapped misconceptions in one session.
+    started = m.start_practice(
+        req=m.StartPracticeRequest(
+            chapter="Chương I",
+            scope="lesson",
+            lesson="Bài 1",
+            mode="diagnostic",
+            intensity="standard",
+        ),
+        student=student,
+        db=db,
+    )
     diag_id = started["session"]["id"]
-    emit("DIAG_START", {"session_id": diag_id, "question_ids": qids, "targets": targets})
+    created_sessions.append(diag_id)
+    questions = started["questions"]
+    qids = [q["id"] for q in questions]
+    targets = [qid for qid in qids if TARGET_ERROR in str(m.bank.by_id[qid])][:2]
+    diag_meta = dict((db.get(m.LearningSession, diag_id).meta_json or {}))
+    emit("DIAG_START", {
+        "session_id": diag_id,
+        "question_ids": qids,
+        "targets": targets,
+        "strategy": diag_meta.get("diagnostic_strategy"),
+    })
+    if len(targets) < 2:
+        raise RuntimeError(f"Adaptive selector did not provide two VLN-01 probes: {qids}")
 
     ai_evidence = []
     for pq in questions:
