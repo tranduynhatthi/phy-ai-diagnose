@@ -138,7 +138,7 @@ RUN python /tmp/public_release_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python /app/scripts/inspect_release_flow.py
-RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_homepage_cleanup.py /app/tests/test_role_access.py /app/tests/test_question_content_audit.py /app/tests/test_adaptive_diagnostic.py
+RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_homepage_cleanup.py /app/tests/test_role_access.py /app/tests/test_question_content_audit.py /app/tests/test_adaptive_diagnostic.py /app/tests/test_public_release.py
 RUN PHY_APP_ROOT=/app PHY_PYTHON=/usr/local/bin/python node /app/tests/test_role_portals.cjs
 RUN PHY_APP_ROOT=/app PHY_PYTHON=/usr/local/bin/python node /app/tests/test_admin_accounts.cjs
 RUN PHY_APP_ROOT=/app python /app/scripts/validate_audited_bank.py --export /tmp/phy-reviewed-bank.json
