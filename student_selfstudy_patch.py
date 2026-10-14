@@ -11,6 +11,12 @@ POLICY = r'''"""Student-first release policy for PHY-AI DIAGNOSE v1.4."""
 import re
 
 FORMULA_RULES = [
+    (r"\\bbiết\\s*E0\\s*=\\s*NBS\\s*[·⋅*]?\\s*2πf\\s*và\\s*E\\s*=\\s*E0\\s*/\\s*√2\\s*[,.]?", "vận dụng các hệ thức của máy phát điện xoay chiều đã học."),
+    (r"\\bĐiện áp hiệu dụng đầu máy phát coi bằng\\s*E0\\s*/\\s*√2\\s*,\\s*với\\s*E0\\s*=\\s*NBS\\s*[·⋅*]?\\s*2πf\\s*[,.]?", "Vận dụng các hệ thức của máy phát điện xoay chiều đã học."),
+    (r"\\bGiá trị hiệu dụng\\s*E\\s*=\\s*E0\\s*/\\s*√2\\s*bằng bao nhiêu\\?", "Giá trị hiệu dụng bằng bao nhiêu?"),
+    (r"\\bBiên độ suất điện động\\s*E0\\s*=\\s*NBS\\s*[·⋅*]?\\s*2πf\\s*bằng bao nhiêu\\?", "Biên độ suất điện động bằng bao nhiêu?"),
+    (r"\\bDùng\\s+p\\s*=\\s*ρ\\s*⟨v²⟩\\s*/\\s*3\\s*[,.]?", "Vận dụng hệ thức thuyết động học phân tử đã học."),
+    (r"\\s+và\\s*(?:Ē|E_bar|E)\\s*=\\s*3\\s*k\\s*T\\s*/\\s*2\\s*[,.]?", ""),
     (r"(?:Trong bài toán,\\s*)?(?:lấy|dùng)\\s+(?:hệ thức\\s+)?gần đúng\\s*T\\s*\\(K\\)\\s*[≈=]\\s*t\\s*\\(°C\\)\\s*\\+\\s*273\\s*[,.]?", ""),
     # Chapter I - thermal physics
     (r"\b(?:Với|Theo|Dùng)\s+quy\s+ước\s*ΔU\s*=\s*A\s*\+\s*Q\b", "Theo quy ước dấu của SGK"),
