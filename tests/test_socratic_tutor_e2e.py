@@ -114,3 +114,56 @@ def test_no_consent_escalation_and_optimistic_turn(tutor_context):
     stale=client.post(f"/api/tutor/{first['id']}/reply",headers=h,
         json={"message":"Em cần suy nghĩ lại.", "expected_turn":0})
     assert stale.status_code==409
+
+
+def test_gemini_verification_budget_and_no_error_profile_mutation(tutor_context,monkeypatch):
+    import json
+    from app import socratic_tutor
+    client,headers,sessions=tutor_context
+    _set_verified_profile(sessions)
+    monkeypatch.setenv("SOCRATIC_TUTOR_LLM_ENABLED","true")
+    monkeypatch.setenv("SOCRATIC_TUTOR_DAILY_AI_LIMIT","2")
+    monkeypatch.setenv("GEMINI_API_KEY","offline-mock-key")
+    requests=[]
+    class FakeResponse:
+        def __enter__(self):return self
+        def __exit__(self,*a):pass
+        def read(self):
+            return json.dumps({
+                "responseId":"mock-"+str(len(requests)),
+                "usageMetadata":{"totalTokenCount":30},
+                "candidates":[{"content":{"parts":[{"text":json.dumps({
+                    "verdict":"insufficient_evidence",
+                    "verification_note":"Em cần bổ sung căn cứ để xác nhận lập luận.",
+                    "feedback":"Em hãy xem xét điều kiện đang được sử dụng.",
+                    "question":"Em dựa vào quan sát nào để giải thích?"
+                },ensure_ascii=False)}]}}]
+            },ensure_ascii=False).encode()
+    def fake_call(req,timeout):
+        requests.append(req)
+        return FakeResponse()
+    monkeypatch.setattr(socratic_tutor.urlrequest,"urlopen",fake_call)
+    h=headers["socratic_student_a"]
+    started=_start(client,h,llm_consent=True)
+    assert started.status_code==200,started.text
+    sid=started.json()["id"]
+    for n in range(5):
+        r=client.post(f"/api/tutor/{sid}/reply",headers=h,json={
+            "message":"Em nghĩ như vậy vì chưa nắm đầy đủ mô hình phân tử.",
+            "expected_turn":n})
+        assert r.status_code==200,r.text
+        body=r.json()
+        assert body["ai_verification_count"]==min(n+1,2)
+        assert body["verdict"]==("insufficient_evidence" if n<2 else "not_checked")
+    assert len(requests)==2
+    assert body["status"]=="finished"
+    assert body["ai_verification_count"]==2
+    assert body["history"][4]["verdict"]=="not_checked"
+    with sessions() as db:
+        prof=db.execute(select(ErrorProfile).where(
+            ErrorProfile.user_id=="socratic_student_a",
+            ErrorProfile.error_id=="VLN-01")).scalar_one()
+        assert prof.evidence_total==5 and prof.evidence_wrong==2 and prof.confidence==55
+        session=db.get(LearningSession,sid)
+        audit=(session.meta_json or {}).get("audit") or {}
+        assert audit["model_attempts"]==2 and audit["model_calls"]==2
