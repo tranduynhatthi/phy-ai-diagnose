@@ -56,6 +56,21 @@ FORMULA_RULES = [
 
 def sanitize_formula_stem(prompt: str) -> str:
     text = str(prompt or "")
+    literal_replacements = [
+        ("Trong bài toán, lấy gần đúng T(K)≈t(°C)+273.", ""),
+        (" và Ē = 3kT/2.", "."),
+        (" và Ē=3kT/2.", "."),
+        ("Dùng p = ρ⟨v²⟩/3.", "Vận dụng hệ thức thuyết động học phân tử đã học."),
+        ("Dùng p=ρ⟨v²⟩/3.", "Vận dụng hệ thức thuyết động học phân tử đã học."),
+        ("Biên độ suất điện động E0 = NBS·2πf bằng bao nhiêu?", "Biên độ suất điện động bằng bao nhiêu?"),
+        ("Biên độ suất điện động E0=NBS·2πf bằng bao nhiêu?", "Biên độ suất điện động bằng bao nhiêu?"),
+        ("Giá trị hiệu dụng E = E0/√2 bằng bao nhiêu?", "Giá trị hiệu dụng bằng bao nhiêu?"),
+        ("Giá trị hiệu dụng E=E0/√2 bằng bao nhiêu?", "Giá trị hiệu dụng bằng bao nhiêu?"),
+        ("Điện áp hiệu dụng đầu máy phát coi bằng E0/√2, với E0=NBS·2πf.", "Vận dụng các hệ thức của máy phát điện xoay chiều đã học."),
+        ("biết E0=NBS·2πf và E=E0/√2.", "vận dụng các hệ thức của máy phát điện xoay chiều đã học."),
+    ]
+    for old, new in literal_replacements:
+        text = text.replace(old, new)
     for pattern, replacement in FORMULA_RULES:
         text = re.sub(pattern, replacement, text, flags=re.I)
     text = re.sub(r"\s+([,.;:?])", r"\1", text)
