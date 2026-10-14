@@ -134,3 +134,18 @@ def test_invalid_ai_verdict_is_not_accepted_as_verified(monkeypatch):
         history=[],consent=True)
     assert result["used_ai"] is False
     assert result["verdict"]=="not_checked"
+
+
+def test_reflection_asks_a_question_before_final_verification():
+    import json
+    response={"candidates":[{"content":{"parts":[{"text":json.dumps({
+        "verdict":"insufficient_evidence",
+        "verification_note":"Cần giải thích thêm giả thiết.",
+        "feedback":"Hãy tự xem lại.",
+        "question":"Lần sau em kiểm tra những giả thiết nào?"
+    },ensure_ascii=False)}]}}]}
+    fourth=tutor._parse_gemini(response,"reflect",None)
+    fifth=tutor._parse_gemini(response,"final_reflect",None)
+    assert "?" in fourth["question"]
+    assert fifth["question"]==""
+    assert fifth["verdict"]=="insufficient_evidence"
