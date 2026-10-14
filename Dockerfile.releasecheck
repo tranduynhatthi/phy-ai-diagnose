@@ -148,7 +148,7 @@ RUN python /tmp/repair_null_guard_patch.py
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python /app/scripts/inspect_release_flow.py
 RUN python /app/scripts/audit_formula_stems.py
-RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_role_access.py /app/tests/test_question_content_audit.py /app/tests/test_adaptive_diagnostic.py /app/tests/test_public_release.py /app/tests/test_student_selfstudy.py /app/tests/test_ai_coach.py
+RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_role_access.py /app/tests/test_question_content_audit.py /app/tests/test_adaptive_diagnostic.py /app/tests/test_public_release.py /app/tests/test_student_selfstudy.py /app/tests/test_ai_coach.py /app/tests/test_ai_coach_hardening.py
 RUN PHY_APP_ROOT=/app PHY_PYTHON=/usr/local/bin/python node /app/tests/test_student_public.cjs
 RUN PHY_APP_ROOT=/app python /app/scripts/validate_audited_bank.py --export /tmp/phy-reviewed-bank.json
 RUN PHY_APP_ROOT=/app PHY_BANK_JSON=/tmp/phy-reviewed-bank.json PHY_MATHJAX_ROOT=/tmp/phy-node-tests/node_modules/mathjax-full PHY_MATH_AUDIT_DIR=/tmp/phy-math-results node /app/tests/test_math_rendering.cjs
