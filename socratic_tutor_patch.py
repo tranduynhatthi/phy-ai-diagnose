@@ -98,7 +98,7 @@ def tutor_reply(session_id:str,req:dict,student:User=Depends(require_roles("stud
     if not error: raise HTTPException(409,"Mã lỗi không còn hợp lệ.")
     next_phase=expected_phase(len(turns)+1)
     # Five *verified* steps: verify the student's final reflection too.
-    phase=next_phase if next_phase!="recheck" else "reflect"
+    phase=next_phase if next_phase!="recheck" else "final_reflect"
     enabled=(m.get("consent") is True and flag_enabled("SOCRATIC_TUTOR_LLM_ENABLED")
              and bool(__import__("os").environ.get("GEMINI_API_KEY","").strip()))
     audit=dict(m.get("audit") or {})
