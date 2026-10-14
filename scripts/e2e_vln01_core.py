@@ -268,19 +268,38 @@ try:
     v2 = error_from_profile(p2)
     emit("PROFILE_AFTER_REPAIR", {"vln01": v2})
 
-    recheck = m.start_practice(
-        req=m.StartPracticeRequest(
-            chapter="Chương I",
-            scope="lesson",
-            lesson="Bài 1",
-            mode="diagnostic",
-            intensity="standard",
-        ),
-        student=student,
-        db=db,
-    )
+    # Recheck in a new diagnostic context. Because the selector is random,
+    # require the same two validated VLN-01 probes before judging whether the
+    # repaired misconception has persisted.
+    recheck = None
+    for attempt in range(1, 31):
+        candidate = m.start_practice(
+            req=m.StartPracticeRequest(
+                chapter="Chương I",
+                scope="lesson",
+                lesson="Bài 1",
+                mode="diagnostic",
+                intensity="standard",
+            ),
+            student=student,
+            db=db,
+        )
+        candidate_id = candidate["session"]["id"]
+        created_sessions.append(candidate_id)
+        candidate_qids = [q["id"] for q in candidate["questions"]]
+        found = [qid for qid in ("EXT-01-T01", "EXT-01-T04") if qid in candidate_qids]
+        emit("RECHECK_SELECT_ATTEMPT", {
+            "attempt": attempt,
+            "session_id": candidate_id,
+            "targets_found": found,
+        })
+        if len(found) == 2:
+            recheck = candidate
+            break
+    if recheck is None:
+        raise RuntimeError("Could not sample both VLN-01 probes for recheck in 30 attempts")
+
     re_id = recheck["session"]["id"]
-    created_sessions.append(re_id)
     for pq in recheck["questions"]:
         qid = pq["id"]
         m.answer_practice(
@@ -309,6 +328,14 @@ try:
         "profiles_from_recheck": re_finish.get("profiles"),
         "vln01_after_recheck": v3,
     })
+    if not v3:
+        raise RuntimeError("VLN-01 profile disappeared instead of retaining auditable history")
+    if float(v3.get("confidence") or 0) >= float(v2.get("confidence") or 0):
+        raise RuntimeError(f"Clean recheck did not reduce VLN-01 confidence: before={v2}, after={v3}")
+    if int(v3.get("evidence_total") or 0) < int(v2.get("evidence_total") or 0) + 2:
+        raise RuntimeError(f"Clean recheck evidence was not added: before={v2}, after={v3}")
+    if v3.get("repair_state") != "Đã sửa tốt":
+        raise RuntimeError(f"Repair state regressed after clean recheck: {v3}")
 
     emit("E2E_SUMMARY", {
         "ok": True,
