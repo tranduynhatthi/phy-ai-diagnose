@@ -80,7 +80,7 @@ def _fallback(*, mode: str, score: float | None, profiles: list[dict], weak_chap
     focus = [_profile_view(p) for p in profiles[:3]]
     if focus:
         headline = "Kế hoạch tự học theo lỗi đã được kiểm chứng"
-        summary = "Hệ thống đã xác định các điểm cần ưu tiên từ bằng chứng trong bài làm. AI Coach tạm thời chưa khả dụng nên kế hoạch này do Evidence Engine tạo."
+        summary = "Chọn một lỗi dưới đây để bắt đầu ôn tập."
         plan = []
         for i, p in enumerate(focus[:2], 1):
             title = p.get("title") or p.get("error_code")
@@ -456,20 +456,20 @@ function renderAiCoach(coach,id,anchorId){
  if(!coach){host.innerHTML='';host.classList.add('hidden');return}
  host.classList.remove('hidden');
  let used=!!coach.used,focus=coach.focus_errors||[],plan=coach.plan||[];
- let badge=used?'Gemini + Evidence Engine':'Evidence Engine · AI dự phòng';
+ let badge=used?'Gemini hỗ trợ':'Gợi ý ôn tập';
  host.innerHTML=`<div class="ai-title">✨ AI Coach <span class="ai-badge">${esc(badge)}</span></div>
- <div class="ai-coach-pipeline"><span>1 · Gemini đọc lập luận</span><span>2 · Evidence Engine kiểm chứng</span><span>3 · AI giải thích điểm nghẽn</span><span>4 · Lập kế hoạch sửa lỗi</span></div>
+ 
  <h3>${esc(coach.headline||'Kế hoạch tự học của em')}</h3>
  <div class="small">${esc(coach.summary||'')}</div>
- ${focus.length?'<div style="margin-top:10px"><b>AI tập trung vào các lỗi đã được kiểm chứng</b>'+focus.map(x=>`<div class="ai-signal"><b>${esc(x.error_code)} · ${esc(x.title||'')}</b><div class="small ai-verified">✓ Evidence Engine đã kiểm chứng lỗi này trước khi AI lập kế hoạch</div><div class="small">${esc(x.what_ai_noticed||'')}</div>${x.why_it_matters?`<div class="small muted">${esc(x.why_it_matters)}</div>`:''}<div class="ai-coach-action"><button class="btn secondary" onclick="startRepair('${esc(x.error_code)}')">Sửa lỗi này ngay</button></div></div>`).join('')+'</div>':''}
+ ${focus.length?'<div style="margin-top:10px"><b>Lỗi cần ưu tiên</b>'+focus.map(x=>`<div class="ai-signal"><b>${esc(x.error_code)} · ${esc(x.title||'')}</b><div class="small">${esc(x.what_ai_noticed||'')}</div>${x.why_it_matters?`<div class="small muted">${esc(x.why_it_matters)}</div>`:''}<div class="ai-coach-action"><button class="btn secondary" onclick="startRepair('${esc(x.error_code)}')">Sửa lỗi này ngay</button></div></div>`).join('')+'</div>':''}
  <div class="ai-coach-plan">${plan.map(x=>`<div class="ai-coach-step"><b>Bước ${Number(x.step)||''} · ${Number(x.minutes)||5} phút</b><div>${esc(x.action||'')}</div><div class="small muted">${esc(x.why||'')}</div></div>`).join('')}</div>
  ${coach.self_check?`<div class="feedback" style="margin-top:10px"><b>Tự kiểm tra:</b> ${esc(coach.self_check)}</div>`:''}
  ${coach.encouragement?`<div class="small" style="margin-top:8px">${esc(coach.encouragement)}</div>`:''}
- <div class="ai-coach-note">AI không tự quyết định em mắc lỗi. Hồ sơ lỗi chỉ được cập nhật sau khi Evidence Engine kiểm chứng bằng nhiều bằng chứng trong bài làm.</div>`
+ `
 }
 function renderQuestionAI(ai){
- if(!ai){$('qFeedback').innerHTML='<div class="ai-live"><div class="ai-title">✨ AI Coach</div><div class="small">Em chưa nhập cách suy nghĩ nên AI chưa phân tích nguyên nhân. Evidence Engine vẫn ghi nhận câu trả lời để kiểm chứng lỗi.</div></div>';return}
- if(!ai.used){$('qFeedback').innerHTML=`<div class="ai-live"><div class="ai-title">✨ AI Coach <span class="ai-badge">dự phòng</span></div><div class="small">AI chưa phân tích được ở câu này. Evidence Engine vẫn tiếp tục thu thập bằng chứng; kết quả chẩn đoán không bị gián đoạn.</div></div>`;return}
+ if(!ai){$('qFeedback').innerHTML='<div class="ai-live"><div class="ai-title">✨ AI Coach</div><div class="small">Hãy giải thích cách em suy nghĩ để nhận gợi ý từ AI.</div></div>';return}
+ if(!ai.used){$('qFeedback').innerHTML=`<div class="ai-live"><div class="ai-title">✨ AI Coach <span class="ai-badge">dự phòng</span></div><div class="small">Chưa có phản hồi AI cho câu này.</div></div>`;return}
  let signals=ai.signals||[];
  $('qFeedback').innerHTML=`<div class="ai-live"><div class="ai-title">✨ AI đã đọc cách em suy nghĩ <span class="ai-badge">đang kiểm chứng</span></div>
  ${ai.feedback?`<div style="margin-top:6px">${esc(ai.feedback)}</div>`:''}
