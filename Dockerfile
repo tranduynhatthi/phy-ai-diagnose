@@ -125,9 +125,9 @@ RUN python /tmp/adaptive_diagnostic_patch.py
 RUN python /tmp/public_release_patch.py
 RUN python /tmp/student_selfstudy_patch.py
 RUN python /tmp/student_math_fix_patch.py
-RUN PYTHONPATH=/app python /app/scripts/inspect_ai_coach_flow.py
 
 RUN pip install --no-cache-dir -r requirements.txt
+RUN PYTHONPATH=/app python /app/scripts/inspect_ai_coach_flow.py
 RUN mkdir -p /app/models
 RUN useradd -m -u 10001 appuser && chown -R appuser:appuser /app
 USER appuser
