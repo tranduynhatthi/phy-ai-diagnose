@@ -143,20 +143,4 @@ Kết quả release gate:
 - MathJax: 7.034 trường, 8.119 biểu thức, 8 render paths, `errors=[]`, `status=passed`.
 - Release-check deployment Railway: **SUCCESS**.
 
-## E2E production v1.5 — Gemini AI Coach thật
-
-Đã chạy trực tiếp trên production và **PASS**:
-
-- Hai probe VLN-01 trả Gemini thật `used=true`, `provider=gemini`, model `gemini-3.1-flash-lite`.
-- Request AI theo từng câu: `yk3Par_ZIYS_39IPhtqJiQY` và `y03PatzaNvjo-8YP3IKgyQ8`.
-- Cả hai candidate signal đều là `VLN-01`, strength **1.0**, trạng thái response `candidate_evidence`, `decision_authority=Evidence Engine`.
-- Evidence Engine hợp nhất thành profile `VLN-01`, `decision_source=RULE_LLM`, confidence **55.0**.
-- Gemini AI Coach chạy thật với request ID `zU3Pav77AoKn_uMP5b2i6A4`, `used=true`, provider `gemini`.
-- AI Coach chỉ tập trung vào lỗi đã được kiểm chứng: `focus_errors=[VLN-01]`; không có lỗi ngoài verified profile.
-- Kế hoạch AI có đúng **3 bước**, tổng thời gian 17 phút; response ghi rõ `decision_authority=Evidence Engine`.
-- Phiên sửa lỗi đạt **10/10 – Đã sửa tốt**; recheck targeted giảm confidence **55.0 → 27.5**, evidence **5 → 8**.
-- Smoke script hoàn nguyên dữ liệu test thành công: `CLEANUP restored=true`.
-- Deployment production hoàn tất **SUCCESS**.
-- Pre-deploy smoke command đã được gỡ ngay sau kiểm thử để các lần deploy tiếp theo không tự tiêu thụ Gemini API.
-
-Fallback khi Gemini không khả dụng đã được kiểm chứng bằng regression: Evidence Engine vẫn tạo kế hoạch 3 bước và phiên học không bị gián đoạn.
+Trước khi đánh dấu production v1.5 hoàn tất cần chạy một request Gemini thật trên production để kiểm tra `ai.used=true`, `request_id`, verified `focus_errors`, kế hoạch đúng 3 bước và fallback đã được kiểm thử bằng regression.
