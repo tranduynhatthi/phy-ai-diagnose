@@ -66,6 +66,19 @@ Selector cũ chọn ngẫu nhiên đã được giữ cho chế độ luyện t�
 - luồng `RULE_LLM -> hồ sơ lỗi -> sửa lỗi 10/10 -> chẩn đoán lại` đã được xác minh;
 - không ghi nhận HTTP 5xx trong cửa sổ 24 giờ được kiểm tra.
 
-Sau khi merge, phải chạy lại E2E production bằng selector một lần duy nhất rồi gỡ pre-deploy smoke command trước khi mở cho học sinh.
+## E2E production sau merge
 
-<!-- production-e2e-trigger: 2026-10-14-v1.3 -->
+Đã chạy trực tiếp trên production và **PASS**:
+
+- phiên chẩn đoán tạo ngay trong **một lần start**, không còn vòng lặp lấy ngẫu nhiên;
+- phiên đầu chứa hai probe VLN-01 có cấu trúc: `EXT-01-C01` và `EXT-01-T01`;
+- Gemini thật trả `used=true`, model `gemini-3.1-flash-lite`, có request ID và candidate `VLN-01` cho cả hai probe;
+- Evidence Engine hợp nhất thành `decision_source=RULE_LLM`, confidence VLN-01 = **55.0**;
+- phiên sửa lỗi đạt **10/10**, trạng thái `Đã sửa tốt`;
+- phiên chẩn đoán lại chọn `profile_targeted` ngay lần đầu và chứa ba probe VLN-01;
+- sau khi trả lời đúng toàn bộ recheck, confidence giảm **55.0 → 27.5**, `evidence_total 5 → 8`, lịch sử `Đã sửa tốt` được giữ;
+- smoke script khôi phục dữ liệu test về trạng thái ban đầu (`CLEANUP restored=true`);
+- deployment production hoàn tất `SUCCESS`.
+
+Pre-deploy E2E command đã được gỡ sau kiểm thử; các deployment tiếp theo không tự chạy smoke test với Gemini.
+
