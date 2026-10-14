@@ -29,9 +29,9 @@ COPY adaptive_diagnostic_patch.py /tmp/adaptive_diagnostic_patch.py
 COPY public_release_patch.py /tmp/public_release_patch.py
 COPY student_selfstudy_patch.py /tmp/student_selfstudy_patch.py
 COPY student_math_fix_patch.py /tmp/student_math_fix_patch.py
+COPY ai_coach_patch.py /tmp/ai_coach_patch.py
 COPY v3_patch /app/v3_patch
 COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
-COPY scripts/inspect_ai_coach_flow.py /app/scripts/inspect_ai_coach_flow.py
 RUN python - <<'PY'
 from pathlib import Path
 import base64, zipfile, shutil, re
@@ -125,9 +125,9 @@ RUN python /tmp/adaptive_diagnostic_patch.py
 RUN python /tmp/public_release_patch.py
 RUN python /tmp/student_selfstudy_patch.py
 RUN python /tmp/student_math_fix_patch.py
+RUN python /tmp/ai_coach_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
-RUN PYTHONPATH=/app python /app/scripts/inspect_ai_coach_flow.py
 RUN mkdir -p /app/models
 RUN useradd -m -u 10001 appuser && chown -R appuser:appuser /app
 USER appuser
