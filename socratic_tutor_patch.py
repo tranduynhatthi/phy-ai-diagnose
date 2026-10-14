@@ -19,6 +19,16 @@ from .sgk_physics12 import get_sgk_anchor
 from sqlalchemy import func,text
 from datetime import datetime,timedelta,timezone
 
+def _tutor_recent(session,cutoff):
+    """Check tutor creation from explicit metadata; unknown time fails closed."""
+    created=(session.meta_json or {}).get("created_utc")
+    if not created: return True
+    try:
+        dt=datetime.fromisoformat(str(created).replace("Z","+00:00"))
+        return dt>=cutoff
+    except (ValueError,TypeError):
+        return True
+
 def _tutor_public(s):
     m=dict(s.meta_json or {});turns=m.get("turns") or []
     return {"id":str(s.id),"status":s.status,"error_id":m.get("error_id"),
@@ -50,14 +60,12 @@ def start_tutor(req:dict,student:User=Depends(require_roles("student")),db:Sessi
         LearningSession.status=="active")).scalars().all()
     for s in running:
         if (s.meta_json or {}).get("error_id")==code: return _tutor_public(s)
-    time_col=getattr(LearningSession,"created_at",None)
-    if time_col is None: time_col=getattr(LearningSession,"started_at",None)
-    if time_col is not None:
-        count=db.execute(select(func.count()).select_from(LearningSession).where(
-            LearningSession.user_id==student.id,LearningSession.kind=="tutor",
-            time_col>=datetime.now(timezone.utc)-timedelta(days=1))).scalar_one()
-        if count>=5: raise HTTPException(429,"Tối đa 5 phiên gia sư trong 24 giờ.")
-    meta={"error_id":code,"source":anchor,"question":anchor["guiding_question"],
+    all_student_sessions=db.execute(select(LearningSession).where(
+        LearningSession.user_id==student.id,LearningSession.kind=="tutor")).scalars().all()
+    cutoff=datetime.now(timezone.utc)-timedelta(hours=24)
+    if sum(1 for row in all_student_sessions if _tutor_recent(row,cutoff))>=5:
+        raise HTTPException(429,"Tối đa 5 phiên gia sư trong 24 giờ.")
+    meta={"created_utc":datetime.now(timezone.utc).isoformat(),"error_id":code,"source":anchor,"question":anchor["guiding_question"],
           "consent":req.get("llm_consent") is True,"turns":[],
           "audit":{"model_calls":0,"model_attempts":0,"tokens":0,"request_ids":[]}}
     s=LearningSession(user_id=student.id,kind="tutor",mode="socratic",
@@ -101,16 +109,11 @@ def tutor_reply(session_id:str,req:dict,student:User=Depends(require_roles("stud
         if db.get_bind().dialect.name=="postgresql":
             db.execute(text("SELECT pg_advisory_xact_lock(6109202616)"))
         limit=max(0,min(500,int(__import__("os").environ.get("SOCRATIC_TUTOR_DAILY_AI_LIMIT","20"))))
-        time_col=getattr(LearningSession,"created_at",None)
-        if time_col is None: time_col=getattr(LearningSession,"started_at",None)
-        if time_col is not None:
-            recent=db.execute(select(LearningSession).where(
-                LearningSession.kind=="tutor",
-                time_col>=datetime.now(timezone.utc)-timedelta(hours=24)
-            )).scalars().all()
-            attempts=sum(int((r.meta_json or {}).get("audit",{}).get("model_attempts") or 0) for r in recent)
-        else:
-            attempts=limit  # fail closed: no time column, no billable Gemini calls
+        recent=db.execute(select(LearningSession).where(
+            LearningSession.kind=="tutor")).scalars().all()
+        cutoff=datetime.now(timezone.utc)-timedelta(hours=24)
+        attempts=sum(int((r.meta_json or {}).get("audit",{}).get("model_attempts") or 0)
+                     for r in recent if _tutor_recent(r,cutoff))
         can_call=attempts<limit
     if can_call:
         # One possible Gemini API request per turn. Attempts count even if
