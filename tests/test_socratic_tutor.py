@@ -68,3 +68,69 @@ def test_html_and_backend_safeguards_are_installed():
     assert 'socraticLauncher' in html and 'socraticStartRecheck' in html
     assert "scope:'chapter'" in html
     assert "socratic-script-v16" in html
+
+
+def test_real_verification_contract_uses_single_mock_gemini_call(monkeypatch):
+    import json
+    calls=[]
+    monkeypatch.setenv("GEMINI_API_KEY","fake-for-offline-mock")
+    monkeypatch.setenv("SOCRATIC_TUTOR_LLM_ENABLED","true")
+    class FakeResponse:
+        def __enter__(self): return self
+        def __exit__(self,*args): pass
+        def read(self):
+            return json.dumps({
+                "responseId":"offline-response-1",
+                "modelVersion":"gemini-3.1-flash-lite",
+                "usageMetadata":{"totalTokenCount":50},
+                "candidates":[{"content":{"parts":[{"text":json.dumps({
+                    "verdict":"needs_revision",
+                    "verification_note":"Cách nghĩ đứng yên hoàn toàn chưa phù hợp với chuyển động nhiệt của các hạt.",
+                    "feedback":"Em đang đồng nhất trạng thái vật với chuyển động của các hạt.",
+                    "question":"Các phân tử trong vật rắn có dao động quanh vị trí cân bằng không?"
+                },ensure_ascii=False)}]}}]
+            },ensure_ascii=False).encode("utf-8")
+    def fake_network(req,timeout):
+        calls.append(req)
+        payload=json.loads(req.data)
+        props=payload["generationConfig"]["responseSchema"]["properties"]
+        assert {"verdict","verification_note","feedback","question"}.issubset(props)
+        context=json.loads(payload["contents"][0]["parts"][0]["text"])
+        assert context["verified_ontology_concept"]=="Mỗi phân tử vẫn dao động nhiệt."
+        assert context["student_reply"]=="Em nghĩ hạt trong chất rắn đứng yên."
+        return FakeResponse()
+    monkeypatch.setattr(tutor.urlrequest,"urlopen",fake_network)
+    result=tutor.next_tutor_reply(
+        message="Em nghĩ hạt trong chất rắn đứng yên.",phase="contrast",
+        error={"id":"VLN-01","title":"Nhầm chuyển động nhiệt",
+               "repair":{"concept":"Mỗi phân tử vẫn dao động nhiệt."}},
+        anchor=get_sgk_anchor("Chương I","Bài 1"),
+        previous_question="Các hạt có chuyển động?",history=[],consent=True)
+    assert len(calls)==1
+    assert result["used_ai"] is True
+    assert result["provider"]=="gemini"
+    assert result["verdict"]=="needs_revision"
+    assert result["verification_note"]
+    assert result["request_id"]=="offline-response-1"
+
+def test_invalid_ai_verdict_is_not_accepted_as_verified(monkeypatch):
+    import json
+    monkeypatch.setenv("GEMINI_API_KEY","fake-for-offline-mock")
+    monkeypatch.setenv("SOCRATIC_TUTOR_LLM_ENABLED","true")
+    class FakeResponse:
+        def __enter__(self): return self
+        def __exit__(self,*args): pass
+        def read(self):
+            return json.dumps({"candidates":[{"content":{"parts":[{"text":json.dumps({
+                "verdict":"perfectly_correct",
+                "verification_note":"Không có đối chiếu.",
+                "feedback":"Đúng rồi.",
+                "question":"Vì sao?"
+            })}]}}]}).encode()
+    monkeypatch.setattr(tutor.urlrequest,"urlopen",lambda *a,**k:FakeResponse())
+    result=tutor.next_tutor_reply(
+        message="Em đoán vậy.",phase="contrast",error={"id":"VLN-01"},
+        anchor=get_sgk_anchor("Chương I","Bài 1"),previous_question="Vì sao?",
+        history=[],consent=True)
+    assert result["used_ai"] is False
+    assert result["verdict"]=="not_checked"
