@@ -31,6 +31,7 @@ COPY student_selfstudy_patch.py /tmp/student_selfstudy_patch.py
 COPY student_math_fix_patch.py /tmp/student_math_fix_patch.py
 COPY v3_patch /app/v3_patch
 COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
+COPY scripts/inspect_ai_coach_flow.py /app/scripts/inspect_ai_coach_flow.py
 RUN python - <<'PY'
 from pathlib import Path
 import base64, zipfile, shutil, re
@@ -124,6 +125,7 @@ RUN python /tmp/adaptive_diagnostic_patch.py
 RUN python /tmp/public_release_patch.py
 RUN python /tmp/student_selfstudy_patch.py
 RUN python /tmp/student_math_fix_patch.py
+RUN python /app/scripts/inspect_ai_coach_flow.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/models
