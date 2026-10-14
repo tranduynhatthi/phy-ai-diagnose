@@ -90,9 +90,15 @@ def _fallback(*, mode: str, score: float | None, profiles: list[dict], weak_chap
                 "why": "Đây là lỗi đã có bằng chứng trong bài làm của em.",
                 "minutes": 6,
             })
-        next_step = len(plan) + 1
+        if len(plan) < 2:
+            plan.append({
+                "step": 2,
+                "action": "Làm 2–3 câu sửa lỗi có phản hồi ngay.",
+                "why": "Biến khái niệm vừa ôn thành cách giải đúng, không chỉ đọc lại lí thuyết.",
+                "minutes": 5,
+            })
         plan.append({
-            "step": next_step,
+            "step": 3,
             "action": "Làm một phiên chẩn đoán lại ở ngữ cảnh mới.",
             "why": "Cần kiểm tra xem em đã sửa được cách suy nghĩ chứ không chỉ nhớ đáp án.",
             "minutes": 5,
