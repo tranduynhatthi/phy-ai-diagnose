@@ -72,3 +72,21 @@ Trước khi hợp nhất vào main, cần chạy:
 - Giai đoạn chuyển pha theo số lượt thay vì đánh giá năng lực ngôn ngữ; cần nghiên cứu hiệu quả giáo dục trước khi mở rộng theo năng lực.
 - Lời giải thích trong đối thoại không phải điểm số hoặc nhãn lỗi huấn luyện.
 - Với người dùng dưới 18 tuổi, cơ sở giáo dục cần đánh giá yêu cầu thông báo, đồng thuận và lưu giữ dữ liệu phù hợp trước khi bật gửi nội dung tới nhà cung cấp AI.
+
+
+## 9. Gemini kiểm chứng lập luận — nâng cấp theo yêu cầu người sử dụng
+
+Không được sử dụng chế độ chỉ có câu hỏi quy tắc rồi tuyên bố là AI đã kiểm chứng. Một lượt Gemini thành công trả **bốn trường** theo JSON Schema: `verdict`, `verification_note`, `feedback`, `question`. `verdict` chỉ nhận `consistent` (có căn cứ), `needs_revision` (cần sửa), `insufficient_evidence` (chưa đủ thông tin). AI phải giải thích cụ thể điểm kiểm tra dựa trên `error.repair.concept/contrast/tip` của ontology dự án, không được khẳng định đã trích toàn văn SGK khi thực tế chưa được duyệt OCR. Một lượt phát sinh tối đa một lệnh gọi Gemini, đồng thời tạo nhận xét kiểm chứng tạm thời và câu hỏi tiếp theo.
+
+Nếu không gọi được Gemini, phản hồi giữ `verdict=not_checked` và được ghi rõ **chưa được Gemini kiểm chứng**. Không dùng đánh giá này để thay đổi `ErrorProfile` hoặc chứng nhận khắc phục. Kể cả lượt thứ năm (tự phản tỉnh) cũng yêu cầu kiểm chứng bằng Gemini nếu còn hạn mức; kết thúc luôn phải chuyển qua câu hỏi chẩn đoán mới của Evidence Engine.
+
+Mặc định không có lệnh gọi AI. Khi người quản trị xác nhận key thuộc Gemini **Free Tier**, chính sách dữ liệu của Google phù hợp, và chấp thuận triển khai, cấu hình:
+
+```text
+SOCRATIC_TUTOR_ENABLED=true
+SOCRATIC_TUTOR_LLM_ENABLED=true
+SOCRATIC_TUTOR_DAILY_AI_LIMIT=20
+GEMINI_MODEL=gemini-3.1-flash-lite
+```
+
+`SOCRATIC_TUTOR_DAILY_AI_LIMIT` đếm số **lần thử gọi** toàn hệ thống trong cửa sổ 24 giờ, kể cả khi nhà cung cấp trả lỗi. PostgreSQL sử dụng khóa advisory cấp giao dịch để tránh vượt giới hạn khi nhiều học sinh gửi cùng lúc; `0` đồng nghĩa khóa toàn bộ Gemini. Dù có hạn mức nội bộ, cấu hình này **không tự đảm bảo tài khoản Gemini nằm ở Free Tier**: quản trị viên phải kiểm tra chính xác bậc và khả năng tính phí trong AI Studio. Google có thể dùng dữ liệu gửi qua Free Tier để cải thiện sản phẩm; khi triển khai với học sinh thật cần thiết lập chính sách dữ liệu, thông báo và sự đồng ý phù hợp. Kiểm thử tự động dùng mock Gemini, không gọi API có thể bị tính phí.
