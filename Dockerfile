@@ -25,6 +25,7 @@ COPY hybrid_patch /tmp/hybrid_patch
 COPY gemini_provider_patch.py /tmp/gemini_provider_patch.py
 COPY diagnostic_ai_flow_patch.py /tmp/diagnostic_ai_flow_patch.py
 COPY recheck_profile_patch.py /tmp/recheck_profile_patch.py
+COPY adaptive_diagnostic_patch.py /tmp/adaptive_diagnostic_patch.py
 COPY v3_patch /app/v3_patch
 COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
 RUN python - <<'PY'
@@ -116,6 +117,7 @@ RUN cat /tmp/hybrid_patch/part*.b64 | base64 -d | gzip -d > /tmp/hybrid_ai_patch
 RUN python /tmp/gemini_provider_patch.py
 RUN python /tmp/diagnostic_ai_flow_patch.py
 RUN python /tmp/recheck_profile_patch.py
+RUN python /tmp/adaptive_diagnostic_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/models
