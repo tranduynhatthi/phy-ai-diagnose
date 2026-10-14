@@ -16,6 +16,7 @@ new = '''        profiles=diagnostic_profiles_from_session(db,s)
         # same error in a new context and the student answers those probes
         # correctly. Keep this conservative: require at least two mapped probes
         # in the current session and require all of them to be fully correct.
+        from .services import state_from_confidence
         repaired = db.execute(
             select(ErrorProfile).where(
                 ErrorProfile.user_id == student.id,
