@@ -332,10 +332,18 @@ main = main.replace(old_answer, new_answer, 1)
 
 # Diagnostic finish: Gemini becomes a visible coach, but only after the Evidence
 # Engine has created/updated the profile.
-finish_pattern = re.compile(
-    re.escape('    return {"session":public_session(s),"profiles":profiles}') +
-    r'\s+(?=@app\.post\("/api/repair/start"\))'
-)
+finish_start = main.find('@app.post("/api/practice/{session_id}/finish")')
+if finish_start < 0:
+    raise SystemExit("AI coach patch: finish_practice route not found")
+finish_end = main.find("\n@app.", finish_start + 1)
+if finish_end < 0:
+    raise SystemExit("AI coach patch: next route after finish_practice not found")
+finish_block = main[finish_start:finish_end]
+finish_return = '    return {"session":public_session(s),"profiles":profiles}'
+finish_return_pos = finish_block.rfind(finish_return)
+if finish_return_pos < 0:
+    raise SystemExit("AI coach patch: final finish_practice return not found")
+
 new_finish = '''    coach_profiles = []
     reasoning_evidence = []
     if s.kind == "diagnostic":
@@ -375,12 +383,10 @@ new_finish = '''    coach_profiles = []
         db.commit()
     else:
         ai_coach = None
-    return {"session":public_session(s),"profiles":profiles,"ai_coach":ai_coach}
+    return {"session":public_session(s),"profiles":profiles,"ai_coach":ai_coach}'''
 
-@app.post("/api/repair/start")'''
-main, finish_matches = finish_pattern.subn(new_finish, main, count=1)
-if finish_matches != 1:
-    raise SystemExit(f"AI coach patch: finish_practice return marker matches={finish_matches}")
+finish_block = finish_block[:finish_return_pos] + new_finish + finish_block[finish_return_pos + len(finish_return):]
+main = main[:finish_start] + finish_block + main[finish_end:]
 
 # Exam finish: AI summarizes only already-verified profiles and chapter scores.
 old_exam_return = '    return {"session":public_session(s),"result":result,"review":review,"ability_after":recent_performance(db,student.id),"post_exam_diagnosis":{"profiles":post_exam_profiles,"weak_chapter":weak_chapter,"weak_rate":round(weak_rate,4) if weak_rate is not None else None}}\n'
