@@ -14,9 +14,9 @@ main+=r'''
 
 # The tutor does not record graded answers or modify ErrorProfile.
 # Only a new independent diagnosis can modify the Evidence Engine profile.
-from .socratic_tutor import flag_enabled,clean_student_text,next_tutor_reply,expected_phase,MAX_TURNS
+from .socratic_tutor import flag_enabled,clean_student_text,next_tutor_reply,expected_phase,MAX_TURNS,fallback_reply
 from .sgk_physics12 import get_sgk_anchor
-from sqlalchemy import func
+from sqlalchemy import func,text
 from datetime import datetime,timedelta,timezone
 
 def _tutor_public(s):
@@ -25,6 +25,7 @@ def _tutor_public(s):
             "chapter":s.chapter,"lesson":s.lesson,"source":m.get("source"),
             "question":m.get("question") or "","phase":expected_phase(len(turns)),
             "turn":len(turns),"max_turns":MAX_TURNS,"history":turns,
+            "ai_verification_count":sum(1 for t in turns if t.get("used_ai") and t.get("verdict")!="not_checked"),
             "consent":bool(m.get("consent")),"decision_authority":"Evidence Engine",
             "notice":"Đối thoại không chấm điểm; chỉ chẩn đoán lại mới cập nhật hồ sơ lỗi."}
 
@@ -56,7 +57,7 @@ def start_tutor(req:dict,student:User=Depends(require_roles("student")),db:Sessi
         if count>=5: raise HTTPException(429,"Tối đa 5 phiên gia sư trong 24 giờ.")
     meta={"error_id":code,"source":anchor,"question":anchor["guiding_question"],
           "consent":req.get("llm_consent") is True,"turns":[],
-          "audit":{"model_calls":0,"tokens":0,"request_ids":[]}}
+          "audit":{"model_calls":0,"model_attempts":0,"tokens":0,"request_ids":[]}}
     s=LearningSession(user_id=student.id,kind="tutor",mode="socratic",
                       chapter=chapter,lesson=lesson,meta_json=meta)
     db.add(s);db.commit();db.refresh(s)
@@ -86,19 +87,42 @@ def tutor_reply(session_id:str,req:dict,student:User=Depends(require_roles("stud
     error=bank.error_by_id.get(m.get("error_id"))
     if not error: raise HTTPException(409,"Mã lỗi không còn hợp lệ.")
     next_phase=expected_phase(len(turns)+1)
+    # Five *verified* steps: verify the student's final reflection too.
+    phase=next_phase if next_phase!="recheck" else "reflect"
+    enabled=(m.get("consent") is True and flag_enabled("SOCRATIC_TUTOR_LLM_ENABLED")
+             and bool(__import__("os").environ.get("GEMINI_API_KEY","").strip()))
+    audit=dict(m.get("audit") or {})
+    can_call=enabled
+    if enabled:
+        # PostgreSQL transaction advisory lock makes the global budget atomic
+        # even with several web workers and different students submitting together.
+        if db.get_bind().dialect.name=="postgresql":
+            db.execute(text("SELECT pg_advisory_xact_lock(6109202616)"))
+        limit=max(0,min(500,int(__import__("os").environ.get("SOCRATIC_TUTOR_DAILY_AI_LIMIT","20"))))
+        if hasattr(LearningSession,"created_at"):
+            recent=db.execute(select(LearningSession).where(
+                LearningSession.kind=="tutor",
+                LearningSession.created_at>=datetime.now(timezone.utc)-timedelta(hours=24)
+            )).scalars().all()
+            attempts=sum(int((r.meta_json or {}).get("audit",{}).get("model_attempts") or 0) for r in recent)
+        else:
+            attempts=limit
+        can_call=attempts<limit
+    if can_call:
+        # One possible Gemini API request per turn. Attempts count even if
+        # provider rejects, times out, or replies with invalid JSON.
+        audit["model_attempts"]=int(audit.get("model_attempts") or 0)+1
+    reply=next_tutor_reply(message=message,phase=phase,error=error,
+                           anchor=m.get("source"),previous_question=m.get("question") or "",
+                           history=turns,consent=can_call)
     if next_phase=="recheck":
-        reply={"feedback":"Em đã hoàn thành đối thoại. Hãy chẩn đoán lại để kiểm chứng.",
-               "question":"","used_ai":False,"provider":"socratic_rules",
-               "tokens":0,"request_id":None}
-    else:
-        reply=next_tutor_reply(message=message,phase=next_phase,error=error,
-                               anchor=m.get("source"),previous_question=m.get("question") or "",
-                               history=turns,consent=m.get("consent") is True)
+        reply["question"]=""
     turns.append({"question":m.get("question"),"student":message,
                   "feedback":reply["feedback"],"used_ai":reply["used_ai"],
+                  "verdict":reply.get("verdict","not_checked"),
+                  "verification_note":reply.get("verification_note","Gemini chưa kiểm chứng."),
                   "phase":expected_phase(len(turns))})
     m["turns"]=turns;m["question"]=reply["question"]
-    audit=dict(m.get("audit") or {})
     if reply["used_ai"]:
         audit["model_calls"]=int(audit.get("model_calls") or 0)+1
         audit["tokens"]=int(audit.get("tokens") or 0)+int(reply.get("tokens") or 0)
@@ -106,7 +130,9 @@ def tutor_reply(session_id:str,req:dict,student:User=Depends(require_roles("stud
     m["audit"]=audit;s.meta_json=m
     if len(turns)>=MAX_TURNS: s.status="finished"
     db.commit()
-    return {**_tutor_public(s),"feedback":reply["feedback"],"used_ai":reply["used_ai"]}
+    return {**_tutor_public(s),"feedback":reply["feedback"],"used_ai":reply["used_ai"],
+            "verdict":reply.get("verdict","not_checked"),
+            "verification_note":reply.get("verification_note","Gemini chưa kiểm chứng.")}
 '''
 p.write_text(main,encoding="utf8")
 
@@ -128,7 +154,7 @@ html=html.replace("</head>",'''<style>
 </style></head>''',1)
 html=html.replace("</body>",r'''<div id="socraticLayer" role="dialog" aria-modal="true" aria-labelledby="socraticTitle"><div id="socraticCard">
 <div class="socraticBar"><h2 id="socraticTitle">✨ AI gia sư Socratic</h2><button class="btn secondary" type="button" onclick="socraticClose()">Đóng ✕</button></div>
-<p class="small muted" id="socraticSource"></p><p class="small muted">AI gợi mở, không tự chấm điểm hoặc xác nhận sửa lỗi. Hãy chẩn đoán lại sau phiên này.</p>
+<p class="small muted" id="socraticSource"></p><p class="small muted">Gemini kiểm chứng lập luận theo học liệu nội bộ đã rà soát, không phải toàn văn SGK. Nhận xét AI chỉ là tạm thời; Evidence Engine quyết định sau chẩn đoán lại.</p>
 <div id="socraticHistory" aria-live="polite"></div><label for="socraticInput">Em hãy giải thích cách nghĩ:</label>
 <textarea id="socraticInput" maxlength="700" placeholder="Trả lời câu hỏi của gia sư..."></textarea>
 <p class="small muted" id="socraticProgress"></p><div class="socraticBar"><button type="button" id="socraticSend" class="btn primary" onclick="socraticSend()">Gửi lập luận</button><button type="button" id="socraticRecheck" class="btn secondary" style="display:none" onclick="socraticStartRecheck()">Chẩn đoán lại →</button></div></div></div>
@@ -153,12 +179,14 @@ function socraticMessage(value,isStudent){let item=document.createElement('div')
 function socraticRender(r){
  $('socraticHistory').innerHTML='';let source=r.source||{};
  $('socraticSource').textContent=source.title?source.book+' • '+source.title+' • Trang '+source.printed_pages.join('–')+' (PDF '+source.pdf_pages.join('–')+')':'Chưa có neo SGK đã xác minh';
- (r.history||[]).forEach(t=>{socraticMessage('Gia sư: '+t.question,false);socraticMessage('Em: '+t.student,true);socraticMessage('Phản hồi: '+t.feedback,false)});
+ (r.history||[]).forEach(t=>{socraticMessage('Gia sư: '+t.question,false);socraticMessage('Em: '+t.student,true);socraticMessage((t.used_ai?'Gemini nhận xét ('+({consistent:'Có căn cứ',needs_revision:'Cần sửa',insufficient_evidence:'Chưa đủ thông tin'}[t.verdict]||'Tạm thời')+')':'Chưa được Gemini kiểm chứng')+': '+(t.verification_note||'')+'\\n'+t.feedback,false)});
  if(r.question)socraticMessage('Gia sư: '+r.question,false);
  let done=r.status!=='active'||r.turn>=r.max_turns;
  $('socraticInput').disabled=done;$('socraticSend').disabled=done;$('socraticInput').value='';
  $('socraticRecheck').style.display=done?'inline-flex':'none';
- $('socraticProgress').textContent=done?'Đã đủ lượt; chỉ chẩn đoán lại mới kiểm chứng.':'Lượt '+(r.turn+1)+'/'+r.max_turns+' • '+(r.consent?'Đã đồng ý dùng Gemini nếu máy chủ bật':'Không gửi lập luận đến Gemini');
+ $('socraticProgress').textContent=(done?'Đã đủ lượt, hãy chẩn đoán lại.':'Lượt '+(r.turn+1)+'/'+r.max_turns)+
+ ' • Gemini đã kiểm chứng '+(r.ai_verification_count||0)+'/'+r.turn+' lượt'+
+ (r.consent?' • Đã đồng ý dùng Gemini khi máy chủ có hạn mức':' • Chế độ không gửi tới Gemini');
 }
 async function socraticSend(){if(!socraticCurrent)return;
  let message=$('socraticInput').value.trim();if(message.length<2){alert('Hãy nhập ít nhất 2 ký tự.');return}
