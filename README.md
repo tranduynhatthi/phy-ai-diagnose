@@ -138,3 +138,19 @@ Bản v1.4 chuyển trọng tâm từ quản lí lớp sang năng lực tự h�
 Sau mỗi đề ôn tập, response có thêm post_exam_diagnosis. Các câu trong đề có mapping lỗi hợp lệ được dùng như bằng chứng; học sinh có thể chọn “Sửa lỗi ngay”. Nếu chưa đủ bằng chứng cho một lỗi cụ thể, hệ thống xác định chương yếu nhất và mở một phiên chẩn đoán sâu.
 
 Question bank áp dụng chính sách không đưa sẵn trong câu dẫn các công thức đã học trong SGK Vật lí 12. Dữ kiện, hằng số và công thức ngoài phạm vi đã học vẫn được giữ khi cần. Chi tiết xem audit/SGK_FORMULA_STEM_POLICY.md.
+
+
+## AI Coach v1.5 — AI nhìn thấy được trong trải nghiệm học sinh
+
+Bản v1.5 làm rõ vai trò của Gemini nhưng vẫn giữ Evidence Engine là lớp quyết định cuối cùng.
+
+- Trong từng câu chẩn đoán, khi học sinh nhập cách suy nghĩ, giao diện hiển thị trạng thái **“AI đang đọc cách em suy nghĩ…”**.
+- Gemini trả candidate evidence được hiển thị dưới dạng **“Dấu hiệu cần kiểm chứng”**, kèm độ mạnh tín hiệu. Đây không phải kết luận cuối cùng.
+- Sau khi kết thúc phiên chẩn đoán, AI Coach chỉ nhận các hồ sơ lỗi đã được Evidence Engine kiểm chứng cùng các tín hiệu lập luận có mã lỗi trùng khớp; AI tạo bản giải thích ngắn và kế hoạch tự học đúng 3 bước, khoảng 15–20 phút.
+- Sau mỗi đề ôn tập, AI Coach tổng hợp các lỗi đã được kiểm chứng và chương yếu nhất để tạo kế hoạch tiếp theo; nếu chưa đủ bằng chứng cho một lỗi cụ thể, AI phải nói rõ chưa đủ căn cứ và hướng học sinh sang chẩn đoán sâu.
+- Output AI được lọc theo ontology/hồ sơ đã xác nhận; mã lỗi do mô hình tự tạo bị loại bỏ.
+- Session lưu `ai_coach_audit` gồm `used`, `provider`, `model`, `request_id` và `decision_authority=Evidence Engine`.
+- Khi Gemini lỗi, hết quota hoặc timeout, hệ thống tự chuyển sang kế hoạch của Evidence Engine; phiên học không bị gián đoạn.
+- Giao diện luôn nêu rõ: **AI không tự quyết định học sinh mắc lỗi; hồ sơ lỗi chỉ được cập nhật sau khi Evidence Engine kiểm chứng bằng nhiều bằng chứng.**
+
+Release gate v1.5: 85 Python tests PASS, student-only Playwright PASS, ngân hàng 1.000 câu `issues=[]`, `SGK_FORMULA_STEM_VIOLATIONS=0`, MathJax 7.034 trường / 8.119 biểu thức với `errors=[]`.
