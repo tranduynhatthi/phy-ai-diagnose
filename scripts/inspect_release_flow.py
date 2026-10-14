@@ -2,7 +2,7 @@ import inspect
 import re
 import app.main as m
 
-for name in ("start_practice","finish_practice","start_repair","profile"):
+for name in ("start_practice","finish_practice","start_repair","profile","submit_exam"):
     fn=getattr(m,name,None)
     print(f"=== RELEASE INSPECT: {name} ===")
     print(inspect.getsource(fn) if fn else "MISSING")
@@ -30,3 +30,6 @@ print("=== RELEASE INSPECT: TEXTAREA / TEACHER MARKERS ===")
 html=(m.STATIC_DIR/"index.html").read_text(encoding="utf-8") if hasattr(m,"STATIC_DIR") else ""
 for term in ['id="qReasoning"','teacher-portal','id="teacherView"','resultProfiles']:
     print(term, html.find(term))
+
+print("=== RELEASE INSPECT: diagnostic_profiles_from_session ===")
+print(inspect.getsource(m.diagnostic_profiles_from_session))
