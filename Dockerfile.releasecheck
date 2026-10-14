@@ -40,6 +40,7 @@ COPY public_release_patch.py /tmp/public_release_patch.py
 COPY student_selfstudy_patch.py /tmp/student_selfstudy_patch.py
 COPY student_math_fix_patch.py /tmp/student_math_fix_patch.py
 COPY ai_coach_patch.py /tmp/ai_coach_patch.py
+COPY repair_null_guard_patch.py /tmp/repair_null_guard_patch.py
 COPY v3_patch /app/v3_patch
 COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
 COPY scripts/validate_audited_bank.py /app/scripts/validate_audited_bank.py
@@ -142,11 +143,12 @@ RUN python /tmp/public_release_patch.py
 RUN python /tmp/student_selfstudy_patch.py
 RUN python /tmp/student_math_fix_patch.py
 RUN python /tmp/ai_coach_patch.py
+RUN python /tmp/repair_null_guard_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python /app/scripts/inspect_release_flow.py
 RUN python /app/scripts/audit_formula_stems.py
-RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_role_access.py /app/tests/test_question_content_audit.py /app/tests/test_adaptive_diagnostic.py /app/tests/test_public_release.py /app/tests/test_student_selfstudy.py /app/tests/test_ai_coach.py
+RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_role_access.py /app/tests/test_question_content_audit.py /app/tests/test_adaptive_diagnostic.py /app/tests/test_public_release.py /app/tests/test_student_selfstudy.py /app/tests/test_ai_coach.py /app/tests/test_ai_coach_hardening.py
 RUN PHY_APP_ROOT=/app PHY_PYTHON=/usr/local/bin/python node /app/tests/test_student_public.cjs
 RUN PHY_APP_ROOT=/app python /app/scripts/validate_audited_bank.py --export /tmp/phy-reviewed-bank.json
 RUN PHY_APP_ROOT=/app PHY_BANK_JSON=/tmp/phy-reviewed-bank.json PHY_MATHJAX_ROOT=/tmp/phy-node-tests/node_modules/mathjax-full PHY_MATH_AUDIT_DIR=/tmp/phy-math-results node /app/tests/test_math_rendering.cjs

@@ -154,3 +154,17 @@ Bản v1.5 làm rõ vai trò của Gemini nhưng vẫn giữ Evidence Engine là
 - Giao diện luôn nêu rõ: **AI không tự quyết định học sinh mắc lỗi; hồ sơ lỗi chỉ được cập nhật sau khi Evidence Engine kiểm chứng bằng nhiều bằng chứng.**
 
 Release gate v1.5: 85 Python tests PASS, student-only Playwright PASS, ngân hàng 1.000 câu `issues=[]`, `SGK_FORMULA_STEM_VIOLATIONS=0`, MathJax 7.034 trường / 8.119 biểu thức với `errors=[]`.
+
+
+## AI Coach — vai trò nhìn thấy được
+
+AI Coach được thiết kế theo chuỗi 4 bước hiển thị trực tiếp cho học sinh:
+
+1. **Gemini đọc lập luận** học sinh viết trong ô “Cách em suy nghĩ”.
+2. **Evidence Engine kiểm chứng** candidate evidence bằng đáp án, nhiều probe độc lập và lịch sử lỗi.
+3. **AI giải thích điểm nghẽn** chỉ với các lỗi đã được Evidence Engine xác nhận.
+4. **AI lập kế hoạch sửa lỗi 3 bước** trong khoảng 15–20 phút và đưa học sinh vào bộ câu sửa lỗi tương ứng.
+
+Gemini không được phép tạo hồ sơ lỗi mới, tự gán trạng thái CONFIRMED hoặc đưa một mã lỗi ngoài verified profiles vào kế hoạch. Nếu API lỗi/quota/timeout, Evidence Engine tạo kế hoạch dự phòng để phiên tự học không bị gián đoạn.
+
+Bản v1.5.1 bổ sung nút **“Sửa lỗi này ngay”** ở từng lỗi đã kiểm chứng và hiển thị rõ nhãn **“Evidence Engine đã kiểm chứng lỗi này trước khi AI lập kế hoạch”**. Đồng thời sửa lỗi server khi học sinh gửi câu sửa lỗi trống: đáp án trống được chấm là sai thay vì gây HTTP 500.

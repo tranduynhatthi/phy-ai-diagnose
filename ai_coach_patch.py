@@ -434,6 +434,8 @@ if 'id="ai-coach-v15-styles"' not in html:
 .ai-coach-card h3{margin:8px 0 6px}.ai-coach-plan{display:grid;gap:8px;margin-top:12px}
 .ai-coach-step{padding:11px 12px;border-radius:11px;background:#fff;border:1px solid var(--line)}
 .ai-coach-note{margin-top:10px;padding-top:10px;border-top:1px dashed #c8d9ff;font-size:12px;color:var(--muted)}
+.ai-coach-pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0 12px}.ai-coach-pipeline span{padding:8px;border-radius:9px;background:#eef4ff;border:1px solid #d5e2ff;font-size:11px;font-weight:700;color:#294b8d;text-align:center}.ai-verified{margin-top:6px;color:#236b45;font-weight:700}.ai-coach-action{margin-top:7px}
+@media(max-width:620px){.ai-coach-pipeline{grid-template-columns:1fr 1fr}}
 .ai-working{display:flex;gap:8px;align-items:center;color:#365b9d}.ai-dot{width:8px;height:8px;border-radius:50%;background:#527bd0;animation:aiPulse 1s infinite alternate}
 @keyframes aiPulse{from{opacity:.3;transform:scale(.8)}to{opacity:1;transform:scale(1.15)}}
 </style>'''
@@ -456,9 +458,10 @@ function renderAiCoach(coach,id,anchorId){
  let used=!!coach.used,focus=coach.focus_errors||[],plan=coach.plan||[];
  let badge=used?'Gemini + Evidence Engine':'Evidence Engine · AI dự phòng';
  host.innerHTML=`<div class="ai-title">✨ AI Coach <span class="ai-badge">${esc(badge)}</span></div>
+ <div class="ai-coach-pipeline"><span>1 · Gemini đọc lập luận</span><span>2 · Evidence Engine kiểm chứng</span><span>3 · AI giải thích điểm nghẽn</span><span>4 · Lập kế hoạch sửa lỗi</span></div>
  <h3>${esc(coach.headline||'Kế hoạch tự học của em')}</h3>
  <div class="small">${esc(coach.summary||'')}</div>
- ${focus.length?'<div style="margin-top:10px"><b>AI tập trung vào các lỗi đã được kiểm chứng</b>'+focus.map(x=>`<div class="ai-signal"><b>${esc(x.error_code)} · ${esc(x.title||'')}</b><div class="small">${esc(x.what_ai_noticed||'')}</div>${x.why_it_matters?`<div class="small muted">${esc(x.why_it_matters)}</div>`:''}</div>`).join('')+'</div>':''}
+ ${focus.length?'<div style="margin-top:10px"><b>AI tập trung vào các lỗi đã được kiểm chứng</b>'+focus.map(x=>`<div class="ai-signal"><b>${esc(x.error_code)} · ${esc(x.title||'')}</b><div class="small ai-verified">✓ Evidence Engine đã kiểm chứng lỗi này trước khi AI lập kế hoạch</div><div class="small">${esc(x.what_ai_noticed||'')}</div>${x.why_it_matters?`<div class="small muted">${esc(x.why_it_matters)}</div>`:''}<div class="ai-coach-action"><button class="btn secondary" onclick="startRepair('${esc(x.error_code)}')">Sửa lỗi này ngay</button></div></div>`).join('')+'</div>':''}
  <div class="ai-coach-plan">${plan.map(x=>`<div class="ai-coach-step"><b>Bước ${Number(x.step)||''} · ${Number(x.minutes)||5} phút</b><div>${esc(x.action||'')}</div><div class="small muted">${esc(x.why||'')}</div></div>`).join('')}</div>
  ${coach.self_check?`<div class="feedback" style="margin-top:10px"><b>Tự kiểm tra:</b> ${esc(coach.self_check)}</div>`:''}
  ${coach.encouragement?`<div class="small" style="margin-top:8px">${esc(coach.encouragement)}</div>`:''}
