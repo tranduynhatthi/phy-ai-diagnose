@@ -30,6 +30,9 @@ COPY public_release_patch.py /tmp/public_release_patch.py
 COPY student_selfstudy_patch.py /tmp/student_selfstudy_patch.py
 COPY student_math_fix_patch.py /tmp/student_math_fix_patch.py
 COPY ai_coach_patch.py /tmp/ai_coach_patch.py
+COPY sgk_physics12.py /tmp/sgk_physics12.py
+COPY socratic_tutor.py /tmp/socratic_tutor.py
+COPY socratic_tutor_patch.py /tmp/socratic_tutor_patch.py
 COPY repair_null_guard_patch.py /tmp/repair_null_guard_patch.py
 COPY v3_patch /app/v3_patch
 COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
@@ -128,6 +131,7 @@ RUN python /tmp/student_selfstudy_patch.py
 RUN python /tmp/student_math_fix_patch.py
 RUN python /tmp/ai_coach_patch.py
 RUN python /tmp/repair_null_guard_patch.py
+RUN python /tmp/socratic_tutor_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/models
