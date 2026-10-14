@@ -30,6 +30,8 @@ COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
 COPY scripts/validate_audited_bank.py /app/scripts/validate_audited_bank.py
 COPY scripts/inspect_release_flow.py /app/scripts/inspect_release_flow.py
 COPY tests /app/tests
+COPY homepage_cleanup_patch.py /app/homepage_cleanup_patch.py
+COPY multi_school_home_patch.py /app/multi_school_home_patch.py
 RUN python - <<'PY'
 from pathlib import Path
 import base64, zipfile, shutil, re
