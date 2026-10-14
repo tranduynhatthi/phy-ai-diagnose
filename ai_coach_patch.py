@@ -334,7 +334,7 @@ main = main.replace(old_answer, new_answer, 1)
 # Engine has created/updated the profile.
 finish_pattern = re.compile(
     re.escape('    return {"session":public_session(s),"profiles":profiles}') +
-    r'\\s+(?=@app\\.post\\("/api/repair/start"\\))'
+    r'\s+(?=@app\.post\("/api/repair/start"\))'
 )
 new_finish = '''    coach_profiles = []
     reasoning_evidence = []
