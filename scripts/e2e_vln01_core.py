@@ -283,7 +283,7 @@ try:
     created_sessions.append(re_id)
     for pq in recheck["questions"]:
         qid = pq["id"]
-        ans = m.answer_practice(
+        m.answer_practice(
             session_id=re_id,
             req=m.AnswerRequest(
                 answer={"question_id": qid, "value": solve_bank_question(m.bank.by_id[qid])},
@@ -292,8 +292,14 @@ try:
             student=student,
             db=db,
         )
-        if not ans.get("correct"):
-            raise RuntimeError(f"Recheck answer unexpectedly wrong for {qid}: {ans}")
+        response_row = db.execute(
+            select(m.Response).where(
+                m.Response.session_id == re_id,
+                m.Response.question_id == qid,
+            )
+        ).scalar_one()
+        if not bool(response_row.is_fully_correct):
+            raise RuntimeError(f"Recheck answer unexpectedly wrong for {qid}")
 
     re_finish = m.finish_practice(session_id=re_id, student=student, db=db)
     p3 = m.profile(student=student, db=db)
