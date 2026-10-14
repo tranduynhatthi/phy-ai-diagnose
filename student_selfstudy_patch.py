@@ -176,6 +176,34 @@ html = re.sub(
     count=1,
 )
 
+# Remove teacher-only JavaScript dependencies from the public student shell.
+html = html.replace(
+    "for(const id of ['teacherLoginSubmit','studentLoginSubmit','studentRegisterSubmit'])$(id).disabled=busy;",
+    "for(const id of ['studentLoginSubmit','studentRegisterSubmit']){const el=$(id);if(el)el.disabled=busy;}"
+)
+html = html.replace(
+    "for(const id of ['teacherLoginForm','studentLoginForm','studentRegisterForm'])$(id).reset();",
+    "for(const id of ['studentLoginForm','studentRegisterForm']){const el=$(id);if(el)el.reset();}"
+)
+html = html.replace(
+    "for(const id of ['teacherLoginMsg','studentLoginMsg','regMsg'])$(id).textContent='';",
+    "for(const id of ['studentLoginMsg','regMsg']){const el=$(id);if(el)el.textContent='';}"
+)
+html = html.replace(
+    "for(const id of ['teacherLoginMsg','studentLoginMsg'])$(id).textContent='Không kết nối được máy chủ. Vui lòng thử đăng nhập lại.';",
+    "if($('studentLoginMsg'))$('studentLoginMsg').textContent='Không kết nối được máy chủ. Vui lòng thử đăng nhập lại.';"
+)
+html = html.replace(
+    "function routeHome(classes=[]){if(me.role==='student'){initStudent(classes);show('studentView');loadProfile()}else{show('teacherView');loadTeacher()}}",
+    "function routeHome(classes=[]){if(me&&me.role==='student'){initStudent(classes);show('studentView');loadProfile()}else{token='';me=null;localStorage.removeItem('phy_token');show('authView');renderTop()}}"
+)
+html = re.sub(
+    r"function logout\(\)\{[\s\S]*?\n\}",
+    "function logout(){token='';me=null;if(examTimerHandle){clearInterval(examTimerHandle);examTimerHandle=null}localStorage.removeItem('phy_token');clearAuthForms();show('authView');renderTop()}",
+    html,
+    count=1,
+)
+
 # Student-first learning guide at the top of the dashboard.
 if 'id="selfStudyGuide"' not in html:
     student_marker = '<section id="studentView"'
