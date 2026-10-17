@@ -211,8 +211,8 @@ async def qa_import_xlsx(request:QARequest,admin:User=Depends(require_roles("adm
     return {"imported":len(rows),"ids":rows,"state":"draft",
             "notice":"Mọi câu nhập từ Excel chỉ là bản nháp; chưa công bố."}
 
-# Register overlay only when explicitly enabled. This never alters the protected baseline.
-if os.getenv("QUESTION_BANK_PUBLISH_ENABLED","false").lower() in ("true","1","yes","on"):
-    from .question_admin_overlay import install_overlay as _qa_install
-    from .database import engine as _qa_engine
-    _qa_install(bank,_qa_engine)
+# Version index is always installed so existing in-flight answers remain
+# resolvable after disabling publication. Selection is independently feature-flagged.
+from .question_admin_overlay import install_overlay as _qa_install
+from .database import engine as _qa_engine
+_qa_install(bank,_qa_engine)
