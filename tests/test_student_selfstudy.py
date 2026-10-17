@@ -103,3 +103,21 @@ def test_effective_bank_has_no_taught_formula_leaks_in_prompts():
                 violations.append((q["id"], prompt))
                 break
     assert not violations, violations[:20]
+
+
+def test_teacher_workspace_contains_only_owned_class_features():
+    html = (APP_ROOT / "app/static/index.html").read_text(encoding="utf-8")
+    start = html.index('<section id="teacherView"')
+    end = html.index("</section>", start)
+    teacher = html[start:end]
+    for control in ('schoolSelect','schoolIdentity','schoolDetailCard','schoolStats'):
+        assert f'id="{control}"' not in teacher, control
+    for control in ('classList', 'studentProgressRows', 'studentDetailCard'):
+        assert f'id="{control}"' in teacher, control
+    assert 'onclick="createClass()"' in teacher
+    assert 'Lớp học của tôi' in teacher
+    loader_start = html.index("async function loadTeacher()")
+    loader_end = html.index("}", loader_start)
+    loader = html[loader_start:loader_end]
+    assert "await loadTeacherClassesBase()" in loader
+    assert "await loadSchools()" not in loader
