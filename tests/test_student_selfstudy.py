@@ -49,10 +49,14 @@ def test_adaptive_exam_is_default_again():
     assert '<option value="auto" selected>Tự động theo kết quả gần đây</option>' in html
 
 
-def test_class_code_is_not_part_of_public_student_onboarding():
+def test_class_code_is_optional_for_selfstudy_and_existing_students_can_join():
     html = (APP_ROOT / "app/static/index.html").read_text(encoding="utf-8")
-    assert '<input id="regClass" type="hidden" value="">' in html
-    assert "Nhập mã lớp giáo viên cung cấp" not in html
+    assert 'id="regClass" name="class_code"' in html
+    assert 'Mã lớp của giáo viên (không bắt buộc)' in html
+    assert 'id="studentClassJoinPanel"' in html
+    assert 'id="studentTeacherJoinCode"' in html
+    assert 'joinTeacherClass()' in html
+    assert 'loadMyTeacherClasses()' in html
 
 
 def test_privacy_copy_matches_student_selfstudy_goal():
