@@ -145,6 +145,9 @@ def test_question_overlay_is_opt_in_preserves_previous_versions(context,monkeypa
     c,h,f,engine=context
     from app.question_admin_overlay import install_overlay
     original_pool=bank.pool
+    original_index=bank.by_id
+    bank.pool=bank._question_admin_base_pool
+    bank._question_admin_installed=False
     try:
         install_overlay(bank,engine)
         new=post(c,h["admin"]);assert new.status_code==201,new.text
@@ -175,7 +178,8 @@ def test_question_overlay_is_opt_in_preserves_previous_versions(context,monkeypa
         assert bank.by_id[id+"-v1"]["answer"]==1
     finally:
         bank.pool=original_pool
-        bank._question_admin_installed=False
+        bank.by_id=original_index
+        bank._question_admin_installed=True
 
 
 def test_static_admin_script_and_html_injection_rejected(context):
