@@ -2,19 +2,19 @@
 (function(){
 "use strict";
 const $=id=>document.getElementById(id);
-let qa={current:null,ontology:[],page:1,limit:20,total:0};
+let qa={current:null,ontology:[],lessonsByChapter:{},page:1,limit:20,total:0};
 const e=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const notice=(msg,bad)=>{let n=$("qaNotice");if(n){n.textContent=msg;n.style.color=bad?"#9c1725":"#276749";}};
 async function apiQA(path,opt){return api(path,opt||{})}
 function scopes(){
- let chapters=[...new Set(qa.ontology.map(x=>x.chapter).filter(Boolean))];
+ let chapters=Object.keys(qa.lessonsByChapter);
  $("qaChapter").innerHTML=chapters.map(x=>'<option>'+e(x)+'</option>').join("");
  $("qaFilterChapter").innerHTML='<option value="">Tất cả</option>'+chapters.map(x=>'<option>'+e(x)+'</option>').join("");
  lessonChange();
 }
 function lessonChange(){
  let chapter=$("qaChapter").value;
- let lessons=[...new Set(qa.ontology.filter(x=>x.chapter===chapter).map(x=>x.lesson).filter(Boolean))];
+ let lessons=qa.lessonsByChapter[chapter]||[];
  $("qaLesson").innerHTML=lessons.map(x=>'<option>'+e(x)+'</option>').join("");errorsChange();
 }
 function errorsChange(){
@@ -156,6 +156,7 @@ window.qaOpen=async function(){
  try{
  const state=await apiQA("/api/admin/question-bank/status");
  qa.ontology=await apiQA("/api/admin/question-bank/ontology");
+ qa.lessonsByChapter=state.lessons_by_chapter||{};
  scopes();
  $("qaMode").textContent=state.published_in_practice?
  "Bản được duyệt đang có hiệu lực trong các phiên luyện tập/chẩn đoán mới.":
