@@ -89,7 +89,7 @@ pattern=re.compile(r"^async function loadTeacher\(\)\{[\s\S]*?^\}\n",re.M)
 new_teacher="""async function loadTeacher(){
  const sessionToken=token;
  if(!me||me.role!=='teacher')return;
- if($('teacherWelcome'))$('teacherWelcome').textContent=\`Xin chào, \${me.display_name}\`;
+ if($('teacherWelcome'))$('teacherWelcome').textContent='Xin chào, '+me.display_name;
  // School-wide rosters are deliberately NOT queried.
  if(sessionToken!==token)return;
  await loadTeacherClassesBase();
