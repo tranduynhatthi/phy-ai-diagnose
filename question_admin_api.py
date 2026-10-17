@@ -66,7 +66,8 @@ def qa_status(admin:User=Depends(require_roles("admin")),db:Session=Depends(get_
     _qa_setup(db)
     return {"enabled":True,
             "published_in_practice":os.getenv("QUESTION_BANK_PUBLISH_ENABLED","false").lower() in ("true","1","yes","on"),
-            "base_questions":len(bank.questions),"ontology_errors":len(bank.error_by_id)}
+            "base_questions":len(bank.questions),"ontology_errors":len(bank.error_by_id),
+            "lessons_by_chapter":{ch:list(meta.get("lessons",[])) for ch,meta in bank.data["chapters"].items()}}
 
 @app.get("/api/admin/question-bank/ontology")
 def qa_ontology(admin:User=Depends(require_roles("admin")),db:Session=Depends(get_db)):
