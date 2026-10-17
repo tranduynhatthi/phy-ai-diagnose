@@ -69,10 +69,11 @@ for anchor in sorted(anchors):
 if not selected:
     raise SystemExit("No standalone school workspace found to remove")
 
-# Remove the student-only school label, without deleting the self-study UI/card.
-for node in tree.nodes:
-    if node.node_id in {"studentSchoolLine"} and student.start<node.start<node.end<student.end:
-        selected.append((node.start,node.end))
+# Preserve the old student school status element in the DOM because a legacy
+# student dashboard callback still writes to it asynchronously. Hide it instead
+# of deleting it, to avoid null-reference browser exceptions.
+if "</head>" not in html:raise SystemExit("Document head missing")
+html=html.replace("</head>",'<style id="hide-student-school-label">#studentSchoolLine{display:none!important}</style></head>',1)
 
 selected.sort()
 merged=[]
