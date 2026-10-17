@@ -38,6 +38,7 @@ def install_overlay(bank,engine):
     if getattr(bank,"_question_admin_installed",False):
         return
     static_pool=bank.pool
+    bank._question_admin_base_pool=static_pool
     bank.by_id=VersionedIndex(bank.by_id,engine)
     def approved_pool(*args,**kwargs):
         baseline=list(static_pool(*args,**kwargs))
