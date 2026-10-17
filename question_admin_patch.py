@@ -24,8 +24,9 @@ if 'id="questionAdminRoot"' in html:
     raise SystemExit("Question admin UI already installed")
 start=html.find('<section id="adminView"')
 if start<0:raise SystemExit("Existing administrator section not found")
-close=html.find("</section>",start)
-if close<0:raise SystemExit("Administrator closing section not found")
+opening=html.find(">",start)
+if opening<0:raise SystemExit("Administrator opening section is invalid")
+opening+=1
 panel=r'''
 <div class="card" style="margin-top:14px">
   <button type="button" class="btn primary" onclick="qaOpen()">📚 Quản trị ngân hàng câu hỏi</button>
@@ -89,7 +90,9 @@ panel=r'''
   </div>
 </div>
 '''
-html=html[:close]+panel+html[close:]
+# The launcher must appear immediately on entering the administrator page.
+# Placing it after a long account table can make it look missing.
+html=html[:opening]+"\n"+panel+"\n"+html[opening:]
 if "</body>" not in html:raise SystemExit("HTML closing body marker not found")
 html=html.replace("</body>",'<script src="/static/question_admin_ui.js" defer></script></body>',1)
 html_path.write_text(html,encoding="utf-8")
