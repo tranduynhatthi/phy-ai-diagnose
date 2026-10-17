@@ -58,8 +58,9 @@ async function run() {
   page.on('pageerror',e=>pageErrors.push(e.message));
   await page.goto('/');
 
-  assert.equal(await page.locator('.teacher-portal').count(),0);
-  assert.equal(await page.locator('#teacherView').count(),0);
+  assert.equal(await page.locator('.teacher-portal').count(),1,'teacher login must be restored');
+  assert.equal(await page.locator('#teacherView').count(),1,'teacher dashboard must be restored');
+  assert(await page.locator('#teacherLoginForm').isVisible(),'teacher login must be visible to guests');
   assert.equal(await page.locator('.student-portal').count(),1);
   assert(await page.locator('#studentPrivacyNotice').isVisible());
   assert((await page.locator('#portalTitle').textContent()).includes('Tự học Vật lí 12'));
@@ -106,11 +107,13 @@ async function run() {
   assert(Array.isArray(result.post_exam_diagnosis.profiles));
   assert(result.post_exam_diagnosis.weak_chapter,'weak chapter missing after zero-score exam');
 
-  await page.evaluate(async()=>{
-    await api('/api/me',{method:'DELETE'});
-    logout();
-  });
-  assert(await page.locator('#authView').isVisible());
+  await page.evaluate(async()=>{await api('/api/me',{method:'DELETE'});show('studentView');});
+  assert(await page.locator('#teacherAccountSwitch').isVisible());
+  await page.locator('#goTeacherPortal').click();
+  assert(await page.locator('#authView').isVisible(),'teacher portal link should return to login');
+  assert(await page.locator('#teacherLoginForm').isVisible(),'teacher login accessible after switching');
+  assert.equal(await page.locator('#teacherLoginUser').evaluate(x=>x===document.activeElement),true);
+  assert(!await page.locator('#studentView').isVisible(),'student dashboard must be hidden after switching');
   assert.equal(await page.evaluate(()=>localStorage.getItem('phy_token')),null);
   assert.deepEqual(pageErrors,[],'student public UI JavaScript errors');
   console.log('Student-only self-study browser flow: passed');
