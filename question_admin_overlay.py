@@ -43,7 +43,6 @@ def install_overlay(bank,engine):
             with Session(engine) as db:
                 managed=db.execute(select(ManagedQuestion).where(
                     ManagedQuestion.status.in_(("published","draft","submitted","archive_requested","archived")),
-                    ManagedQuestion.published_json.is_not(None)
                 )).scalars().all()
         except Exception:
             # Bank stays usable if the optional managed table is not provisioned.
@@ -51,7 +50,7 @@ def install_overlay(bank,engine):
         excluded=set()
         supplemental=[]
         for row in managed:
-            if row.source_id:
+            if row.source_id and (row.published_json is not None or row.status=="archived"):
                 excluded.add(row.source_id)
             # An approved archive retires the source, but never destroys old IDs.
             if row.status=="archived": continue
