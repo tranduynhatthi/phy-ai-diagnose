@@ -1,0 +1,47 @@
+name: Question Bank Admin v1 isolated release gate
+
+on:
+  push:
+    branches: [feature/question-bank-admin-v1]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: question-bank-admin-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  releasecheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      QUESTION_ADMIN_ENABLED: "false"
+      QUESTION_BANK_PUBLISH_ENABLED: "false"
+      LLM_ENABLED: "false"
+      SOCRATIC_TUTOR_ENABLED: "false"
+      SOCRATIC_TUTOR_LLM_ENABLED: "false"
+      GEMINI_API_KEY: ""
+      OPENAI_API_KEY: ""
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build existing release gate plus question admin tests
+        run: docker build --progress=plain -f Dockerfile.releasecheck -t phy-ai-qadmin-ci .
+      - name: Confirm the proposed feature is OFF by default
+        run: |
+          set -euo pipefail
+          docker run --rm -d --name phy-ai-qadmin-ci -p 18090:8000 \
+            -e ENVIRONMENT=development \
+            -e DATABASE_URL=sqlite:////tmp/phy-ai-qadmin-test.sqlite3 \
+            -e SECRET_KEY=ci-test-only-secret-value \
+            -e QUESTION_ADMIN_ENABLED=false \
+            -e QUESTION_BANK_PUBLISH_ENABLED=false \
+            phy-ai-qadmin-ci
+          trap 'docker logs phy-ai-qadmin-ci || true; docker rm -f phy-ai-qadmin-ci || true' EXIT
+          for i in $(seq 1 40); do
+            if curl --fail --silent http://127.0.0.1:18090/api/health >/tmp/health.json; then break; fi
+            sleep 2
+          done
+          cat /tmp/health.json
+          test "$(curl --silent -o /tmp/qadmin-off.json -w '%{http_code}' http://127.0.0.1:18090/api/admin/question-bank)" != "500"

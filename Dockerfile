@@ -33,6 +33,11 @@ COPY ai_coach_patch.py /tmp/ai_coach_patch.py
 COPY sgk_physics12.py /tmp/sgk_physics12.py
 COPY socratic_tutor.py /tmp/socratic_tutor.py
 COPY socratic_tutor_patch.py /tmp/socratic_tutor_patch.py
+COPY question_admin_store.py /tmp/question_admin_store.py
+COPY question_admin_overlay.py /tmp/question_admin_overlay.py
+COPY question_admin_api.py /tmp/question_admin_api.py
+COPY question_admin_ui.js /tmp/question_admin_ui.js
+COPY question_admin_patch.py /tmp/question_admin_patch.py
 COPY student_ui_cleanup_patch.py /tmp/student_ui_cleanup_patch.py
 COPY repair_null_guard_patch.py /tmp/repair_null_guard_patch.py
 COPY v3_patch /app/v3_patch
@@ -134,8 +139,10 @@ RUN python /tmp/ai_coach_patch.py
 RUN python /tmp/repair_null_guard_patch.py
 RUN python /tmp/socratic_tutor_patch.py
 RUN python /tmp/student_ui_cleanup_patch.py
+RUN python /tmp/question_admin_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir openpyxl==3.1.5
 RUN mkdir -p /app/models
 RUN useradd -m -u 10001 appuser && chown -R appuser:appuser /app
 USER appuser
