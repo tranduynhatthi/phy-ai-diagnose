@@ -12,7 +12,11 @@ if "@app.get(\"/api/admin/question-bank\")" in main:
     raise SystemExit("Question admin already installed")
 if "@app.post(\"/api/tutor/start\")" not in main:
     raise SystemExit("Expected installed Socratic Tutor before question bank administration")
-main+="\n\n"+Path("/tmp/question_admin_api.py").read_text(encoding="utf-8")
+route_marker='@app.get("/api/ai/status")'
+if main.count(route_marker)!=1:
+    raise SystemExit("API insertion marker unavailable; refuse unsafe catch-all ordering")
+routes=Path("/tmp/question_admin_api.py").read_text(encoding="utf-8")
+main=main.replace(route_marker,routes+"\n\n"+route_marker,1)
 main_path.write_text(main,encoding="utf-8")
 
 html=html_path.read_text(encoding="utf-8")
