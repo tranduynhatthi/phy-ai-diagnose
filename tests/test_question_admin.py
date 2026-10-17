@@ -212,3 +212,17 @@ def test_published_version_remains_until_new_approval(context):
     with f() as db:
         record=db.get(ManagedQuestion,ident)
         assert {q["id"] for q in record.history_json}=={ident+"-v1",ident+"-v2"}
+
+
+def test_question_admin_launcher_is_prominent_in_admin_workspace():
+    from pathlib import Path
+    import app.main as m
+    html=(m.STATIC_DIR/"index.html").read_text(encoding="utf-8")
+    start=html.index('<section id="adminView"')
+    end=html.index('</section>',start)
+    admin_html=html[start:end]
+    launcher=admin_html.index('onclick="qaOpen()"')
+    assert launcher < admin_html.index('id="adminStats"')
+    assert launcher < admin_html.index('Quản lý tài khoản hệ thống')
+    assert html.count('onclick="qaOpen()"')==1
+    assert html.count('src="/static/question_admin_ui.js"')==1
