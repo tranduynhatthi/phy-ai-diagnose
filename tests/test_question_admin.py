@@ -166,3 +166,35 @@ def test_question_overlay_is_opt_in_preserves_previous_versions(context):
     finally:
         bank.pool=original_pool
         bank._question_admin_installed=False
+
+
+def test_static_admin_script_and_html_injection_rejected(context):
+    c,h,_,_=context
+    asset=c.get("/static/question_admin_ui.js")
+    assert asset.status_code==200,asset.text[:180]
+    assert b"window.qaOpen" in asset.content
+    unsafe={**question(),"prompt":'<img src=x onerror="alert(1)">'}
+    result=post(c,h["admin"],p=unsafe)
+    assert result.status_code==422,result.text
+
+def test_published_version_remains_until_new_approval(context):
+    c,h,f,_=context
+    first=post(c,h["admin"]);assert first.status_code==201,first.text
+    ident=first.json()["id"]
+    assert action(c,h["admin"],ident,"submit",1).status_code==200
+    pub=action(c,h["admin"],ident,"approve",1)
+    assert pub.status_code==200
+    previous=pub.json()["published"]["id"]
+    update=c.put("/api/admin/question-bank/"+ident,headers=h["admin"],
+       json={"expected_revision":1,"question":{**question(),
+           "prompt":"Một phiên bản cập nhật của câu hỏi về chuyển động nhiệt?"}})
+    assert update.status_code==200,update.text
+    assert update.json()["published"]["id"]==previous
+    assert update.json()["status"]=="draft"
+    assert action(c,h["admin"],ident,"submit",2).status_code==200
+    after=action(c,h["admin"],ident,"approve",2)
+    assert after.status_code==200,after.text
+    assert after.json()["published"]["id"]==ident+"-v2"
+    with f() as db:
+        record=db.get(ManagedQuestion,ident)
+        assert {q["id"] for q in record.history_json}=={ident+"-v1",ident+"-v2"}
