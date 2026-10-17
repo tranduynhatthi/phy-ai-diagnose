@@ -39,6 +39,7 @@ COPY question_admin_api.py /tmp/question_admin_api.py
 COPY question_admin_ui.js /tmp/question_admin_ui.js
 COPY question_admin_patch.py /tmp/question_admin_patch.py
 COPY teacher_portal_entry_patch.py /tmp/teacher_portal_entry_patch.py
+COPY student_class_enrollment_patch.py /tmp/student_class_enrollment_patch.py
 COPY teacher_portal_snapshot_patch.py /tmp/teacher_portal_snapshot_patch.py
 COPY student_ui_cleanup_patch.py /tmp/student_ui_cleanup_patch.py
 COPY repair_null_guard_patch.py /tmp/repair_null_guard_patch.py
@@ -144,6 +145,7 @@ RUN python /tmp/socratic_tutor_patch.py
 RUN python /tmp/student_ui_cleanup_patch.py
 RUN python /tmp/question_admin_patch.py
 RUN python /tmp/teacher_portal_entry_patch.py
+RUN python /tmp/student_class_enrollment_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir openpyxl==3.1.5
