@@ -11,13 +11,15 @@ from app.student_selfstudy_policy import sanitize_formula_stem
 import app.student_selfstudy_policy as policy
 
 
-def test_public_interface_is_student_first():
+def test_public_interface_keeps_student_selfstudy_and_restores_teachers():
     html = (APP_ROOT / "app/static/index.html").read_text(encoding="utf-8")
-    assert 'class="portal-card teacher-portal"' not in html
-    assert 'id="teacherView"' not in html
+    assert 'class="portal-card teacher-portal"' in html
+    assert 'id="teacherView"' in html
+    assert 'id="teacherLoginForm"' in html
+    assert 'id="teacherAccountSwitch"' in html
     assert 'class="portal-card student-portal"' in html
     assert 'id="selfStudyGuide"' in html
-    assert "Dành cho học sinh trung bình và yếu" in html
+    assert "Chọn cổng Giáo viên" in html
     assert "Không cần học lại tất cả" in html
 
 
