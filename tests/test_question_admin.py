@@ -157,7 +157,11 @@ def test_question_overlay_is_opt_in_preserves_previous_versions(context,monkeypa
         published=bank.pool("Chương I","lesson","Bài 1",diagnostic_only=True)
         assert any(q["id"]==id+"-v1" for q in published)
         assert bank.by_id[id+"-v1"]["answer"]==1
+        # Resolve from PostgreSQL even when it has not been cached in memory.
+        del bank.by_id[id+"-v1"]
         assert bank.by_id.get(id+"-v1")["answer"]==1
+        assert bank.grade(bank.by_id.get(id+"-v1"),1)["is_fully_correct"]
+        assert not bank.grade(bank.by_id.get(id+"-v1"),0)["is_fully_correct"]
         monkeypatch.setenv("QUESTION_BANK_PUBLISH_ENABLED","false")
         assert not any(q["id"]==id+"-v1" for q in bank.pool("Chương I","lesson","Bài 1",diagnostic_only=True))
         assert bank.by_id.get(id+"-v1")["answer"]==1
