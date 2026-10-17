@@ -1,0 +1,43 @@
+name: Export vetted PHY-AI bank (no user records)
+on:
+  push:
+    branches: [feature/php-mysql-bank-export]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build effective audited app image (no real database or API keys)
+        run: docker build -t phy-ai-export:latest -f Dockerfile .
+      - name: Export exact effective bank, no student records
+        run: |
+          mkdir -p export
+          docker run --rm --user 0 \
+            -v "$PWD/export:/export" \
+            -e DATABASE_URL=sqlite:////tmp/phy-aiexport.sqlite3 \
+            -e SECRET_KEY=not-real-just-for-offline-bank-export \
+            -e LLM_ENABLED=false -e GEMINI_API_KEY= \
+            phy-ai-export:latest python -c '
+          from app.main import bank
+          import json, pathlib, hashlib
+          qs=list(bank.questions)
+          cs=bank.data.get("chapters",{})
+          errs=dict(bank.error_by_id)
+          assert len(qs)==1000 and len(set(q["id"] for q in qs))==1000
+          assert len(errs)==68
+          assert len(cs)==4 and all(sum(q.get("chapter")==chapter for q in qs)==250 for chapter in cs)
+          data={"schema":"phy-ai-export-v1","version":bank.data.get("version","audited-effective-bank"),"chapters":cs,"errors":errs,"questions":qs}
+          raw=json.dumps(data,ensure_ascii=False,allow_nan=False,indent=2).encode("utf-8")
+          pathlib.Path("/export/phy-ai-effective-bank-1000.json").write_bytes(raw)
+          print("Export verified: 1000 questions, 4x250, 68 ontology codes; SHA256="+hashlib.sha256(raw).hexdigest())'
+      - name: Upload only question bank (no student or password data)
+        uses: actions/upload-artifact@v4
+        with:
+          name: phy-ai-effective-question-bank
+          path: export/phy-ai-effective-bank-1000.json
+          if-no-files-found: error
+          retention-days: 7
