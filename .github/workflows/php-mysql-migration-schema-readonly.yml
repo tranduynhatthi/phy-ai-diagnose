@@ -1,0 +1,44 @@
+name: Read-only Python SQLAlchemy metadata for PHP migration
+on:
+  push:
+    branches: [chore/php-mysql-migration-schema-readonly]
+permissions:
+  contents: read
+jobs:
+  schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t phyai-schema:latest -f Dockerfile .
+      - name: Export models and SQLAlchemy metadata WITHOUT accessing a database
+        run: |
+          mkdir export
+          docker run --rm --user 0 \
+            -e DATABASE_URL=sqlite:////tmp/php-migration-no-production.sqlite3 \
+            -e SECRET_KEY=offline-metadata-export-not-production-key \
+            -e GEMINI_API_KEY='' \
+            -v "$PWD/export:/export" phyai-schema:latest \
+            python -c '
+          import inspect, json, pathlib
+          import app.models as models
+          from app.database import Base
+          tables={}
+          for table in Base.metadata.sorted_tables:
+              tables[table.name]={
+                  "columns":[{"name":c.name,"type":str(c.type),
+                              "nullable":c.nullable,"primary_key":c.primary_key}
+                             for c in table.columns],
+                  "foreign_keys":[{"from":fk.parent.name,"to":fk.column.table.name+"."+fk.column.name}
+                                  for fk in table.foreign_keys]
+              }
+          source=inspect.getsource(models)
+          pathlib.Path("/export/models_schema.json").write_text(json.dumps(tables,ensure_ascii=False,indent=2))
+          pathlib.Path("/export/models_source.py").write_text(source)
+          print("Offline metadata export complete; no data records queried.")
+          '
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-migration-schema-no-user-data
+          path: export/*
+          retention-days: 3
