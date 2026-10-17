@@ -226,3 +226,20 @@ def test_question_admin_launcher_is_prominent_in_admin_workspace():
     assert launcher < admin_html.index('Quản lý tài khoản hệ thống')
     assert html.count('onclick="qaOpen()"')==1
     assert html.count('src="/static/question_admin_ui.js"')==1
+
+
+def test_teacher_portal_accessible_from_student_workspace():
+    """The user can reach teacher/admin login without changing student role."""
+    import app.main as main
+    html=(main.STATIC_DIR/"index.html").read_text(encoding="utf-8")
+    start=html.index('<section id="studentView"')
+    end=html.index('</section>',start)
+    student=html[start:end]
+    assert student.count('id="teacherAccountSwitch"')==1
+    assert 'href="/?portal=teacher"' in student
+    assert 'id="teacherLoginForm"' in html
+    assert 'id="studentLoginForm"' in html
+    assert "if(token)logout();" in html
+    assert "window.history.replaceState" in html
+    assert "get('portal')==='teacher'" in html
+    assert html.count('id="teacherAccountSwitch"')==1
