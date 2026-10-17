@@ -5,6 +5,7 @@ remain answerable after a new revision has been published or a row archived.
 """
 from __future__ import annotations
 import re
+import os
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from .question_admin_store import ManagedQuestion
@@ -28,6 +29,11 @@ class VersionedIndex(dict):
                         return version
         raise KeyError(key)
 
+    def get(self,key,default=None):
+        # dict.get() does NOT call __missing__, but legacy grade/report routes use it.
+        try: return self[key]
+        except KeyError: return default
+
 def install_overlay(bank,engine):
     if getattr(bank,"_question_admin_installed",False):
         return
@@ -35,6 +41,10 @@ def install_overlay(bank,engine):
     bank.by_id=VersionedIndex(bank.by_id,engine)
     def approved_pool(*args,**kwargs):
         baseline=list(static_pool(*args,**kwargs))
+        if os.getenv("QUESTION_BANK_PUBLISH_ENABLED","false").lower() not in ("true","1","yes","on"):
+            # Rollback must hide new selections but still resolve published
+            # immutable IDs from ongoing and historical sessions via by_id.get().
+            return baseline
         chapter=args[0] if len(args)>0 else kwargs.get("chapter")
         scope=args[1] if len(args)>1 else kwargs.get("scope")
         lesson=args[2] if len(args)>2 else kwargs.get("lesson")
