@@ -314,3 +314,30 @@ def test_school_class_creation_join_and_student_dashboard_remain_available(conte
     # A teacher outside this school cannot create its classes or read it.
     assert client.post(f"/api/schools/{school['id']}/classes", json={"name": "12A4"}, headers=headers["teacher_b"]).status_code == 403
     assert client.get(f"/api/teacher/schools/{school['id']}/dashboard", headers=headers["teacher_b"]).status_code == 403
+
+
+def test_existing_student_joins_only_with_classroom_code_and_teacher_owns_roster(context):
+    client,headers,sessions=context
+    url="/api/student/classes/join"
+    assert client.post(url,headers=headers["unenrolled"],json={"code":"BADCODE"}).status_code==404
+    assert client.post(url,headers=headers["unenrolled"],json={"code":"$$$"}).status_code==422
+    assert client.post(url,headers=headers["teacher_a"],json={"code":"CODE_A"}).status_code==403
+    result=client.post(url,headers=headers["unenrolled"],json={"code":"code_a"})
+    assert result.status_code==200,result.text
+    assert result.json()["classroom"]["id"]=="class_a"
+    assert result.json()["already_joined"] is False
+    retry=client.post(url,headers=headers["unenrolled"],json={"code":"CODE_A"})
+    assert retry.status_code==200 and retry.json()["already_joined"] is True
+    with sessions() as db:
+        assert len(db.execute(select(Enrollment).where(
+            Enrollment.user_id=="unenrolled",Enrollment.classroom_id=="class_a"
+        )).scalars().all())==1
+    own=client.get("/api/teacher/v2/students/unenrolled/progress",headers=headers["teacher_a"])
+    assert own.status_code==200,own.text
+    foreign=client.get("/api/teacher/v2/students/unenrolled/progress",headers=headers["teacher_b"])
+    assert foreign.status_code==403
+    own_roster=client.get("/api/teacher/v2/classes/class_a/dashboard",headers=headers["teacher_a"])
+    assert own_roster.status_code==200
+    assert "unenrolled" in {u["id"] for u in own_roster.json()["student_progress"]}
+    assert client.get("/api/teacher/v2/classes/class_a/dashboard",headers=headers["teacher_b"]).status_code==404
+    assert {x["id"] for x in client.get("/api/classes",headers=headers["unenrolled"]).json()}=={"class_a"}
