@@ -40,7 +40,7 @@ def _required_string(v,name,limit):
     if not isinstance(v,str) or not v.strip() or len(v.strip())>limit:
         raise ValueError(f"{name}: yêu cầu văn bản không rỗng, tối đa {limit} ký tự.")
     stripped=v.strip()
-    if re.search(r"<\\s*(?:/?[A-Za-z][A-Za-z0-9]*|!--)", stripped):
+    if re.search(r"<\s*(?:/?[A-Za-z][A-Za-z0-9]*|!--)", stripped):
         raise ValueError(f"{name}: không cho phép mã HTML trong nội dung câu hỏi.")
     return stripped
 
