@@ -69,10 +69,13 @@ async function run() {
   await page.locator('#regName').fill('Học sinh tự học');
   await page.locator('#regUser').fill('student_selfstudy_browser');
   await page.locator('#regPass').fill('StudentSelfStudy2026');
-  assert.equal(await page.locator('#regClass').getAttribute('type'),'hidden');
+  assert.notEqual(await page.locator('#regClass').getAttribute('type'),'hidden');
+  assert(await page.locator('#regClass').isVisible(),'registration class code must be optional and visible');
   await page.getByRole('button',{name:'Tạo tài khoản học sinh',exact:true}).click();
   await page.locator('#studentView').waitFor({state:'visible'});
   assert(await page.locator('#selfStudyGuide').isVisible());
+  assert(await page.locator('#studentClassJoinPanel').isVisible(),'existing students can join teacher classes');
+  assert((await page.locator('#studentJoinedClasses').textContent()).includes('Chưa tham gia lớp'));
   const legacyClassCard=page.locator('#studentView [data-student-class-panel="hidden"]');
   assert.equal(await legacyClassCard.count(),1,'student class panel must be retained for JS but hidden');
   assert.equal(await legacyClassCard.isVisible(),false,'student class join card must not be visible');
