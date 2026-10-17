@@ -25,18 +25,18 @@ class DOM(HTMLParser):
         self.source=source;self.lines=[0];self.nodes=[];self.stack=[]
         for line in source.splitlines(keepends=True):self.lines.append(self.lines[-1]+len(line))
         self.feed(source)
-    def offset(self):
+    def source_offset(self):
         line,col=self.getpos()
         return self.lines[line-1]+col
     def handle_starttag(self,tag,attrs):
         if tag in {"br","hr","input","img","meta","link","source","area","wbr","path","circle"}:return
-        node=Node(tag,attrs,self.offset(),self.stack[-1] if self.stack else None)
+        node=Node(tag,attrs,self.source_offset(),self.stack[-1] if self.stack else None)
         self.nodes.append(node)
         self.stack.append(node)
     def handle_endtag(self,tag):
         for idx in range(len(self.stack)-1,-1,-1):
             if self.stack[idx].tag==tag:
-                self.stack[idx].end=self.source.find(">",self.offset())+1
+                self.stack[idx].end=self.source.find(">",self.source_offset())+1
                 del self.stack[idx:]
                 break
 
