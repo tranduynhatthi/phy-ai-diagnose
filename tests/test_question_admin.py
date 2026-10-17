@@ -141,7 +141,7 @@ def test_excel_atomic_validation_and_template(context):
     assert rejected.status_code==422
     with f() as db:assert len(db.execute(select(ManagedQuestion)).scalars().all())==1
 
-def test_question_overlay_is_opt_in_preserves_previous_versions(context):
+def test_question_overlay_is_opt_in_preserves_previous_versions(context,monkeypatch):
     c,h,f,engine=context
     from app.question_admin_overlay import install_overlay
     original_pool=bank.pool
@@ -153,9 +153,15 @@ def test_question_overlay_is_opt_in_preserves_previous_versions(context):
         assert all(q["id"]!=id+"-v1" for q in before)
         assert action(c,h["admin"],id,"submit",1).status_code==200
         assert action(c,h["admin"],id,"approve",1).status_code==200
+        monkeypatch.setenv("QUESTION_BANK_PUBLISH_ENABLED","true")
         published=bank.pool("Chương I","lesson","Bài 1",diagnostic_only=True)
         assert any(q["id"]==id+"-v1" for q in published)
         assert bank.by_id[id+"-v1"]["answer"]==1
+        assert bank.by_id.get(id+"-v1")["answer"]==1
+        monkeypatch.setenv("QUESTION_BANK_PUBLISH_ENABLED","false")
+        assert not any(q["id"]==id+"-v1" for q in bank.pool("Chương I","lesson","Bài 1",diagnostic_only=True))
+        assert bank.by_id.get(id+"-v1")["answer"]==1
+        monkeypatch.setenv("QUESTION_BANK_PUBLISH_ENABLED","true")
         assert action(c,h["admin"],id,"archive-request",1).status_code==200
         still=bank.pool("Chương I","lesson","Bài 1",diagnostic_only=True)
         assert any(q["id"]==id+"-v1" for q in still)
