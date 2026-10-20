@@ -55,7 +55,7 @@ function renderQuestion(){
  if(!view.length){$("sheet").replaceChildren(el("p","Không có câu hỏi khớp bộ lọc."));return;}
  const q=view[index],root=$("sheet");root.replaceChildren();
  const heading=el("h2","Bài "+q.lesson+" · Câu "+String(q.seq).padStart(2,"0"));
- const meta=el("div");add(meta,note(q.difficulty),note(q.type==="mcq"?"Trắc nghiệm":q.type==="tf"?"Đúng / Sai":"Trả lời ngắn"),note(q.lesson===7?"Bài 7 chưa duyệt":"Bản kiểm thử"));
+ const meta=el("div");add(meta,note(q.difficulty),note(q.type==="mcq"?"Trắc nghiệm":q.type==="tf"?"Đúng / Sai":"Trả lời ngắn"),note(q.lesson===7?"Bài 7 chưa duyệt":q.lesson===1?(q.change_kind==="THAY MỚI"?"Câu thay mới · chờ GV duyệt":q.change_kind==="CHỈNH SỬA"?"Đã sửa · chờ GV duyệt":"GV đã đánh dấu Đạt"):"Bản kiểm thử"));
  add(root,heading,meta,el("div","Mã: "+q.id,"qid"),el("div",q.prompt,"prompt"));
  if(q.id==="KT1-01-012-GVS2")root.append(meltingGraph());
  if(q.type==="mcq"){
