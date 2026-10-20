@@ -27,7 +27,7 @@ def _context_diverse_probes(questions: list[dict]) -> list[dict]:
     ordered=sorted(questions,key=lambda q:str(q.get("id","")))
     groups={}
     for q in ordered:
-        name=re.sub(r"\\\\s+"," ",str(q.get("context","")).strip().lower())
+        name=re.sub(r"\\s+"," ",str(q.get("context","")).strip().lower())
         if not name:
             name="_no_context_"
         groups.setdefault(name,[]).append(q)
