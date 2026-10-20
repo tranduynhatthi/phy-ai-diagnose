@@ -62,6 +62,7 @@ COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
 COPY scripts/validate_audited_bank.py /app/scripts/validate_audited_bank.py
 COPY scripts/inspect_release_flow.py /app/scripts/inspect_release_flow.py
 COPY scripts/audit_formula_stems.py /app/scripts/audit_formula_stems.py
+COPY scripts/audit_ontology_v6.py /app/scripts/audit_ontology_v6.py
 COPY tests /app/tests
 COPY homepage_cleanup_patch.py /app/homepage_cleanup_patch.py
 COPY multi_school_home_patch.py /app/multi_school_home_patch.py
