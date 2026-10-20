@@ -102,6 +102,71 @@ def apply(root=Path("/app")):
 
 '''
     src=replace_one(src,policy_anchor,policy+policy_anchor,"probe coverage audit helper")
+    # Provide foundation-first practice and suppress near-identical number variants
+    # inside the same practice session. Question content is never mutated.
+    picker_anchor='    @staticmethod\n    def tf_score(correct_count: int) -> float:\n'
+    picker='''    @staticmethod
+    def question_template(question):
+        import re
+        import unicodedata
+        stem = unicodedata.normalize("NFC", str(question.get("prompt", "")).casefold())
+        stem = re.sub(r"[+-]?\\\\d+(?:[.,]\\\\d+)?(?:\\\\s*[×*]\\\\s*10\\\\s*\\\\^?\\\\s*[+-]?\\\\d+)?", "#", stem)
+        stem = re.sub(r"\\\\s+", " ", stem).strip()
+        return (question.get("lesson"), question.get("type"), stem)
+
+    @classmethod
+    def scaffolded_practice(cls, pool, standard_selection, band):
+        """Re-select without repeating near-clone templates if alternatives exist.
+
+        NB/TH preference is a selection policy, not a claim that old VD
+        questions were rewritten or that the difficulty labels are validated.
+        """
+        if band not in ("foundation", "developing"):
+            return standard_selection
+        limit = len(standard_selection)
+        difficulty = (
+            {"NB":0, "TH":1, "VD":2, "VDC":3}
+            if band == "foundation" else
+            {"TH":0, "NB":1, "VD":2, "VDC":3}
+        )
+        picked = []
+        used_ids = set()
+        used_templates = set()
+        lesson_hits = {}
+        remaining = list(pool)
+        while len(picked) < limit and remaining:
+            fresh_templates = [
+                q for q in remaining
+                if cls.question_template(q) not in used_templates
+            ]
+            choices = fresh_templates or remaining
+            q = min(
+                choices,
+                key=lambda item: (
+                    difficulty.get(item.get("level"), 3),
+                    lesson_hits.get(item.get("lesson"), 0),
+                    str(item.get("id")),
+                ),
+            )
+            remaining.remove(q)
+            if q.get("id") in used_ids:
+                continue
+            picked.append(q)
+            used_ids.add(q["id"])
+            used_templates.add(cls.question_template(q))
+            lesson_hits[q.get("lesson")] = lesson_hits.get(q.get("lesson"), 0) + 1
+        return picked
+
+'''
+    src=replace_one(src,picker_anchor,picker+picker_anchor,"scaffolded and diverse practice")
+
+    old='    selected=bank.select_practice(pool,req.scope,req.intensity)\n'
+    new='''    selected=bank.select_practice(pool,req.scope,req.intensity)
+    if req.mode == "practice":
+        student_band = recent_performance(db, student.id).get("band", "developing")
+        selected = bank.scaffolded_practice(pool, selected, student_band)
+'''
+    api=replace_one(api,old,new,"student level-aware practice")
     services.write_text(svc,encoding="utf-8")
     main.write_text(api,encoding="utf-8")
     bank.write_text(src,encoding="utf-8")
