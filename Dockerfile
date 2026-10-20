@@ -13,6 +13,8 @@ COPY admin_bootstrap_patch.py /tmp/admin_bootstrap_patch.py
 COPY admin_password_patch.py /tmp/admin_password_patch.py
 COPY question_bank_quality_patch.py /tmp/question_bank_quality_patch.py
 COPY question_bank_content_audit_patch.py /tmp/question_bank_content_audit_patch.py
+COPY question_bank_v5_patch.py /tmp/question_bank_v5_patch.py
+COPY audit/question_bank_v5_tf_rebalance.json /app/app/data/question_bank_v5_tf_rebalance.json
 COPY question_bank_audit.json /app/app/data/question_bank_audit.json
 COPY diagnostic_finish_fix.py /tmp/diagnostic_finish_fix.py
 COPY multi_school_home_patch.py /tmp/multi_school_home_patch.py
@@ -139,6 +141,7 @@ RUN python /tmp/adaptive_diagnostic_patch.py
 RUN python /tmp/public_release_patch.py
 RUN python /tmp/teacher_portal_snapshot_patch.py
 RUN python /tmp/student_selfstudy_patch.py
+RUN python /tmp/question_bank_v5_patch.py
 RUN python /tmp/student_math_fix_patch.py
 RUN python /tmp/ai_coach_patch.py
 RUN python /tmp/repair_null_guard_patch.py
