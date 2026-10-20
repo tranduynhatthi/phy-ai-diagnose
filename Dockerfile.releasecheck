@@ -40,6 +40,7 @@ COPY gemini_provider_patch.py /tmp/gemini_provider_patch.py
 COPY diagnostic_ai_flow_patch.py /tmp/diagnostic_ai_flow_patch.py
 COPY recheck_profile_patch.py /tmp/recheck_profile_patch.py
 COPY adaptive_diagnostic_patch.py /tmp/adaptive_diagnostic_patch.py
+COPY diagnostic_probe_quality_v5_patch.py /tmp/diagnostic_probe_quality_v5_patch.py
 COPY public_release_patch.py /tmp/public_release_patch.py
 COPY student_selfstudy_patch.py /tmp/student_selfstudy_patch.py
 COPY student_math_fix_patch.py /tmp/student_math_fix_patch.py
@@ -157,6 +158,7 @@ RUN python /tmp/gemini_provider_patch.py
 RUN python /tmp/diagnostic_ai_flow_patch.py
 RUN python /tmp/recheck_profile_patch.py
 RUN python /tmp/adaptive_diagnostic_patch.py
+RUN python /tmp/diagnostic_probe_quality_v5_patch.py
 RUN python /tmp/public_release_patch.py
 RUN python /tmp/teacher_portal_snapshot_patch.py
 RUN python /tmp/student_selfstudy_patch.py
