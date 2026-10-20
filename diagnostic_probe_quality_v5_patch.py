@@ -24,6 +24,7 @@ def apply(root=Path("/app")):
 
 def _context_diverse_probes(questions: list[dict]) -> list[dict]:
     """Choose unique contexts first; follow with remaining distinct questions."""
+    import re
     ordered=sorted(questions,key=lambda q:str(q.get("id","")))
     groups={}
     for q in ordered:
