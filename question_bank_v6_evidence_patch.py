@@ -167,6 +167,16 @@ def apply(root=Path("/app")):
         selected = bank.scaffolded_practice(pool, selected, student_band)
 '''
     api=replace_one(api,old,new,"student level-aware practice")
+    # AI Coach receives verified profiles only, never unconfirmed candidate signals.
+    old='    coach_profiles = []\n    reasoning_evidence = []\n'
+    new='''    unconfirmed_signals = [p for p in profiles if p.get("needs_confirmation")]\n    profiles = [p for p in profiles if not p.get("needs_confirmation")]\n    coach_profiles = []\n    reasoning_evidence = []\n'''
+    api=replace_one(api,old,new,"AI Coach verified profile filter")
+    old='return {"session":public_session(s),"profiles":profiles,"ai_coach":ai_coach}'
+    new='return {"session":public_session(s),"profiles":profiles,"unconfirmed_signals":unconfirmed_signals,"ai_coach":ai_coach}'
+    api=replace_one(api,old,new,"diagnostic pending signals response")
+    old='    exam_profiles = diagnostic_profiles_from_session(db, s)\n'
+    new=old+'    exam_profiles = [p for p in exam_profiles if not p.get("needs_confirmation")]\n'
+    api=replace_one(api,old,new,"exam profile verified filter")
     services.write_text(svc,encoding="utf-8")
     main.write_text(api,encoding="utf-8")
     bank.write_text(src,encoding="utf-8")
