@@ -14,6 +14,7 @@ COPY admin_password_patch.py /tmp/admin_password_patch.py
 COPY question_bank_quality_patch.py /tmp/question_bank_quality_patch.py
 COPY question_bank_content_audit_patch.py /tmp/question_bank_content_audit_patch.py
 COPY question_bank_v5_patch.py /tmp/question_bank_v5_patch.py
+COPY question_bank_v6_evidence_patch.py /tmp/question_bank_v6_evidence_patch.py
 COPY audit/question_bank_v5_tf_rebalance.json /app/app/data/question_bank_v5_tf_rebalance.json
 COPY question_bank_audit.json /app/app/data/question_bank_audit.json
 COPY diagnostic_finish_fix.py /tmp/diagnostic_finish_fix.py
@@ -150,6 +151,7 @@ RUN python /tmp/student_ui_cleanup_patch.py
 RUN python /tmp/question_admin_patch.py
 RUN python /tmp/teacher_portal_entry_patch.py
 RUN python /tmp/student_class_enrollment_patch.py
+RUN python /tmp/question_bank_v6_evidence_patch.py
 RUN python /tmp/teacher_only_workspace_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
