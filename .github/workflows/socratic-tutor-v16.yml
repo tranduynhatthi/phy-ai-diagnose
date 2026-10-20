@@ -29,7 +29,7 @@ jobs:
         run: docker build --progress=plain --file Dockerfile.releasecheck --tag phy-ai-socratic-v16:ci .
       - name: Export 1,000-question review queue (no student data)
         run: |
-          docker run --rm --entrypoint python phy-ai-socratic-v16:ci /app/scripts/audit_ontology_v6.py > question-bank-quality-v6.json
+          docker run --rm --entrypoint python phy-ai-socratic-v16:ci /app/scripts/audit_ontology_v6.py | sed -n '/^{/,$p' > question-bank-quality-v6.json
           python - <<'PY'
           import json
           d=json.load(open("question-bank-quality-v6.json",encoding="utf-8"))
