@@ -10,11 +10,13 @@ import sys
 
 QUALITY_MODULE = r'''"""PHY-AI DIAGNOSE V5: auditable true/false answer-pattern rebalance."""
 from collections import Counter, defaultdict
+from copy import deepcopy
 import json
 from pathlib import Path
 from .content_audit import validate_questions
 
 PLAN_FILE = Path(__file__).parent / "data" / "question_bank_v5_tf_rebalance.json"
+LEGACY_QUESTIONS = {}  # Old immutable IDs remain resolvable for existing sessions.
 
 
 def pattern(question):
@@ -71,6 +73,7 @@ def apply_v5_rebalance(data):
 
     prepared = []
     seen = set()
+    LEGACY_QUESTIONS.clear()
     for item in plan["changes"]:
         qid = item["id"]
         if qid in seen or qid not in by_id:
@@ -82,22 +85,28 @@ def apply_v5_rebalance(data):
             raise ValueError("Invalid statement permutation: " + qid)
         if pattern(q) != item["before"]:
             raise ValueError("Truth pattern drift before reordering: " + qid)
+        legacy = deepcopy(q)
         shifted = [q["statements"][index] for index in order]
         if "".join("T" if st["answer"] else "F" for st in shifted) != item["after"]:
             raise ValueError("V5 answer pattern mismatch: " + qid)
-        prepared.append((q, shifted))
+        fresh_id = qid + "-V5"
+        if fresh_id in by_id:
+            raise ValueError("V5 alias collides with existing question ID: " + qid)
+        prepared.append((q, shifted, legacy, fresh_id))
 
     if len(prepared) != plan["counts"]["changed_tf"]:
         raise ValueError("Incomplete V5 change plan")
-    for q, shifted in prepared:
+    for q, shifted, legacy, fresh_id in prepared:
+        LEGACY_QUESTIONS[legacy["id"]] = legacy
         q["statements"] = shifted
+        q["id"] = fresh_id
     validate_questions(data)
     report = summarize(data)
     if report["tf_patterns"] != plan["tf_patterns_after"]:
         raise ValueError("V5 distribution fails its review target")
     data["version"] = "2026.10-1000q-v5-tf-balanced"
     data.setdefault("audit", {})["v5_quality"] = {
-        "method": "Stable, recorded permutations of existing statements; no assertions flipped.",
+        "method": "Versioned replacement IDs for changed TF questions; original IDs remain accessible, unchanged, for historical grading.",
         "changed_tf_questions": len(prepared),
         "baseline": prior,
         "rebalanced": report,
@@ -105,7 +114,7 @@ def apply_v5_rebalance(data):
             "Some errors have insufficient independent diagnostic probes.",
             "Option-level misconception mapping still needs expert curation.",
             "Unbalanced truth-count frequencies require new/revised scientific statements, not permutations.",
-            "Historic positional answers require a versioned compatibility policy before production deployment.",
+            "Existing sessions resolve original IDs and original statement ordering from the compatibility index.",
             "Performance statistics must be calibrated on real student response data.",
         ],
     }
@@ -126,6 +135,12 @@ def apply(root=Path("/app")):
         if s.count(marker) != 1:
             raise RuntimeError("Cannot find the v4 student formula policy hook")
         s = s.replace(marker, marker + hook, 1)
+    index_anchor = '        self.by_id = {q["id"]: q for q in self.questions}\n'
+    legacy_hook = '        from .quality_v5 import LEGACY_QUESTIONS\n        self.by_id.update(LEGACY_QUESTIONS)\n'
+    if legacy_hook not in s:
+        if s.count(index_anchor) != 1:
+            raise RuntimeError("V5 legacy-by-id anchor missing")
+        s = s.replace(index_anchor, index_anchor + legacy_hook, 1)
     module_path.write_text(QUALITY_MODULE, encoding="utf-8")
     bank_path.write_text(s, encoding="utf-8")
     print("V5 TF quality patch installed, pending startup validation")
