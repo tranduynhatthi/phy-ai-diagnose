@@ -21,7 +21,7 @@ def test_counts_science_and_provenance():
     assert len(bank.questions)==1000
     assert len(set(q["id"] for q in bank.questions))==1000
     assert Counter(q["type"] for q in bank.questions)=={"mcq":532,"tf":218,"short":250}
-    assert Counter(q["chapter"] for q in bank.questions)=={f"Chương {x}":250 for x in "IIII"} if False else {
+    assert Counter(q["chapter"] for q in bank.questions)=={
         "Chương I":250,"Chương II":250,"Chương III":250,"Chương IV":250
     }
     assert bank.data["version"]=="2026.10-1000q-v6-content-evidence"
