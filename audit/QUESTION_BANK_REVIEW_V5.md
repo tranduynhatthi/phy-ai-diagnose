@@ -84,3 +84,30 @@ Tổng cộng cả trước và sau là 218 câu. **V5 giảm khả năng đoán
 - Chưa chứng minh 67 mã lỗi có độ nhạy/đặc hiệu bằng dữ liệu học sinh.
 - Các thay đổi V5 hiện là **nhánh thử nghiệm chờ kiểm chứng tích hợp và tương thích lịch sử**, không phải bản đã đưa lên hệ thống public.
 - Không được dùng các chỉ số `issues=[]` của bản V4 để tuyên bố “hết mọi nhược điểm” về chẩn đoán.
+
+
+## E. V6 – Sửa lỗ hổng độ phủ chẩn đoán, có mã phiên bản
+
+Bản kiểm thử ngày 20/10/2026 đã chạy 124 phép thử Python, browser student-only, 1.000 câu, 7.034 trường công thức MathJax và xuất báo cáo thống kê. Kết quả tại lần xuất trước khi sửa nội dung: **4 mã lỗi thiếu probe** (HN-07, HN-13, HN-14, TT-13) và **102 nhóm có khuôn trùng khi xóa các dữ kiện số**. Các nhóm trùng chỉ là đầu mối rà soát, không tự động được kết luận sai kiến thức.
+
+Bản sửa nội dung V6 thêm 8 câu hỏi mới (thay 8 câu MCQ lặp khuôn, không tăng số lượng tổng) dựa theo kiến thức SGK Vật lí 12 KNTT: `EXT-16-M04-V6`, `EXT-16-M05-V6`, `EXT-22-M04-V6`, `EXT-22-M05-V6`, `EXT-23-M02-V6`, `EXT-23-M03-V6`, `EXT-23-M04-V6`, `EXT-23-M05-V6`. Mã cũ không bị ghi đè, nhằm bảo vệ lịch sử.
+
+| Mã lỗi | Câu mới | Nội dung kiểm tra | Tham chiếu SGK (trang in) |
+|---|---|---|---|
+| TT-13 | EXT-16-M04/M05-V6 | Phân biệt suất điện động cảm ứng và dòng điện trong mạch hở | 70 |
+| HN-07 | EXT-22-M04/M05-V6 | Phân biệt phân hạch nặng và nhiệt hạch nhẹ | 101–102 |
+| HN-13 | EXT-23-M02/M03-V6 | Hoạt độ, chu kì bán rã, số hạt chưa phân rã | 108 |
+| HN-14 | EXT-23-M04/M05-V6 | Độ đâm xuyên, khả năng ion hóa của alpha, beta và gamma | 106 |
+
+**Giới hạn nghiêm ngặt:** Tính độc lập của probe được ước lượng bằng sự khác nhau của ngữ cảnh và dạng bài, không phải tham số tâm trắc đo trên học sinh. Câu mới gắn `verified=false` để yêu cầu giáo viên xác minh độc lập trước công bố nội dung. Bốn mã có thể được phủ bằng các câu mới, nhưng không chứng minh phân loại lỗi đạt độ nhạy/đặc hiệu mong muốn.
+
+## F. Bộ sửa kỹ thuật V6
+
+- Trước khi cập nhật hồ sơ sai lầm, đòi ít nhất hai **câu sai khác nhau trong hai ngữ cảnh**; không coi 4 phát biểu sai thuộc một câu là 4 probe độc lập.
+- Lọc tín hiệu AI theo mã lỗi được tác giả chỉ định cho câu, thay vì tìm tên mã trong văn bản tùy ý.
+- `unconfirmed_signals` được tách khỏi `profiles` và AI Coach không lập kế hoạch khẳng định lỗi chưa xác minh.
+- V5/V6 đổi ID theo phiên bản, lịch sử vẫn truy xuất ID gốc tương ứng đáp án/chấm cũ.
+- `scaffolded_practice` ưu tiên NB/TH theo hồ sơ người học; giảm lặp cùng khuôn số trong một phiên, không gán lại nhãn độ khó gốc.
+- `scripts/audit_ontology_v6.py` xuất danh sách mã lỗi thiếu độ phủ và nhóm khuôn giống nhau để kiểm duyệt thủ công.
+
+**Chưa hoàn tất:** biên tập độc lập toàn bộ 1.000 câu và đối chiếu từng trang, xây dựng phương án nhiễu gắn mã lỗi có chứng cứ cho cả 532 MCQ, đa dạng số mệnh đề đúng thực chất cho 218 câu Đ/S, thay toàn bộ nhóm trùng chỉ-thay-số, và thẩm định hiệu quả trên học sinh thật. Hồ sơ nghiệm thu cần thiết: issue #15.
