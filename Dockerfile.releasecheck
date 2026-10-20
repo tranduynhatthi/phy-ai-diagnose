@@ -62,6 +62,7 @@ COPY repair_null_guard_patch.py /tmp/repair_null_guard_patch.py
 COPY v3_patch /app/v3_patch
 COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
 COPY scripts/validate_audited_bank.py /app/scripts/validate_audited_bank.py
+COPY scripts/export_review_docx.py /app/scripts/export_review_docx.py
 COPY scripts/inspect_release_flow.py /app/scripts/inspect_release_flow.py
 COPY scripts/audit_formula_stems.py /app/scripts/audit_formula_stems.py
 COPY scripts/audit_ontology_v6.py /app/scripts/audit_ontology_v6.py
@@ -177,6 +178,7 @@ RUN python /tmp/teacher_only_workspace_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir openpyxl==3.1.5
+RUN pip install --no-cache-dir python-docx==1.2.0
 RUN node --check /app/app/static/question_admin_ui.js
 RUN python /app/scripts/inspect_release_flow.py
 RUN python /app/scripts/audit_formula_stems.py
