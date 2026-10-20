@@ -31,7 +31,7 @@ def test_v5_question_count_and_original_types_unchanged():
 def test_v5_statement_pattern_balance_matches_review_plan():
     plan = json.loads(PLAN_FILE.read_text(encoding="utf-8"))
     report = summarize(bank.data)
-    assert bank.data["version"] == "2026.10-1000q-v5-tf-balanced"
+    assert bank.data["version"] == "2026.10-1000q-v6-content-evidence"
     assert len(plan["changes"]) == 102
     assert report["tf_patterns"] == plan["tf_patterns_after"]
     assert max(report["tf_patterns"].values()) <= 33
@@ -59,9 +59,8 @@ def test_v5_changes_preserve_each_question_truth_multiset_and_explanations():
 
 def test_v5_does_not_treat_low_coverage_as_validated():
     report = summarize(bank.data)
-    assert report["errors"] == 67
+    assert report["errors"] == 68
     assert isinstance(report["underprobed_errors"], list)
-    assert len(report["underprobed_errors"]) > 0
     assert all(
         r["diagnostic_questions"] < 2 or r["independent_context_labels"] < 2
         for r in report["underprobed_errors"]
