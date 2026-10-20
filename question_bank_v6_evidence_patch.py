@@ -110,8 +110,8 @@ def apply(root=Path("/app")):
         import re
         import unicodedata
         stem = unicodedata.normalize("NFC", str(question.get("prompt", "")).casefold())
-        stem = re.sub(r"[+-]?\\\\d+(?:[.,]\\\\d+)?(?:\\\\s*[×*]\\\\s*10\\\\s*\\\\^?\\\\s*[+-]?\\\\d+)?", "#", stem)
-        stem = re.sub(r"\\\\s+", " ", stem).strip()
+        stem = re.sub(r"[+-]?\\d+(?:[.,]\\d+)?(?:\\s*[×*]\\s*10\\s*\\^?\\s*[+-]?\\d+)?", "#", stem)
+        stem = re.sub(r"\\s+", " ", stem).strip()
         return (question.get("lesson"), question.get("type"), stem)
 
     @classmethod
