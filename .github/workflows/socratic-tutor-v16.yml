@@ -41,6 +41,24 @@ jobs:
           name: phy-ai-question-bank-quality-v6
           path: question-bank-quality-v6.json
           retention-days: 14
+      - name: Export complete V6 versioned question bank
+        run: |
+          docker run --rm --entrypoint sh phy-ai-socratic-v16:ci -c 'python /app/scripts/validate_audited_bank.py --export /tmp/PHY_AI_DIAGNOSE_1000_V6.json >/dev/null && cat /tmp/PHY_AI_DIAGNOSE_1000_V6.json' > PHY_AI_DIAGNOSE_1000_V6.json
+          python - <<'PY'
+          import json
+          from collections import Counter
+          d=json.load(open("PHY_AI_DIAGNOSE_1000_V6.json",encoding="utf-8"))
+          questions=d["questions"]
+          assert len(questions)==1000
+          assert d["version"]=="2026.10-1000q-v6-content-evidence"
+          assert sum(str(q["id"]).endswith("-V6") for q in questions)==8
+          print("V6 exported",len(questions),"questions",dict(Counter(q["chapter"] for q in questions)))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PHY_AI_DIAGNOSE_1000_V6_complete_bank
+          path: PHY_AI_DIAGNOSE_1000_V6.json
+          retention-days: 14
       - name: Smoke check API and Socratic feature-off on temporary SQLite
         run: |
           set -euo pipefail
