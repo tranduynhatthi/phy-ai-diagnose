@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PHY-AI DIAGNOSE • Kiểm thử riêng Chương I</title>
+<style>
+:root{color-scheme:light;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#183153;background:#f4f7fc}
+*{box-sizing:border-box}body{margin:0}header{background:#a51d35;color:white;padding:17px max(16px,calc((100vw - 1250px)/2));display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}header a{color:white;font-weight:700}header h1{font-size:21px;margin:0}.wrap{max-width:1250px;margin:24px auto;padding:0 16px}.notice{background:#fff7e4;border:1px solid #e4b563;border-radius:12px;padding:13px 17px;line-height:1.55;margin-bottom:16px}.filters{background:white;border:1px solid #dce3ed;border-radius:14px;padding:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:end}.field{display:flex;flex-direction:column;gap:5px;min-width:155px;flex:1}label{font-size:13px;font-weight:700}select,input,textarea{font:inherit;border-radius:8px;padding:10px;border:1px solid #aebdce;background:white;color:#173451}select:focus,input:focus,textarea:focus,button:focus-visible{outline:2px solid #246fbd;outline-offset:2px}.stats{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.stat{background:white;border:1px solid #dce3ed;border-radius:9px;padding:10px 13px;font-size:13px}.layout{display:grid;grid-template-columns:270px 1fr;gap:15px}.nav{max-height:78vh;overflow:auto;align-self:start;position:sticky;top:12px;background:white;border:1px solid #dce3ed;border-radius:14px;padding:12px}.nav-title{font-weight:750;margin:4px 4px 10px}.qbtn{border:1px solid #dce3ed;display:block;width:100%;padding:8px;text-align:left;border-radius:8px;margin-bottom:6px;background:white;color:#173451;cursor:pointer}.qbtn:hover{background:#eff5ff}.qbtn.active{border-color:#a51d35;background:#fff0f2}.qbtn.done:after{content:" ✓";color:#188046}.sheet{background:white;border:1px solid #dce3ed;border-radius:14px;padding:22px;min-height:480px}.tag{display:inline-block;padding:5px 9px;border-radius:8px;background:#eef4fb;font-size:12px;margin-right:7px}.tag.warn{background:#fff0d7;color:#7a4b00}.qid{font-size:13px;color:#567;margin:12px 0}.prompt{font-size:17px;line-height:1.7;white-space:pre-wrap;margin:16px 0}.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid #d5dce6;border-radius:10px;padding:12px;margin:9px 0;cursor:pointer;line-height:1.6}.opt:hover{background:#f6f9ff}.opt input{margin-top:6px}.tfline{border:1px solid #d5dce6;border-radius:10px;margin:10px 0;padding:11px}.tfline .choices{display:flex;gap:18px;margin-top:9px}.tfline .choices label{font-weight:500}.action{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:18px 0}button{font:inherit;cursor:pointer;border-radius:8px;padding:10px 14px;border:1px solid #b3c1d0;background:white;color:#173451}button.primary{background:#a51d35;border-color:#a51d35;color:white}button:disabled{opacity:.5;cursor:default}.solution{background:#f0f7f2;border-left:4px solid #247b40;padding:13px;border-radius:7px;line-height:1.65;white-space:pre-wrap}.solution.incorrect{background:#fff2f1;border-left-color:#ba392c}.review{margin-top:24px;border-top:1px solid #d7e0eb;padding-top:18px}.review textarea{width:100%;min-height:80px;margin-top:7px}.review select{max-width:260px}.small{font-size:13px;color:#526678;line-height:1.55}.err{padding:16px;color:#ba1d1d;background:#ffeded;border-radius:10px}.diagram{max-width:420px;width:100%;border:1px solid #d8e1ea;background:#fafcff;border-radius:10px;padding:10px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.nav{position:static;max-height:170px}.sheet{padding:15px}header h1{font-size:18px}}
+</style></head>
+<body><header><h1>PHY-AI DIAGNOSE · CHƯƠNG I</h1><a href="/">← Về trang chính</a></header>
+<main class="wrap"><div class="notice"><strong>KHU VỰC KIỂM THỬ NỘI DUNG – CHƯA CÔNG BỐ CHÍNH THỨC</strong><div>Bài 1–6: bản đã chỉnh sửa theo góp ý giáo viên, đang chờ phê duyệt cuối. <strong>Bài 7: 40 câu chưa qua vòng kiểm duyệt mới.</strong> Mọi thao tác chỉ chạy trên trình duyệt; không đăng nhập, không lưu kết quả vào dữ liệu học sinh và không thay thế ngân hàng câu hỏi đang hoạt động.</div></div>
+<section class="filters">
+<div class="field"><label for="lesson">Bài học</label><select id="lesson"><option value="1">Bài 1 · Cấu trúc chất – Chuyển thể</option><option value="2">Bài 2 · Nội năng – Định luật I</option><option value="3">Bài 3 · Thang nhiệt độ</option><option value="4">Bài 4 · Nhiệt dung riêng</option><option value="5">Bài 5 · Nhiệt nóng chảy riêng</option><option value="6">Bài 6 · Nhiệt hóa hơi riêng</option><option value="7">Bài 7 · Bài tập tổng hợp (chưa duyệt)</option><option value="all">Cả Chương I · 250 câu</option></select></div>
+<div class="field"><label for="difficulty">Mức nhận thức</label><select id="difficulty"><option value="all">Tất cả</option><option>Nhận biết</option><option>Thông hiểu</option><option>Vận dụng</option></select></div>
+<div class="field"><label for="qtype">Dạng câu</label><select id="qtype"><option value="all">Tất cả</option><option value="mcq">Nhiều lựa chọn</option><option value="tf">Đúng / Sai</option><option value="short">Trả lời ngắn</option></select></div>
+<div class="field"><label for="find">Tìm mã câu hoặc từ khóa</label><input id="find" type="search" placeholder="Ví dụ: nóng chảy"></div>
+</section><div id="stats" class="stats"></div><section class="layout"><aside class="nav"><div class="nav-title">Danh sách câu hỏi</div><div id="qlist">Đang nạp...</div></aside><article class="sheet" id="sheet" aria-live="polite">Đang tải câu hỏi…</article></section>
+<p class="small">Tài liệu kiểm thử: Phiên bản 20/10/2026. Nhận xét xuất CSV ngay trên máy người dùng và không tự động gửi đến máy chủ. Mọi đáp án hiển thị từ tài liệu kiểm duyệt đi kèm.</p></main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const letters=["A","B","C","D"];
+let bank=[],view=[],index=0;
+const responses=Object.create(null),checked=Object.create(null),reviews=Object.create(null);
+function el(tag,txt,cls){const e=document.createElement(tag);if(txt!==undefined)e.textContent=txt;if(cls)e.className=cls;return e}
+function add(parent,...nodes){nodes.forEach(n=>parent.append(n));return parent}
+function note(s){const n=el("span",s,"tag");return n}
+function filter(){
+ const l=$("lesson").value,level=$("difficulty").value,type=$("qtype").value,k=$("find").value.trim().toLocaleLowerCase("vi");
+ view=bank.filter(q=>(l==="all"||String(q.lesson)===l)&&(level==="all"||q.difficulty===level)&&(type==="all"||q.type===type)&&(!k||(q.id+" "+q.prompt).toLocaleLowerCase("vi").includes(k)));
+ index=0;render();
+}
+function nums(){
+ const done=view.filter(q=>checked[q.id]!==undefined).length,correct=view.filter(q=>checked[q.id]===true).length;
+ $("stats").replaceChildren();
+ [["Số câu đang xem",view.length],["Đã kiểm tra",done],["Trả lời đúng",correct],["Bộ dữ liệu",bank.length+" câu"]].forEach(v=>$("stats").append(add(el("div",undefined,"stat"),el("strong",v[0]+": "),document.createTextNode(String(v[1])))));
+}
+function nav(){
+ const root=$("qlist");root.replaceChildren();
+ view.forEach((q,i)=>{const b=el("button","Câu "+String(q.seq).padStart(2,"0")+" · Bài "+q.lesson+" · "+q.difficulty,"qbtn"+(i===index?" active":"")+(checked[q.id]!==undefined?" done":""));b.type="button";b.onclick=()=>{index=i;render()};root.append(b)});
+ if(!view.length)root.append(el("p","Không có câu phù hợp."));
+}
+function setResponse(q,ans){responses[q.id]=ans;delete checked[q.id];renderQuestion()}
+function compare(q){
+ const a=responses[q.id];
+ if(q.type==="mcq")return a===q.answer;
+ if(q.type==="tf")return Array.isArray(a)&&a.length===4&&a.every((x,i)=>typeof x==="boolean"&&x===q.answer[i]);
+ const parse=s=>{const m=String(s).replaceAll(",",".").match(/[-+]?\d+(?:\.\d+)?/);return m?Number(m[0]):NaN};
+ const given=parse(a),key=parse(q.answer);return Number.isFinite(given)&&Number.isFinite(key)&&Math.abs(given-key)<=Math.max(.015,Math.abs(key)*.000001);
+}
+function answerSummary(q){if(q.type==="mcq")return q.answer+". "+q.options[letters.indexOf(q.answer)];if(q.type==="tf")return q.answer.map((v,i)=>letters[i].toLowerCase()+") "+(v?"Đúng":"Sai")).join(" · ");return String(q.answer)}
+function meltingGraph(){
+ const box=el("div");box.innerHTML='<svg class="diagram" viewBox="0 0 420 245" role="img" aria-label="Đồ thị nhiệt độ theo thời gian: phút 0 âm 10 độ, phút 2 không độ, phút 5 không độ, phút 8 mười độ"><path d="M52 18V210H400" stroke="#293c53" stroke-width="2" fill="none"/><polyline points="52,188 132,114 252,114 372,40" fill="none" stroke="#b02743" stroke-width="3"/><path d="M52 114H390" stroke="#aebaca" stroke-dasharray="4 4"/><g fill="#223e5e" font-size="13" font-family="Arial"><text x="12" y="23">T (°C)</text><text x="372" y="232">t (phút)</text><text x="22" y="119">0</text><text x="8" y="193">−10</text><text x="24" y="45">10</text><text x="48" y="230">0</text><text x="128" y="230">2</text><text x="248" y="230">5</text><text x="368" y="230">8</text></g><g fill="#b02743"><circle cx="52" cy="188" r="4"/><circle cx="132" cy="114" r="4"/><circle cx="252" cy="114" r="4"/><circle cx="372" cy="40" r="4"/></g></svg>';return box;
+}
+function renderQuestion(){
+ if(!view.length){$("sheet").replaceChildren(el("p","Không có câu hỏi khớp bộ lọc."));return;}
+ const q=view[index],root=$("sheet");root.replaceChildren();
+ const heading=el("h2","Bài "+q.lesson+" · Câu "+String(q.seq).padStart(2,"0"));
+ const meta=el("div");add(meta,note(q.difficulty),note(q.type==="mcq"?"Trắc nghiệm":q.type==="tf"?"Đúng / Sai":"Trả lời ngắn"),note(q.lesson===7?"Bài 7 chưa duyệt":"Bản kiểm thử"));
+ add(root,heading,meta,el("div","Mã: "+q.id,"qid"),el("div",q.prompt,"prompt"));
+ if(q.id==="KT1-01-012-GVS2")root.append(meltingGraph());
+ if(q.type==="mcq"){
+  q.options.forEach((s,i)=>{const label=el("label",undefined,"opt"),radio=el("input");radio.type="radio";radio.name="ans";radio.checked=responses[q.id]===letters[i];radio.onchange=()=>setResponse(q,letters[i]);add(label,radio,el("span",letters[i]+". "+s));root.append(label)});
+ }else if(q.type==="tf"){
+  q.statements.forEach((s,i)=>{const wrap=el("div",undefined,"tfline");add(wrap,el("div",letters[i].toLowerCase()+") "+s));const choices=el("div",undefined,"choices");[true,false].forEach(v=>{const label=el("label"),radio=el("input");radio.type="radio";radio.name="tf"+i;radio.checked=(responses[q.id]||[])[i]===v;radio.onchange=()=>{const arr=Array.isArray(responses[q.id])?[...responses[q.id]]:[null,null,null,null];arr[i]=v;setResponse(q,arr)};add(label,radio,document.createTextNode(v?" Đúng":" Sai"));choices.append(label)});add(wrap,choices);root.append(wrap)});
+ }else{const label=el("label","Nhập đáp số (có thể dùng dấu phẩy thập phân)"),input=el("input");input.type="text";input.autocomplete="off";input.style.width="100%";input.value=responses[q.id]||"";input.oninput=()=>{responses[q.id]=input.value;delete checked[q.id];const sol=$("solution");if(sol)sol.remove()};add(root,label,input,el("p","Ghi cùng đơn vị như yêu cầu của đề; bản thử nghiệm so sánh giá trị số với đáp án.","small"));}
+ const acts=el("div",undefined,"action"),grade=el("button","Kiểm tra đáp án","primary");grade.onclick=()=>{const r=responses[q.id];if(r==null||r===""||(q.type==="tf"&&(!Array.isArray(r)||r.some(x=>typeof x!=="boolean")))){alert("Vui lòng trả lời đầy đủ trước khi kiểm tra.");return}checked[q.id]=compare(q);render()};const show=el("button","Xem đáp án – giải thích");show.onclick=()=>{checked[q.id]=null;render()};const prev=el("button","← Câu trước");prev.disabled=index===0;prev.onclick=()=>{index--;render()};const next=el("button","Câu tiếp →");next.disabled=index>=view.length-1;next.onclick=()=>{index++;render()};add(acts,grade,show,prev,next);root.append(acts);
+ if(checked[q.id]!==undefined){const was=checked[q.id];const result=el("div",(was===null?"Đáp án tham khảo":was?"✓ Đúng":"✗ Cần xem lại")+" · "+answerSummary(q)+"\nGiải thích: "+(q.explain||"Chưa có giải thích riêng trong tài liệu"),"solution"+(was===false?" incorrect":""));result.id="solution";root.append(result)}
+ const rev=reviews[q.id]||{status:"",comment:""},area=el("div",undefined,"review");
+ add(area,el("h3","Phiếu nhận xét giáo viên"),el("p","Phần này chỉ lưu tạm trên trang. Nhấn “Xuất CSV” để lưu nhận xét trước khi đóng trình duyệt.","small"));
+ const sel=el("select");[["","Chưa đánh giá"],["dat","Đạt"],["sua","Cần sửa"],["loai","Loại"]].forEach(v=>{const op=el("option",v[1]);op.value=v[0];sel.append(op)});sel.value=rev.status;sel.onchange=()=>{(reviews[q.id]??={status:"",comment:""}).status=sel.value};
+ const comment=el("textarea");comment.value=rev.comment;comment.placeholder="Ghi rõ lỗi khoa học, câu dẫn, phương án, đáp án hoặc đề xuất sửa…";comment.oninput=()=>{(reviews[q.id]??={status:"",comment:""}).comment=comment.value};
+ const exportBtn=el("button","Xuất nhận xét CSV");exportBtn.onclick=exportCsv;
+ add(area,sel,comment,exportBtn);root.append(area);
+}
+function csvSafe(x){let s=String(x??"");if(/^\s*[=+@-]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"'}
+function exportCsv(){const rows=[["Ma cau","Bai","So thu tu","Muc do","Danh gia","Nhan xet"]];bank.forEach(q=>{const r=reviews[q.id];if(r&&(r.status||r.comment))rows.push([q.id,q.lesson,q.seq,q.difficulty,r.status,r.comment])});const csv="\ufeff"+rows.map(r=>r.map(csvSafe).join(",")).join("\r\n");const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));const a=document.createElement("a");a.href=url;a.download="PHY_AI_CHUONG_I_NHAN_XET_GV.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function render(){nums();nav();renderQuestion()}
+["lesson","difficulty","qtype"].forEach(id=>$(id).addEventListener("change",filter));$("find").addEventListener("input",filter);
+fetch("./chapter1_preview_250.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("HTTP "+r.status);return r.json()}).then(j=>{bank=j.questions;if(bank.length!==250||new Set(bank.map(q=>q.id)).size!==250)throw Error("Ngân hàng không đủ 250 câu duy nhất");filter()}).catch(e=>{$("sheet").replaceChildren(el("div","Không nạp được dữ liệu thử nghiệm: "+e.message,"err"));$("qlist").textContent="Có lỗi dữ liệu"});
+</script></body></html>
