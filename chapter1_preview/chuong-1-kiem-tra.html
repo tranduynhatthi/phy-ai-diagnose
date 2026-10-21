@@ -7,15 +7,15 @@
 @media(max-width:760px){.layout{grid-template-columns:1fr}.nav{position:static;max-height:170px}.sheet{padding:15px}header h1{font-size:18px}}
 </style></head>
 <body><header><h1>PHY-AI DIAGNOSE · CHƯƠNG I</h1><a href="/">← Về trang chính</a></header>
-<main class="wrap"><div class="notice"><strong>KHU VỰC KIỂM THỬ NỘI DUNG – CHƯA CÔNG BỐ CHÍNH THỨC</strong><div><strong>Bài 1 – vòng duyệt 3: 31 câu ĐÃ ĐƯỢC DUYỆT, 3 câu bị LOẠI, 1 câu CHƯA XÁC NHẬN.</strong> Chế độ làm thử mặc định chỉ hiển thị câu được duyệt. Bài 2–6: bản chỉnh sửa đang tiếp tục kiểm duyệt; <strong>Bài 7: 40 câu chưa qua vòng kiểm duyệt mới.</strong> Mọi thao tác chỉ chạy trên trình duyệt; không đăng nhập, không lưu kết quả vào dữ liệu học sinh và không thay thế ngân hàng câu hỏi đang hoạt động.</div></div>
+<main class="wrap"><div class="notice"><strong>KHU VỰC KIỂM THỬ NỘI DUNG – CHƯA CÔNG BỐ CHÍNH THỨC</strong><div><strong>Bài 1 – vòng duyệt 3: 31 câu ĐÃ ĐƯỢC DUYỆT, 3 câu bị LOẠI, 1 câu CHƯA XÁC NHẬN.</strong> Chế độ làm thử mặc định chỉ hiển thị câu được duyệt. Bài 2–6: bản chỉnh sửa đang tiếp tục kiểm duyệt. <strong>Chương I chỉ còn 6 bài, gồm 210 câu hỏi.</strong> Mọi thao tác chỉ chạy trên trình duyệt; không đăng nhập, không lưu kết quả vào dữ liệu học sinh và không thay thế ngân hàng câu hỏi đang hoạt động.</div></div>
 <section class="filters">
-<div class="field"><label for="lesson">Bài học</label><select id="lesson"><option value="1">Bài 1 · Cấu trúc chất – Chuyển thể</option><option value="2">Bài 2 · Nội năng – Định luật I</option><option value="3">Bài 3 · Thang nhiệt độ</option><option value="4">Bài 4 · Nhiệt dung riêng</option><option value="5">Bài 5 · Nhiệt nóng chảy riêng</option><option value="6">Bài 6 · Nhiệt hóa hơi riêng</option><option value="7">Bài 7 · Bài tập tổng hợp (chưa duyệt)</option><option value="all">Cả Chương I · dữ liệu kiểm duyệt</option></select></div>
+<div class="field"><label for="lesson">Bài học</label><select id="lesson"><option value="1">Bài 1 · Cấu trúc chất – Chuyển thể</option><option value="2">Bài 2 · Nội năng – Định luật I</option><option value="3">Bài 3 · Thang nhiệt độ</option><option value="4">Bài 4 · Nhiệt dung riêng</option><option value="5">Bài 5 · Nhiệt nóng chảy riêng</option><option value="6">Bài 6 · Nhiệt hóa hơi riêng</option><option value="all">Cả Chương I · dữ liệu kiểm duyệt</option></select></div>
 <div class="field"><label for="approval">Duyệt Bài 1</label><select id="approval"><option value="approved">Chỉ 31 câu đã phê duyệt</option><option value="notapproved">4 câu chưa được duyệt / loại (đối chiếu)</option><option value="all">Toàn bộ 35 câu (đối chiếu)</option></select></div>
 <div class="field"><label for="difficulty">Mức nhận thức</label><select id="difficulty"><option value="all">Tất cả</option><option>Nhận biết</option><option>Thông hiểu</option><option>Vận dụng</option></select></div>
 <div class="field"><label for="qtype">Dạng câu</label><select id="qtype"><option value="all">Tất cả</option><option value="mcq">Nhiều lựa chọn</option><option value="tf">Đúng / Sai</option><option value="short">Trả lời ngắn</option></select></div>
 <div class="field"><label for="find">Tìm mã câu hoặc từ khóa</label><input id="find" type="search" placeholder="Ví dụ: nóng chảy"></div>
 </section><div id="stats" class="stats"></div><section class="layout"><aside class="nav"><div class="nav-title">Danh sách câu hỏi</div><div id="qlist">Đang nạp...</div></aside><article class="sheet" id="sheet" aria-live="polite">Đang tải câu hỏi…</article></section>
-<p class="small">Tài liệu kiểm thử: Bài 1 cập nhật phê duyệt vòng 3 ngày 21/10/2026. Nhận xét xuất CSV ngay trên máy người dùng và không tự động gửi đến máy chủ. Mọi đáp án hiển thị từ tài liệu kiểm duyệt đi kèm.</p></main>
+<p class="small">Tài liệu kiểm thử: Bài 7 đã loại khỏi Chương I ngày 21/10/2026; chỉ còn Bài 1–6. Nhận xét xuất CSV ngay trên máy người dùng và không tự động gửi đến máy chủ. Mọi đáp án hiển thị từ tài liệu kiểm duyệt đi kèm.</p></main>
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
@@ -33,7 +33,7 @@ function filter(){
 function nums(){
  const done=view.filter(q=>checked[q.id]!==undefined).length,correct=view.filter(q=>checked[q.id]===true).length;
  $("stats").replaceChildren();
- [["Số câu đang xem",view.length],["Bài 1 đã duyệt","31 / 35"],["Đã kiểm tra",done],["Trả lời đúng",correct],["Dữ liệu lưu kiểm duyệt",bank.length+" câu"]].forEach(v=>$("stats").append(add(el("div",undefined,"stat"),el("strong",v[0]+": "),document.createTextNode(String(v[1])))));
+ [["Số câu đang xem",view.length],["Bài 1 đã duyệt","31 / 35"],["Đã kiểm tra",done],["Trả lời đúng",correct],["Dữ liệu Chương I (6 bài)",bank.length+" câu"]].forEach(v=>$("stats").append(add(el("div",undefined,"stat"),el("strong",v[0]+": "),document.createTextNode(String(v[1])))));
 }
 function nav(){
  const root=$("qlist");root.replaceChildren();
@@ -56,7 +56,7 @@ function renderQuestion(){
  if(!view.length){$("sheet").replaceChildren(el("p","Không có câu hỏi khớp bộ lọc."));return;}
  const q=view[index],root=$("sheet");root.replaceChildren();
  const heading=el("h2","Bài "+q.lesson+" · Câu "+String(q.seq).padStart(2,"0"));
- const meta=el("div");add(meta,note(q.difficulty),note(q.type==="mcq"?"Trắc nghiệm":q.type==="tf"?"Đúng / Sai":"Trả lời ngắn"),note(q.lesson===7?"Bài 7 chưa duyệt":q.lesson===1?(q.approval_status==="APPROVED"?"GIÁO VIÊN ĐÃ DUYỆT":q.approval_status==="REJECTED"?"GIÁO VIÊN LOẠI":"CHƯA ĐƯỢC XÁC NHẬN"):"Bản kiểm thử"));
+ const meta=el("div");add(meta,note(q.difficulty),note(q.type==="mcq"?"Trắc nghiệm":q.type==="tf"?"Đúng / Sai":"Trả lời ngắn"),note(q.lesson===1?(q.approval_status==="APPROVED"?"GIÁO VIÊN ĐÃ DUYỆT":q.approval_status==="REJECTED"?"GIÁO VIÊN LOẠI":"CHƯA ĐƯỢC XÁC NHẬN"):"Bản kiểm thử"));
  add(root,heading,meta,el("div","Mã: "+q.id,"qid"),el("div",q.prompt,"prompt"));
  const disallowed=q.lesson===1&&q.approval_status!=="APPROVED";
  if(disallowed)root.append(el("div",q.approval_status==="REJECTED"?"Câu đã bị giáo viên đánh dấu LOẠI ở vòng 3. Chỉ hiển thị để đối chiếu; không dùng làm bài kiểm tra.":"Câu chưa có dấu xác nhận của giáo viên ở vòng 3. Chỉ hiển thị để đối chiếu; chưa dùng làm bài kiểm tra.","notice"));
@@ -79,5 +79,5 @@ function csvSafe(x){let s=String(x??"");if(/^\s*[=+@-]/.test(s))s="'"+s;return '
 function exportCsv(){const rows=[["Ma cau","Bai","So thu tu","Muc do","Danh gia","Nhan xet"]];bank.forEach(q=>{const r=reviews[q.id];if(r&&(r.status||r.comment))rows.push([q.id,q.lesson,q.seq,q.difficulty,r.status,r.comment])});const csv="\ufeff"+rows.map(r=>r.map(csvSafe).join(",")).join("\r\n");const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));const a=document.createElement("a");a.href=url;a.download="PHY_AI_CHUONG_I_NHAN_XET_GV.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function render(){nums();nav();renderQuestion()}
 ["lesson","difficulty","qtype","approval"].forEach(id=>$(id).addEventListener("change",filter));$("find").addEventListener("input",filter);
-fetch("./chapter1_preview_250.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("HTTP "+r.status);return r.json()}).then(j=>{bank=j.questions;if(bank.length!==250||new Set(bank.map(q=>q.id)).size!==250)throw Error("Ngân hàng không đủ 250 câu duy nhất");filter()}).catch(e=>{$("sheet").replaceChildren(el("div","Không nạp được dữ liệu thử nghiệm: "+e.message,"err"));$("qlist").textContent="Có lỗi dữ liệu"});
+fetch("./chapter1_preview_210.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("HTTP "+r.status);return r.json()}).then(j=>{bank=j.questions;if(bank.length!==210||new Set(bank.map(q=>q.id)).size!==210||bank.some(q=>q.lesson<1||q.lesson>6))throw Error("Dữ liệu kiểm thử không đúng 210 câu thuộc Bài 1–6");filter()}).catch(e=>{$("sheet").replaceChildren(el("div","Không nạp được dữ liệu thử nghiệm: "+e.message,"err"));$("qlist").textContent="Có lỗi dữ liệu"});
 </script></body></html>
