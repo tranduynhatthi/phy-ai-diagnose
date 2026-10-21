@@ -151,7 +151,7 @@ RUN python /tmp/teacher_only_workspace_patch.py
 
 # CHAPTER I TEACHER-REVIEW PREVIEW — isolated static assets, no writes to production database.
 COPY chapter1_preview/chuong-1-kiem-tra.html /app/app/static/chuong-1-kiem-tra.html
-COPY chapter1_preview/chapter1_preview_250.json /app/app/static/chapter1_preview_250.json
+COPY chapter1_preview/chapter1_preview_210.json /app/app/static/chapter1_preview_210.json
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir openpyxl==3.1.5
