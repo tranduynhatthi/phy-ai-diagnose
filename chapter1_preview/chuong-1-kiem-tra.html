@@ -7,14 +7,15 @@
 @media(max-width:760px){.layout{grid-template-columns:1fr}.nav{position:static;max-height:170px}.sheet{padding:15px}header h1{font-size:18px}}
 </style></head>
 <body><header><h1>PHY-AI DIAGNOSE · CHƯƠNG I</h1><a href="/">← Về trang chính</a></header>
-<main class="wrap"><div class="notice"><strong>KHU VỰC KIỂM THỬ NỘI DUNG – CHƯA CÔNG BỐ CHÍNH THỨC</strong><div>Bài 1–6: bản đã chỉnh sửa theo góp ý giáo viên, đang chờ phê duyệt cuối. <strong>Bài 7: 40 câu chưa qua vòng kiểm duyệt mới.</strong> Mọi thao tác chỉ chạy trên trình duyệt; không đăng nhập, không lưu kết quả vào dữ liệu học sinh và không thay thế ngân hàng câu hỏi đang hoạt động.</div></div>
+<main class="wrap"><div class="notice"><strong>KHU VỰC KIỂM THỬ NỘI DUNG – CHƯA CÔNG BỐ CHÍNH THỨC</strong><div><strong>Bài 1 – vòng duyệt 3: 31 câu ĐÃ ĐƯỢC DUYỆT, 3 câu bị LOẠI, 1 câu CHƯA XÁC NHẬN.</strong> Chế độ làm thử mặc định chỉ hiển thị câu được duyệt. Bài 2–6: bản chỉnh sửa đang tiếp tục kiểm duyệt; <strong>Bài 7: 40 câu chưa qua vòng kiểm duyệt mới.</strong> Mọi thao tác chỉ chạy trên trình duyệt; không đăng nhập, không lưu kết quả vào dữ liệu học sinh và không thay thế ngân hàng câu hỏi đang hoạt động.</div></div>
 <section class="filters">
-<div class="field"><label for="lesson">Bài học</label><select id="lesson"><option value="1">Bài 1 · Cấu trúc chất – Chuyển thể</option><option value="2">Bài 2 · Nội năng – Định luật I</option><option value="3">Bài 3 · Thang nhiệt độ</option><option value="4">Bài 4 · Nhiệt dung riêng</option><option value="5">Bài 5 · Nhiệt nóng chảy riêng</option><option value="6">Bài 6 · Nhiệt hóa hơi riêng</option><option value="7">Bài 7 · Bài tập tổng hợp (chưa duyệt)</option><option value="all">Cả Chương I · 250 câu</option></select></div>
+<div class="field"><label for="lesson">Bài học</label><select id="lesson"><option value="1">Bài 1 · Cấu trúc chất – Chuyển thể</option><option value="2">Bài 2 · Nội năng – Định luật I</option><option value="3">Bài 3 · Thang nhiệt độ</option><option value="4">Bài 4 · Nhiệt dung riêng</option><option value="5">Bài 5 · Nhiệt nóng chảy riêng</option><option value="6">Bài 6 · Nhiệt hóa hơi riêng</option><option value="7">Bài 7 · Bài tập tổng hợp (chưa duyệt)</option><option value="all">Cả Chương I · dữ liệu kiểm duyệt</option></select></div>
+<div class="field"><label for="approval">Duyệt Bài 1</label><select id="approval"><option value="approved">Chỉ 31 câu đã phê duyệt</option><option value="notapproved">4 câu chưa được duyệt / loại (đối chiếu)</option><option value="all">Toàn bộ 35 câu (đối chiếu)</option></select></div>
 <div class="field"><label for="difficulty">Mức nhận thức</label><select id="difficulty"><option value="all">Tất cả</option><option>Nhận biết</option><option>Thông hiểu</option><option>Vận dụng</option></select></div>
 <div class="field"><label for="qtype">Dạng câu</label><select id="qtype"><option value="all">Tất cả</option><option value="mcq">Nhiều lựa chọn</option><option value="tf">Đúng / Sai</option><option value="short">Trả lời ngắn</option></select></div>
 <div class="field"><label for="find">Tìm mã câu hoặc từ khóa</label><input id="find" type="search" placeholder="Ví dụ: nóng chảy"></div>
 </section><div id="stats" class="stats"></div><section class="layout"><aside class="nav"><div class="nav-title">Danh sách câu hỏi</div><div id="qlist">Đang nạp...</div></aside><article class="sheet" id="sheet" aria-live="polite">Đang tải câu hỏi…</article></section>
-<p class="small">Tài liệu kiểm thử: Phiên bản 20/10/2026. Nhận xét xuất CSV ngay trên máy người dùng và không tự động gửi đến máy chủ. Mọi đáp án hiển thị từ tài liệu kiểm duyệt đi kèm.</p></main>
+<p class="small">Tài liệu kiểm thử: Bài 1 cập nhật phê duyệt vòng 3 ngày 21/10/2026. Nhận xét xuất CSV ngay trên máy người dùng và không tự động gửi đến máy chủ. Mọi đáp án hiển thị từ tài liệu kiểm duyệt đi kèm.</p></main>
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
@@ -25,14 +26,14 @@ function el(tag,txt,cls){const e=document.createElement(tag);if(txt!==undefined)
 function add(parent,...nodes){nodes.forEach(n=>parent.append(n));return parent}
 function note(s){const n=el("span",s,"tag");return n}
 function filter(){
- const l=$("lesson").value,level=$("difficulty").value,type=$("qtype").value,k=$("find").value.trim().toLocaleLowerCase("vi");
- view=bank.filter(q=>(l==="all"||String(q.lesson)===l)&&(level==="all"||q.difficulty===level)&&(type==="all"||q.type===type)&&(!k||(q.id+" "+q.prompt).toLocaleLowerCase("vi").includes(k)));
+ const l=$("lesson").value,level=$("difficulty").value,type=$("qtype").value,approval=$("approval").value,k=$("find").value.trim().toLocaleLowerCase("vi");
+ view=bank.filter(q=>(l==="all"||String(q.lesson)===l)&&(q.lesson!==1||approval==="all"||(approval==="approved"?q.approval_status==="APPROVED":q.approval_status!=="APPROVED"))&&(level==="all"||q.difficulty===level)&&(type==="all"||q.type===type)&&(!k||(q.id+" "+q.prompt).toLocaleLowerCase("vi").includes(k)));
  index=0;render();
 }
 function nums(){
  const done=view.filter(q=>checked[q.id]!==undefined).length,correct=view.filter(q=>checked[q.id]===true).length;
  $("stats").replaceChildren();
- [["Số câu đang xem",view.length],["Đã kiểm tra",done],["Trả lời đúng",correct],["Bộ dữ liệu",bank.length+" câu"]].forEach(v=>$("stats").append(add(el("div",undefined,"stat"),el("strong",v[0]+": "),document.createTextNode(String(v[1])))));
+ [["Số câu đang xem",view.length],["Bài 1 đã duyệt","31 / 35"],["Đã kiểm tra",done],["Trả lời đúng",correct],["Dữ liệu lưu kiểm duyệt",bank.length+" câu"]].forEach(v=>$("stats").append(add(el("div",undefined,"stat"),el("strong",v[0]+": "),document.createTextNode(String(v[1])))));
 }
 function nav(){
  const root=$("qlist");root.replaceChildren();
@@ -55,15 +56,17 @@ function renderQuestion(){
  if(!view.length){$("sheet").replaceChildren(el("p","Không có câu hỏi khớp bộ lọc."));return;}
  const q=view[index],root=$("sheet");root.replaceChildren();
  const heading=el("h2","Bài "+q.lesson+" · Câu "+String(q.seq).padStart(2,"0"));
- const meta=el("div");add(meta,note(q.difficulty),note(q.type==="mcq"?"Trắc nghiệm":q.type==="tf"?"Đúng / Sai":"Trả lời ngắn"),note(q.lesson===7?"Bài 7 chưa duyệt":q.lesson===1?(q.change_kind==="THAY MỚI"?"Câu thay mới · chờ GV duyệt":q.change_kind==="CHỈNH SỬA"?"Đã sửa · chờ GV duyệt":"GV đã đánh dấu Đạt"):"Bản kiểm thử"));
+ const meta=el("div");add(meta,note(q.difficulty),note(q.type==="mcq"?"Trắc nghiệm":q.type==="tf"?"Đúng / Sai":"Trả lời ngắn"),note(q.lesson===7?"Bài 7 chưa duyệt":q.lesson===1?(q.approval_status==="APPROVED"?"GIÁO VIÊN ĐÃ DUYỆT":q.approval_status==="REJECTED"?"GIÁO VIÊN LOẠI":"CHƯA ĐƯỢC XÁC NHẬN"):"Bản kiểm thử"));
  add(root,heading,meta,el("div","Mã: "+q.id,"qid"),el("div",q.prompt,"prompt"));
+ const disallowed=q.lesson===1&&q.approval_status!=="APPROVED";
+ if(disallowed)root.append(el("div",q.approval_status==="REJECTED"?"Câu đã bị giáo viên đánh dấu LOẠI ở vòng 3. Chỉ hiển thị để đối chiếu; không dùng làm bài kiểm tra.":"Câu chưa có dấu xác nhận của giáo viên ở vòng 3. Chỉ hiển thị để đối chiếu; chưa dùng làm bài kiểm tra.","notice"));
  if(q.id==="KT1-01-012-GVS2")root.append(meltingGraph());
  if(q.type==="mcq"){
   q.options.forEach((s,i)=>{const label=el("label",undefined,"opt"),radio=el("input");radio.type="radio";radio.name="ans";radio.checked=responses[q.id]===letters[i];radio.onchange=()=>setResponse(q,letters[i]);add(label,radio,el("span",letters[i]+". "+s));root.append(label)});
  }else if(q.type==="tf"){
   q.statements.forEach((s,i)=>{const wrap=el("div",undefined,"tfline");add(wrap,el("div",letters[i].toLowerCase()+") "+s));const choices=el("div",undefined,"choices");[true,false].forEach(v=>{const label=el("label"),radio=el("input");radio.type="radio";radio.name="tf"+i;radio.checked=(responses[q.id]||[])[i]===v;radio.onchange=()=>{const arr=Array.isArray(responses[q.id])?[...responses[q.id]]:[null,null,null,null];arr[i]=v;setResponse(q,arr)};add(label,radio,document.createTextNode(v?" Đúng":" Sai"));choices.append(label)});add(wrap,choices);root.append(wrap)});
  }else{const label=el("label","Nhập đáp số (có thể dùng dấu phẩy thập phân)"),input=el("input");input.type="text";input.autocomplete="off";input.style.width="100%";input.value=responses[q.id]||"";input.oninput=()=>{responses[q.id]=input.value;delete checked[q.id];const sol=$("solution");if(sol)sol.remove()};add(root,label,input,el("p","Ghi cùng đơn vị như yêu cầu của đề; bản thử nghiệm so sánh giá trị số với đáp án.","small"));}
- const acts=el("div",undefined,"action"),grade=el("button","Kiểm tra đáp án","primary");grade.onclick=()=>{const r=responses[q.id];if(r==null||r===""||(q.type==="tf"&&(!Array.isArray(r)||r.some(x=>typeof x!=="boolean")))){alert("Vui lòng trả lời đầy đủ trước khi kiểm tra.");return}checked[q.id]=compare(q);render()};const show=el("button","Xem đáp án – giải thích");show.onclick=()=>{checked[q.id]=null;render()};const prev=el("button","← Câu trước");prev.disabled=index===0;prev.onclick=()=>{index--;render()};const next=el("button","Câu tiếp →");next.disabled=index>=view.length-1;next.onclick=()=>{index++;render()};add(acts,grade,show,prev,next);root.append(acts);
+ const acts=el("div",undefined,"action"),grade=el("button","Kiểm tra đáp án","primary");grade.onclick=()=>{const r=responses[q.id];if(r==null||r===""||(q.type==="tf"&&(!Array.isArray(r)||r.some(x=>typeof x!=="boolean")))){alert("Vui lòng trả lời đầy đủ trước khi kiểm tra.");return}checked[q.id]=compare(q);render()};grade.disabled=disallowed;const show=el("button","Xem đáp án – giải thích");show.onclick=()=>{checked[q.id]=null;render()};const prev=el("button","← Câu trước");prev.disabled=index===0;prev.onclick=()=>{index--;render()};const next=el("button","Câu tiếp →");next.disabled=index>=view.length-1;next.onclick=()=>{index++;render()};add(acts,grade,show,prev,next);root.append(acts);
  if(checked[q.id]!==undefined){const was=checked[q.id];const result=el("div",(was===null?"Đáp án tham khảo":was?"✓ Đúng":"✗ Cần xem lại")+" · "+answerSummary(q)+"\nGiải thích: "+(q.explain||"Chưa có giải thích riêng trong tài liệu"),"solution"+(was===false?" incorrect":""));result.id="solution";root.append(result)}
  const rev=reviews[q.id]||{status:"",comment:""},area=el("div",undefined,"review");
  add(area,el("h3","Phiếu nhận xét giáo viên"),el("p","Phần này chỉ lưu tạm trên trang. Nhấn “Xuất CSV” để lưu nhận xét trước khi đóng trình duyệt.","small"));
@@ -75,6 +78,6 @@ function renderQuestion(){
 function csvSafe(x){let s=String(x??"");if(/^\s*[=+@-]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"'}
 function exportCsv(){const rows=[["Ma cau","Bai","So thu tu","Muc do","Danh gia","Nhan xet"]];bank.forEach(q=>{const r=reviews[q.id];if(r&&(r.status||r.comment))rows.push([q.id,q.lesson,q.seq,q.difficulty,r.status,r.comment])});const csv="\ufeff"+rows.map(r=>r.map(csvSafe).join(",")).join("\r\n");const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));const a=document.createElement("a");a.href=url;a.download="PHY_AI_CHUONG_I_NHAN_XET_GV.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function render(){nums();nav();renderQuestion()}
-["lesson","difficulty","qtype"].forEach(id=>$(id).addEventListener("change",filter));$("find").addEventListener("input",filter);
+["lesson","difficulty","qtype","approval"].forEach(id=>$(id).addEventListener("change",filter));$("find").addEventListener("input",filter);
 fetch("./chapter1_preview_250.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("HTTP "+r.status);return r.json()}).then(j=>{bank=j.questions;if(bank.length!==250||new Set(bank.map(q=>q.id)).size!==250)throw Error("Ngân hàng không đủ 250 câu duy nhất");filter()}).catch(e=>{$("sheet").replaceChildren(el("div","Không nạp được dữ liệu thử nghiệm: "+e.message,"err"));$("qlist").textContent="Có lỗi dữ liệu"});
 </script></body></html>
