@@ -23,6 +23,10 @@ COPY admin_bootstrap_patch.py /tmp/admin_bootstrap_patch.py
 COPY admin_password_patch.py /tmp/admin_password_patch.py
 COPY question_bank_quality_patch.py /tmp/question_bank_quality_patch.py
 COPY question_bank_content_audit_patch.py /tmp/question_bank_content_audit_patch.py
+COPY question_bank_v5_patch.py /tmp/question_bank_v5_patch.py
+COPY question_bank_v6_content_patch.py /tmp/question_bank_v6_content_patch.py
+COPY question_bank_v6_evidence_patch.py /tmp/question_bank_v6_evidence_patch.py
+COPY audit/question_bank_v5_tf_rebalance.json /app/app/data/question_bank_v5_tf_rebalance.json
 COPY question_bank_audit.json /app/app/data/question_bank_audit.json
 COPY diagnostic_finish_fix.py /tmp/diagnostic_finish_fix.py
 COPY multi_school_home_patch.py /tmp/multi_school_home_patch.py
@@ -36,6 +40,7 @@ COPY gemini_provider_patch.py /tmp/gemini_provider_patch.py
 COPY diagnostic_ai_flow_patch.py /tmp/diagnostic_ai_flow_patch.py
 COPY recheck_profile_patch.py /tmp/recheck_profile_patch.py
 COPY adaptive_diagnostic_patch.py /tmp/adaptive_diagnostic_patch.py
+COPY diagnostic_probe_quality_v5_patch.py /tmp/diagnostic_probe_quality_v5_patch.py
 COPY public_release_patch.py /tmp/public_release_patch.py
 COPY student_selfstudy_patch.py /tmp/student_selfstudy_patch.py
 COPY student_math_fix_patch.py /tmp/student_math_fix_patch.py
@@ -57,8 +62,10 @@ COPY repair_null_guard_patch.py /tmp/repair_null_guard_patch.py
 COPY v3_patch /app/v3_patch
 COPY scripts/e2e_vln01_core.py /app/scripts/e2e_vln01_core.py
 COPY scripts/validate_audited_bank.py /app/scripts/validate_audited_bank.py
+COPY scripts/export_review_docx.py /app/scripts/export_review_docx.py
 COPY scripts/inspect_release_flow.py /app/scripts/inspect_release_flow.py
 COPY scripts/audit_formula_stems.py /app/scripts/audit_formula_stems.py
+COPY scripts/audit_ontology_v6.py /app/scripts/audit_ontology_v6.py
 COPY tests /app/tests
 COPY homepage_cleanup_patch.py /app/homepage_cleanup_patch.py
 COPY multi_school_home_patch.py /app/multi_school_home_patch.py
@@ -152,9 +159,12 @@ RUN python /tmp/gemini_provider_patch.py
 RUN python /tmp/diagnostic_ai_flow_patch.py
 RUN python /tmp/recheck_profile_patch.py
 RUN python /tmp/adaptive_diagnostic_patch.py
+RUN python /tmp/diagnostic_probe_quality_v5_patch.py
 RUN python /tmp/public_release_patch.py
 RUN python /tmp/teacher_portal_snapshot_patch.py
 RUN python /tmp/student_selfstudy_patch.py
+RUN python /tmp/question_bank_v5_patch.py
+RUN python /tmp/question_bank_v6_content_patch.py
 RUN python /tmp/student_math_fix_patch.py
 RUN python /tmp/ai_coach_patch.py
 RUN python /tmp/repair_null_guard_patch.py
@@ -163,14 +173,16 @@ RUN python /tmp/student_ui_cleanup_patch.py
 RUN python /tmp/question_admin_patch.py
 RUN python /tmp/teacher_portal_entry_patch.py
 RUN python /tmp/student_class_enrollment_patch.py
+RUN python /tmp/question_bank_v6_evidence_patch.py
 RUN python /tmp/teacher_only_workspace_patch.py
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir openpyxl==3.1.5
+RUN pip install --no-cache-dir python-docx==1.2.0
 RUN node --check /app/app/static/question_admin_ui.js
 RUN python /app/scripts/inspect_release_flow.py
 RUN python /app/scripts/audit_formula_stems.py
-RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_role_access.py /app/tests/test_question_content_audit.py /app/tests/test_adaptive_diagnostic.py /app/tests/test_public_release.py /app/tests/test_student_selfstudy.py /app/tests/test_ai_coach.py /app/tests/test_ai_coach_hardening.py /app/tests/test_socratic_tutor.py /app/tests/test_socratic_tutor_e2e.py /app/tests/test_student_ui_cleanup.py /app/tests/test_question_admin.py
+RUN PHY_APP_ROOT=/app python -m pytest -q /app/tests/test_role_access.py /app/tests/test_question_content_audit.py /app/tests/test_question_v5_quality.py /app/tests/test_question_v6_safety.py /app/tests/test_question_v6_content.py /app/tests/test_adaptive_diagnostic.py /app/tests/test_public_release.py /app/tests/test_student_selfstudy.py /app/tests/test_ai_coach.py /app/tests/test_ai_coach_hardening.py /app/tests/test_socratic_tutor.py /app/tests/test_socratic_tutor_e2e.py /app/tests/test_student_ui_cleanup.py /app/tests/test_question_admin.py
 RUN PHY_APP_ROOT=/app PHY_PYTHON=/usr/local/bin/python node /app/tests/test_student_public.cjs
 RUN PHY_APP_ROOT=/app python /app/scripts/validate_audited_bank.py --export /tmp/phy-reviewed-bank.json
 RUN PHY_APP_ROOT=/app PHY_BANK_JSON=/tmp/phy-reviewed-bank.json PHY_MATHJAX_ROOT=/tmp/phy-node-tests/node_modules/mathjax-full PHY_MATH_AUDIT_DIR=/tmp/phy-math-results node /app/tests/test_math_rendering.cjs

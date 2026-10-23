@@ -1,0 +1,65 @@
+name: Export 1000 Physics Questions for Teacher Review
+
+on:
+  push:
+    branches:
+      - review/1000-question-quality-20261020
+    paths:
+      - scripts/export_review_docx.py
+      - Dockerfile.releasecheck
+      - .github/workflows/export-review-docx.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - scripts/export_review_docx.py
+      - Dockerfile.releasecheck
+      - .github/workflows/export-review-docx.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-lesson-word:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+
+      - name: Assemble audited V6 bank in isolated image
+        run: docker build -f Dockerfile.releasecheck -t phy-review-export .
+
+      - name: Export Word question and answer files grouped by lesson
+        run: |
+          mkdir -p deliverables
+          docker run --rm --user root --entrypoint python -v "$PWD/deliverables:/out" phy-review-export             /app/scripts/export_review_docx.py --out /out/word_theo_bai
+          test -s deliverables/PHY_AI_DIAGNOSE_1000_CAU_THEO_BAI_KIEM_DUYET.zip
+
+      - name: Validate ZIP integrity and 1000 IDs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from zipfile import ZipFile
+          directory=Path("deliverables/word_theo_bai")
+          report=json.loads((directory/"00_BAO_CAO_DOI_SOAT.json").read_text(encoding="utf-8"))
+          assert report["question_count"]==1000
+          assert report["distinct_ids"]==1000
+          assert sum(row["count"] for row in report["lessons"])==1000
+          assert report["docx_count"]==2*report["lesson_count"]+1
+          archive=Path("deliverables/PHY_AI_DIAGNOSE_1000_CAU_THEO_BAI_KIEM_DUYET.zip")
+          with ZipFile(archive) as z:
+            assert z.testzip() is None
+            assert len([p for p in z.namelist() if p.endswith(".docx")])==report["docx_count"]
+          print(f"Validated {report['lesson_count']} lessons and {report['docx_count']} editable Word files.")
+          PY
+
+      - name: Upload downloadable teacher-review Word files
+        uses: actions/upload-artifact@v4
+        with:
+          name: PHY-AI-DIAGNOSE-1000-Cau-Word-Theo-Bai
+          path: deliverables/PHY_AI_DIAGNOSE_1000_CAU_THEO_BAI_KIEM_DUYET.zip
+          if-no-files-found: error
+          retention-days: 90

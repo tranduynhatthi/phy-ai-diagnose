@@ -13,6 +13,10 @@ COPY admin_bootstrap_patch.py /tmp/admin_bootstrap_patch.py
 COPY admin_password_patch.py /tmp/admin_password_patch.py
 COPY question_bank_quality_patch.py /tmp/question_bank_quality_patch.py
 COPY question_bank_content_audit_patch.py /tmp/question_bank_content_audit_patch.py
+COPY question_bank_v5_patch.py /tmp/question_bank_v5_patch.py
+COPY question_bank_v6_content_patch.py /tmp/question_bank_v6_content_patch.py
+COPY question_bank_v6_evidence_patch.py /tmp/question_bank_v6_evidence_patch.py
+COPY audit/question_bank_v5_tf_rebalance.json /app/app/data/question_bank_v5_tf_rebalance.json
 COPY question_bank_audit.json /app/app/data/question_bank_audit.json
 COPY diagnostic_finish_fix.py /tmp/diagnostic_finish_fix.py
 COPY multi_school_home_patch.py /tmp/multi_school_home_patch.py
@@ -26,6 +30,7 @@ COPY gemini_provider_patch.py /tmp/gemini_provider_patch.py
 COPY diagnostic_ai_flow_patch.py /tmp/diagnostic_ai_flow_patch.py
 COPY recheck_profile_patch.py /tmp/recheck_profile_patch.py
 COPY adaptive_diagnostic_patch.py /tmp/adaptive_diagnostic_patch.py
+COPY diagnostic_probe_quality_v5_patch.py /tmp/diagnostic_probe_quality_v5_patch.py
 COPY public_release_patch.py /tmp/public_release_patch.py
 COPY student_selfstudy_patch.py /tmp/student_selfstudy_patch.py
 COPY student_math_fix_patch.py /tmp/student_math_fix_patch.py
@@ -136,9 +141,12 @@ RUN python /tmp/gemini_provider_patch.py
 RUN python /tmp/diagnostic_ai_flow_patch.py
 RUN python /tmp/recheck_profile_patch.py
 RUN python /tmp/adaptive_diagnostic_patch.py
+RUN python /tmp/diagnostic_probe_quality_v5_patch.py
 RUN python /tmp/public_release_patch.py
 RUN python /tmp/teacher_portal_snapshot_patch.py
 RUN python /tmp/student_selfstudy_patch.py
+RUN python /tmp/question_bank_v5_patch.py
+RUN python /tmp/question_bank_v6_content_patch.py
 RUN python /tmp/student_math_fix_patch.py
 RUN python /tmp/ai_coach_patch.py
 RUN python /tmp/repair_null_guard_patch.py
@@ -147,6 +155,7 @@ RUN python /tmp/student_ui_cleanup_patch.py
 RUN python /tmp/question_admin_patch.py
 RUN python /tmp/teacher_portal_entry_patch.py
 RUN python /tmp/student_class_enrollment_patch.py
+RUN python /tmp/question_bank_v6_evidence_patch.py
 RUN python /tmp/teacher_only_workspace_patch.py
 
 # CHAPTER I TEACHER-REVIEW PREVIEW — isolated static assets, no writes to production database.
